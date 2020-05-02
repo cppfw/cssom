@@ -12,6 +12,14 @@
 			]
 		},
 		{
+			"label": "build_debug",
+			"type": "shell",
+			"command": "make autojobs=true debug=true",
+			"problemMatcher": [
+				"$gcc"
+			]
+		},
+		{
 			"label": "clean",
 			"type": "shell",
 			"command": "make clean",
@@ -22,6 +30,13 @@
 			"type": "shell",
 			"command": "make test",
 			"dependsOn": "build",
+			"problemMatcher": []
+		},
+		{
+			"label": "test_debug",
+			"type": "shell",
+			"command": "make test debug=true",
+			"dependsOn": "build_debug",
 			"problemMatcher": []
 		}
 	]

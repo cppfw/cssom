@@ -4,15 +4,39 @@
 
 namespace cssdom{
 
+class malformed_css_error : public std::logic_error{
+public:
+	malformed_css_error(const std::string& message) :
+			std::logic_error(message)
+	{}
+};
+
 class parser{
+	uint32_t line = 0;
+
 	enum class state{
-		idle
+		idle,
+		selector_tag,
+		selector_class,
+		combinator
 	};
 
 	state cur_state = state::idle;
 
+	std::vector<char> buf;
+
+	void parse_idle(utki::span<char>::const_iterator& i, utki::span<char>::const_iterator& e);
+	void parse_selector_tag(utki::span<char>::const_iterator& i, utki::span<char>::const_iterator& e);
+	void parse_selector_class(utki::span<char>::const_iterator& i, utki::span<char>::const_iterator& e);
+	void parse_combinator(utki::span<char>::const_iterator& i, utki::span<char>::const_iterator& e);
 public:
-	parser();
+	parser() = default;
+
+	virtual ~parser()noexcept{}
+
+	virtual void on_selector_tag(std::string&& str) = 0;
+	virtual void on_selector_class(std::string&& str) = 0;
+	virtual void on_combinator(std::string&& str) = 0;
 
 	/**
 	 * @brief feed UTF-8 data to parser.

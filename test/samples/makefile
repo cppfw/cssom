@@ -39,8 +39,8 @@ test:: $(prorab_this_name)
 $(.RECIPEPREFIX)@myci-running-test.sh $(this_test)
 $(.RECIPEPREFIX)$(a)cp $(d)../../src/build/*.dll $(d) || true
 $(.RECIPEPREFIX)$(a)for f in $(this_samples); do \
-	    echo "checking file $$$$f.css" && \
-	    LD_LIBRARY_PATH=$(d)../../src/build DYLD_LIBRARY_PATH=$$$$LD_LIBRARY_PATH $(d)./build/parsesvg $$$$f.svg && \
+	    echo "checking file $$$$f" && \
+	    LD_LIBRARY_PATH=$(d)../../src/build DYLD_LIBRARY_PATH=$$$$LD_LIBRARY_PATH $(d)./build/parsecss $$$$f && \
 	    cmp out.css $$$$f.css.cmp; \
 	    if [ $$$$? -ne 0 ]; then myci-error.sh "parsed CSS did not match etalon sample"; exit 1; fi \
 	done
