@@ -18,6 +18,22 @@ struct dom_parser : public parser{
 	virtual void on_combinator(std::string&& str)override{
 		TRACE(<< "combinator: " << str << std::endl)
 	}
+
+	virtual void on_style_properties_start()override{
+		TRACE(<< "style properties START" << std::endl)
+	}
+
+	virtual void on_style_properties_end()override{
+		TRACE(<< "style properties END" << std::endl)
+	}
+
+	virtual void on_property_name(std::string&& str)override{
+		TRACE(<< "property name: " << str << std::endl)
+	}
+
+	virtual void on_property_value(std::string&& str)override{
+		TRACE(<< "property value: " << str << std::endl)
+	}
 };
 
 }

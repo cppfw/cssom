@@ -16,9 +16,14 @@ class parser{
 
 	enum class state{
 		idle,
+		style_idle, // idle state inside style block
 		selector_tag,
 		selector_class,
-		combinator
+		combinator,
+		property_name,
+		property_value_delimiter, // colon between property name and value
+		property_value,
+		property_value_terminator // semicolon
 	};
 
 	state cur_state = state::idle;
@@ -26,9 +31,14 @@ class parser{
 	std::vector<char> buf;
 
 	void parse_idle(utki::span<char>::const_iterator& i, utki::span<char>::const_iterator& e);
+	void parse_style_idle(utki::span<char>::const_iterator& i, utki::span<char>::const_iterator& e);
 	void parse_selector_tag(utki::span<char>::const_iterator& i, utki::span<char>::const_iterator& e);
 	void parse_selector_class(utki::span<char>::const_iterator& i, utki::span<char>::const_iterator& e);
 	void parse_combinator(utki::span<char>::const_iterator& i, utki::span<char>::const_iterator& e);
+	void parse_property_name(utki::span<char>::const_iterator& i, utki::span<char>::const_iterator& e);
+	void parse_property_value_delimiter(utki::span<char>::const_iterator& i, utki::span<char>::const_iterator& e);
+	void parse_property_value(utki::span<char>::const_iterator& i, utki::span<char>::const_iterator& e);
+	void parse_property_value_terminator(utki::span<char>::const_iterator& i, utki::span<char>::const_iterator& e);
 public:
 	parser() = default;
 
@@ -37,6 +47,10 @@ public:
 	virtual void on_selector_tag(std::string&& str) = 0;
 	virtual void on_selector_class(std::string&& str) = 0;
 	virtual void on_combinator(std::string&& str) = 0;
+	virtual void on_style_properties_start() = 0;
+	virtual void on_style_properties_end() = 0;
+	virtual void on_property_name(std::string&& str) = 0;
+	virtual void on_property_value(std::string&& str) = 0;
 
 	/**
 	 * @brief feed UTF-8 data to parser.
