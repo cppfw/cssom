@@ -1,7 +1,25 @@
-#include "../../src/cssdom/document.hpp"
+#include "../../src/cssdom/dom.hpp"
 
 #include <clargs/parser.hpp>
 #include <papki/fs_file.hpp>
+
+#include <memory>
+
+enum class property : uint32_t{
+	background_color,
+	background_image
+};
+
+const std::map<std::string, uint32_t> property_name_to_id_map = {
+	{"background-color", uint32_t(property::background_color)},
+	{"background-image", uint32_t(property::background_image)}
+};
+
+struct property_value : public utki::destructable{
+	std::string value;
+
+	property_value(std::string&& value) : value(std::move(value)) {}
+};
 
 int main(int argc, char** argv){
 	bool help = false;
@@ -32,8 +50,14 @@ int main(int argc, char** argv){
 		in_filename = extras.front();
 	}
 
-	auto doc = cssdom::read(papki::fs_file(in_filename));
-	ASSERT_ALWAYS(doc.stuff.empty())
+	auto doc = cssdom::read(
+			papki::fs_file(in_filename),
+			property_name_to_id_map,
+			[](uint32_t id, std::string&& value) -> std::unique_ptr<utki::destructable> {
+				return std::make_unique<property_value>(std::move(value));
+			}
+		);
+	ASSERT_ALWAYS(doc.styles.empty())
 	//TODO:
 
 	return 0;
