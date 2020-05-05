@@ -18,6 +18,10 @@ struct dom_parser : public parser{
 			parse_property(parse_property)
 	{}
 
+	virtual void on_selector_start()override{
+		TRACE(<< "selector START" << std::endl)
+	}
+
 	virtual void on_selector_tag(std::string&& str)override{
 		TRACE(<< "selector tag: " << str << std::endl)
 	}

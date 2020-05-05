@@ -52,12 +52,14 @@ void parser::parse_idle(utki::span<char>::const_iterator& i, utki::span<char>::c
 			case '\t':
 				break;
 			case '.':
+				this->on_selector_start();
 				this->cur_state = state::selector_class;
 				return;
 			case '[':
 				ASSERT_INFO(false, "parsing of attribute selectors is not implemented")
 				break;
 			default:
+				this->on_selector_start();
 				this->buf.push_back(*i);
 				this->cur_state = state::selector_tag;
 				return;
