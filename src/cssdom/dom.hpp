@@ -7,6 +7,7 @@
 
 namespace cssdom{
 
+//TODO: doxygen all
 enum class combinator{
 	descendant,
 	child,
@@ -35,10 +36,16 @@ struct selector{
 	unsigned calculate_specificity()const noexcept;
 };
 
+typedef std::map<uint32_t, std::unique_ptr<utki::destructable>> property_list;
+typedef std::vector<selector> selector_sequence;
+
+struct style{
+	selector_sequence selectors;
+	std::shared_ptr<property_list> properties;
+};
+
 struct document{
-	typedef std::map<uint32_t, std::unique_ptr<utki::destructable>> property_list;
-	typedef std::vector<selector> selector_sequence;
-	std::vector<std::pair<selector_sequence, std::shared_ptr<property_list>>> styles;
+	std::vector<style> styles;
 };
 
 document read(
