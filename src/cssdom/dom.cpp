@@ -22,6 +22,10 @@ struct dom_parser : public parser{
 		TRACE(<< "selector START" << std::endl)
 	}
 
+	virtual void on_selector_end()override{
+		TRACE(<< "selector END" << std::endl)
+	}
+
 	virtual void on_selector_tag(std::string&& str)override{
 		TRACE(<< "selector tag: " << str << std::endl)
 	}
@@ -99,7 +103,7 @@ combinator cssdom::parse_combinator(const std::string& str){
 	throw std::logic_error(ss.str());
 }
 
-unsigned selector::calculate_specificity()const noexcept{
+unsigned simple_selector::calculate_specificity()const noexcept{
 	//TODO:
 	return 0;
 }

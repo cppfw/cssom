@@ -17,7 +17,12 @@ enum class combinator{
 
 combinator parse_combinator(const std::string& str);
 
-struct selector{
+/**
+ * @brief Simple CSS selector.
+ * The 'simple selector' term is defined in CSS spec.
+ * Simple selectors can be combined into a simple selector sequence with combinators.
+ */
+struct simple_selector{
 	/**
 	 * @brief Tag name.
 	 * The selector tag name can also be empty or *.
@@ -29,15 +34,22 @@ struct selector{
 	// TODO: attribute selectors, pseido-class, pseudo-element etc.
 
 	/**
-	 * @brief Combinator with previous selector in the selector sequence.
+	 * @brief Combinator with previous simple_selector in the simple_selector sequence.
 	 */
 	cssdom::combinator combinator = cssdom::combinator::descendant;
 
 	unsigned calculate_specificity()const noexcept;
 };
 
+/**
+ * @brief List of style properties corresponding to a CSS selector.
+ */
 typedef std::map<uint32_t, std::unique_ptr<utki::destructable>> property_list;
-typedef std::vector<selector> selector_sequence;
+
+/**
+ * @brief Simple selector sequence.
+ */
+typedef std::vector<simple_selector> selector_sequence;
 
 struct style{
 	selector_sequence selectors;

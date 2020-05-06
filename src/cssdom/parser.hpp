@@ -45,6 +45,7 @@ public:
 	virtual ~parser()noexcept{}
 
 	virtual void on_selector_start() = 0;
+	virtual void on_selector_end() = 0;
 	virtual void on_selector_tag(std::string&& str) = 0;
 	virtual void on_selector_class(std::string&& str) = 0;
 	virtual void on_combinator(std::string&& str) = 0;
