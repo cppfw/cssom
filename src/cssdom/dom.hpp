@@ -20,9 +20,9 @@ combinator parse_combinator(const std::string& str);
 /**
  * @brief Simple CSS selector.
  * The 'simple selector' term is defined in CSS spec.
- * Simple selectors can be combined into a simple selector sequence with combinators.
+ * selectors can be combined into a selector chain with combinators.
  */
-struct simple_selector{
+struct selector{
 	/**
 	 * @brief Tag name.
 	 * The selector tag name can also be empty or *.
@@ -34,7 +34,7 @@ struct simple_selector{
 	// TODO: attribute selectors, pseido-class, pseudo-element etc.
 
 	/**
-	 * @brief Combinator with previous simple_selector in the simple_selector sequence.
+	 * @brief Combinator with previous selector in the selector chain.
 	 */
 	cssdom::combinator combinator = cssdom::combinator::descendant;
 
@@ -47,12 +47,12 @@ struct simple_selector{
 typedef std::map<uint32_t, std::unique_ptr<utki::destructable>> property_list;
 
 /**
- * @brief Simple selector sequence.
+ * @brief Simple selector chain.
  */
-typedef std::vector<simple_selector> selector_sequence;
+typedef std::vector<selector> selector_chain;
 
 struct style{
-	selector_sequence selectors;
+	selector_chain selectors;
 	std::shared_ptr<property_list> properties;
 };
 

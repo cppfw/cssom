@@ -5,8 +5,8 @@ using namespace cssdom;
 
 namespace{
 class dom_parser : public parser{
-	simple_selector cur_simple_selector;
-	selector_sequence cur_selector_sequence;
+	selector cur_selector;
+	selector_chain cur_selector_chain;
 	std::shared_ptr<property_list> cur_property_list;
 	std::string cur_property_name;
 public:
@@ -23,43 +23,43 @@ public:
 			parse_property(parse_property)
 	{}
 
-	virtual void on_selector_end()override{
-		TRACE(<< "selector END" << std::endl)
+	virtual void on_selector_chain_end()override{
+		TRACE(<< "selector chain END" << std::endl)
 		if(!this->cur_property_list){
 			this->cur_property_list = std::make_shared<property_list>();
 		}
 		style s{
-			std::move(cur_selector_sequence),
+			std::move(cur_selector_chain),
 			cur_property_list // several selectors may refer the same property list, therefore not moving
 		};
 		doc.styles.emplace_back(std::move(s));
-		ASSERT(this->cur_selector_sequence.empty())
-		ASSERT(this->cur_simple_selector.classes.empty())
-		ASSERT(this->cur_simple_selector.tag.empty())
-		//TODO: add assert attributes of current simple selector are empty
+		ASSERT(this->cur_selector_chain.empty())
+		ASSERT(this->cur_selector.classes.empty())
+		ASSERT(this->cur_selector.tag.empty())
+		//TODO: add assert attributes of current selector are empty
 	}
 
-	virtual void on_simple_selector_end()override{
-		TRACE(<< "simple selector END" << std::endl)
-		this->cur_selector_sequence.push_back(std::move(this->cur_simple_selector));
+	virtual void on_selector_end()override{
+		TRACE(<< "selector END" << std::endl)
+		this->cur_selector_chain.push_back(std::move(this->cur_selector));
 	}
 
 	virtual void on_selector_tag(std::string&& str)override{
 		TRACE(<< "selector tag: " << str << std::endl)
-		this->cur_simple_selector.tag = std::move(str);
+		this->cur_selector.tag = std::move(str);
 	}
 
 	virtual void on_selector_class(std::string&& str)override{
 		TRACE(<< "selector class: " << str << std::endl)
-		this->cur_simple_selector.classes.push_back(std::move(str));
+		this->cur_selector.classes.push_back(std::move(str));
 	}
 
 	virtual void on_combinator(std::string&& str)override{
 		TRACE(<< "combinator: " << str << std::endl)
-		ASSERT(this->cur_simple_selector.classes.empty())
-		ASSERT(this->cur_simple_selector.tag.empty())
-		//TODO: add assert attributes of current simple selector are empty
-		this->cur_simple_selector.combinator = cssdom::parse_combinator(str);
+		ASSERT(this->cur_selector.classes.empty())
+		ASSERT(this->cur_selector.tag.empty())
+		//TODO: add assert attributes of current selector are empty
+		this->cur_selector.combinator = cssdom::parse_combinator(str);
 	}
 
 	virtual void on_style_properties_end()override{
@@ -146,7 +146,7 @@ combinator cssdom::parse_combinator(const std::string& str){
 	throw std::logic_error(ss.str());
 }
 
-unsigned simple_selector::calculate_specificity()const noexcept{
+unsigned selector::calculate_specificity()const noexcept{
 	//TODO:
 	return 0;
 }

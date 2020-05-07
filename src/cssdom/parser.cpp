@@ -98,14 +98,14 @@ void parser::parse_selector_tag(utki::span<char>::const_iterator& i, utki::span<
 			case '\t':
 				this->on_selector_tag(std::string(this->buf.data(), this->buf.size()));
 				this->buf.clear();
-				this->on_simple_selector_end();
+				this->on_selector_end();
 				this->cur_state = state::combinator;
 				return;
 			case '{':
 				this->on_selector_tag(std::string(this->buf.data(), this->buf.size()));
 				this->buf.clear();
-				this->on_simple_selector_end();
 				this->on_selector_end();
+				this->on_selector_chain_end();
 				this->cur_state = state::style_idle;
 				return;
 			// case '.':
@@ -175,7 +175,7 @@ void parser::parse_combinator(utki::span<char>::const_iterator& i, utki::span<ch
 					ss << "unexpected combinator encountered (" << std::string(this->buf.data(), this->buf.size()) << ") at line " << this->line;
 					throw malformed_css_error(ss.str());
 				}
-				this->on_selector_end();
+				this->on_selector_chain_end();
 				this->cur_state = state::style_idle;
 				return;
 			default:
