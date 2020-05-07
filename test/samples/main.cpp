@@ -57,8 +57,9 @@ int main(int argc, char** argv){
 				return std::make_unique<property_value>(std::move(value));
 			}
 		);
-	ASSERT_ALWAYS(doc.styles.empty())
-	//TODO:
+	ASSERT(!doc.styles.empty())
+
+	//TODO: write out the model
 
 	return 0;
 }

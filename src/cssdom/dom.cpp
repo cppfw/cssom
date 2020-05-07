@@ -4,7 +4,12 @@
 using namespace cssdom;
 
 namespace{
-struct dom_parser : public parser{
+class dom_parser : public parser{
+	simple_selector cur_simple_selector;
+	selector_sequence cur_selector_sequence;
+	std::shared_ptr<property_list> cur_property_list;
+	std::string cur_property_name;
+public:
 	document doc;
 
 	const std::map<std::string, uint32_t>& property_name_to_id_map;
@@ -18,43 +23,82 @@ struct dom_parser : public parser{
 			parse_property(parse_property)
 	{}
 
-	virtual void on_selector_start()override{
-		TRACE(<< "selector START" << std::endl)
-	}
-
 	virtual void on_selector_end()override{
 		TRACE(<< "selector END" << std::endl)
+		if(!this->cur_property_list){
+			this->cur_property_list = std::make_shared<property_list>();
+		}
+		style s{
+			std::move(cur_selector_sequence),
+			cur_property_list // several selectors may refer the same property list, therefore not moving
+		};
+		doc.styles.emplace_back(std::move(s));
+		ASSERT(this->cur_selector_sequence.empty())
+		ASSERT(this->cur_simple_selector.classes.empty())
+		ASSERT(this->cur_simple_selector.tag.empty())
+		//TODO: add assert attributes of current simple selector are empty
+	}
+
+	virtual void on_simple_selector_end()override{
+		TRACE(<< "simple selector END" << std::endl)
+		this->cur_selector_sequence.push_back(std::move(this->cur_simple_selector));
 	}
 
 	virtual void on_selector_tag(std::string&& str)override{
 		TRACE(<< "selector tag: " << str << std::endl)
+		this->cur_simple_selector.tag = std::move(str);
 	}
 
 	virtual void on_selector_class(std::string&& str)override{
 		TRACE(<< "selector class: " << str << std::endl)
+		this->cur_simple_selector.classes.push_back(std::move(str));
 	}
 
 	virtual void on_combinator(std::string&& str)override{
 		TRACE(<< "combinator: " << str << std::endl)
-	}
-
-	virtual void on_style_properties_start()override{
-		TRACE(<< "style properties START" << std::endl)
+		ASSERT(this->cur_simple_selector.classes.empty())
+		ASSERT(this->cur_simple_selector.tag.empty())
+		//TODO: add assert attributes of current simple selector are empty
+		this->cur_simple_selector.combinator = cssdom::parse_combinator(str);
 	}
 
 	virtual void on_style_properties_end()override{
 		TRACE(<< "style properties END" << std::endl)
+		this->cur_property_list.reset();
 	}
 
 	virtual void on_property_name(std::string&& str)override{
 		TRACE(<< "property name: " << str << std::endl)
+		ASSERT(this->cur_property_list)
+		this->cur_property_name = std::move(str);
 	}
 
 	virtual void on_property_value(std::string&& str)override{
 		TRACE(<< "property value: " << str << std::endl)
+		
+		ASSERT(!this->cur_property_name.empty())
+
+		auto i = this->property_name_to_id_map.find(this->cur_property_name);
+		this->cur_property_name.clear();
+		if(i == this->property_name_to_id_map.end()){
+			// unknown property name, ignore
+			return;
+		}
+
+		uint32_t id = i->second;
+
+		ASSERT(this->parse_property)
+		auto value = this->parse_property(id, std::move(str));
+
+		if(!value){
+			// could not parse style property value, ignore
+			return;
+		}
+
+		ASSERT(this->cur_property_list)
+		(*this->cur_property_list)[id] = std::move(value);
 	}
 };
-
 }
 
 document cssdom::read(
@@ -85,7 +129,6 @@ document cssdom::read(
 	}
 	
 	return std::move(p.doc);
-
 }
 
 combinator cssdom::parse_combinator(const std::string& str){

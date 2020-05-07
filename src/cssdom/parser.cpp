@@ -52,14 +52,12 @@ void parser::parse_idle(utki::span<char>::const_iterator& i, utki::span<char>::c
 			case '\t':
 				break;
 			case '.':
-				this->on_selector_start();
 				this->cur_state = state::selector_class;
 				return;
 			case '[':
 				ASSERT_INFO(false, "parsing of attribute selectors is not implemented")
 				break;
 			default:
-				this->on_selector_start();
 				this->buf.push_back(*i);
 				this->cur_state = state::selector_tag;
 				return;
@@ -100,11 +98,13 @@ void parser::parse_selector_tag(utki::span<char>::const_iterator& i, utki::span<
 			case '\t':
 				this->on_selector_tag(std::string(this->buf.data(), this->buf.size()));
 				this->buf.clear();
+				this->on_simple_selector_end();
 				this->cur_state = state::combinator;
 				return;
 			case '{':
 				this->on_selector_tag(std::string(this->buf.data(), this->buf.size()));
 				this->buf.clear();
+				this->on_simple_selector_end();
 				this->on_selector_end();
 				this->cur_state = state::style_idle;
 				return;
@@ -176,7 +176,6 @@ void parser::parse_combinator(utki::span<char>::const_iterator& i, utki::span<ch
 					throw malformed_css_error(ss.str());
 				}
 				this->on_selector_end();
-				this->on_style_properties_start();
 				this->cur_state = state::style_idle;
 				return;
 			default:
@@ -188,7 +187,7 @@ void parser::parse_combinator(utki::span<char>::const_iterator& i, utki::span<ch
 						this->cur_state = state::selector_class;
 						break;
 					case '[':
-						ASSERT_INFO(false, "attribute selectors are not implemented")
+						ASSERT_INFO_ALWAYS(false, "attribute selectors are not implemented")
 						break;
 					default:
 						this->buf.push_back(*i);
