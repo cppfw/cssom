@@ -15,8 +15,6 @@ enum class combinator{
 	subsequent_sibling
 };
 
-combinator parse_combinator(const std::string& str);
-
 /**
  * @brief Simple CSS selector.
  * The 'simple selector' term is defined in CSS spec.
@@ -58,12 +56,18 @@ struct style{
 
 struct document{
 	std::vector<style> styles;
+
+	void write(
+			papki::file& fi,
+			const std::map<uint32_t, std::string>& property_id_to_name_map,
+			const std::function<std::string(uint32_t, const utki::destructable&)>& property_value_to_string
+		);
 };
 
 document read(
 		const papki::file& fi,
 		const std::map<std::string, uint32_t>& property_name_to_id_map,
-		const std::function<std::unique_ptr<utki::destructable>(uint32_t, std::string&&)>& parse_property
+		const std::function<std::unique_ptr<utki::destructable>(uint32_t, std::string&&)>& parse_property_value
 	);
 
 }

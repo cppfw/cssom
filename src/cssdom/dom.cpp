@@ -4,6 +4,23 @@
 using namespace cssdom;
 
 namespace{
+combinator parse_combinator(const std::string& str){
+	if(str.empty()){
+		return combinator::descendant;
+	}else if(str == ">"){
+		return combinator::child;
+	}else if(str == "+"){
+		return combinator::next_sibling;
+	}else if(str == "~"){
+		return combinator::subsequent_sibling;
+	}
+	std::stringstream ss;
+	ss << "unknown combinator: " << str;
+	throw std::logic_error(ss.str());
+}
+}
+
+namespace{
 class dom_parser : public parser{
 	selector cur_selector;
 	selector_chain cur_selector_chain;
@@ -59,7 +76,7 @@ public:
 		ASSERT(this->cur_selector.classes.empty())
 		ASSERT(this->cur_selector.tag.empty())
 		//TODO: add assert attributes of current selector are empty
-		this->cur_selector.combinator = cssdom::parse_combinator(str);
+		this->cur_selector.combinator = ::parse_combinator(str);
 	}
 
 	virtual void on_style_properties_end()override{
@@ -131,19 +148,34 @@ document cssdom::read(
 	return std::move(p.doc);
 }
 
-combinator cssdom::parse_combinator(const std::string& str){
-	if(str.empty()){
-		return combinator::descendant;
-	}else if(str == ">"){
-		return combinator::child;
-	}else if(str == "+"){
-		return combinator::next_sibling;
-	}else if(str == "~"){
-		return combinator::subsequent_sibling;
+namespace{
+const std::array<uint8_t, 1> comma = {{uint8_t(',')}};
+}
+
+void document::write(
+		papki::file& fi,
+		const std::map<uint32_t, std::string>& property_id_to_name_map,
+		const std::function<std::string(uint32_t, const utki::destructable&)>& property_value_to_string
+	)
+{
+	papki::file::guard file_guard(fi, papki::file::mode::create);
+
+	for(auto i = this->styles.begin(); i != this->styles.end(); ++i){
+		auto selector_group_start_iter = i;
+		for(auto j = selector_group_start_iter; j != this->styles.end(); ++j){
+			if(j->properties.get() != selector_group_start_iter->properties.get()){
+				break;
+			}
+			++i;
+
+			if(j != selector_group_start_iter){
+				fi.write(utki::make_span(comma));
+			}
+			// TODO: write selector
+		}
+
+		// TODO: write properties
 	}
-	std::stringstream ss;
-	ss << "unknown combinator: " << str;
-	throw std::logic_error(ss.str());
 }
 
 unsigned selector::calculate_specificity()const noexcept{
