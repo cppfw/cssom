@@ -57,9 +57,15 @@ int main(int argc, char** argv){
 				return std::make_unique<property_value>(std::move(value));
 			}
 		);
-	ASSERT(!doc.styles.empty())
-
-	//TODO: write out the model
+	
+	doc.write(
+			papki::fs_file(out_filename),
+			utki::flip_map(property_name_to_id_map),
+			[](uint32_t id, const utki::destructable& value) -> std::string{
+				auto& v = static_cast<const property_value&>(value);
+				return v.value;
+			}
+		);
 
 	return 0;
 }

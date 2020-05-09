@@ -6,10 +6,16 @@ this_out_dir := build
 
 this_cxxflags += -Wall
 this_cxxflags += -Werror
-this_cxxflags += -DDEBUG
+this_cxxflags += -funsigned-char # the 'char' type is unsigned
 this_cxxflags += -fstrict-aliasing
 this_cxxflags += -std=c++14
 this_cxxflags += -g
+
+ifeq ($(debug),true)
+	this_cxxflags += -DDEBUG
+else
+	this_cxxflags += -O3
+endif
 
 this_srcs += main.cpp
 
@@ -40,8 +46,8 @@ $(.RECIPEPREFIX)@myci-running-test.sh $(this_test)
 $(.RECIPEPREFIX)$(a)cp $(d)../../src/build/*.dll $(d) || true
 $(.RECIPEPREFIX)$(a)for f in $(this_samples); do \
 	    echo "checking file $$$$f" && \
-	    LD_LIBRARY_PATH=$(d)../../src/build DYLD_LIBRARY_PATH=$$$$LD_LIBRARY_PATH $(d)./build/parsecss $$$$f && \
-	    cmp out.css $$$$f.css.cmp; \
+	    LD_LIBRARY_PATH=$(d)../../src/build DYLD_LIBRARY_PATH=$$$$LD_LIBRARY_PATH $(d)./build/parsecss --out-file=$(d)out.css $$$$f && \
+	    cmp $(d)out.css $$$$f.cmp; \
 	    if [ $$$$? -ne 0 ]; then myci-error.sh "parsed CSS did not match etalon sample"; exit 1; fi \
 	done
 $(.RECIPEPREFIX)@myci-passed.sh

@@ -21,6 +21,23 @@ combinator parse_combinator(const std::string& str){
 }
 
 namespace{
+std::string combinator_to_string(combinator c){
+	switch(c){
+		case combinator::descendant:
+			return " ";
+		case combinator::child:
+			return ">";
+		case combinator::next_sibling:
+			return "+";
+		case combinator::subsequent_sibling:
+			return "~";
+		default:
+			return "";
+	}
+}
+}
+
+namespace{
 class dom_parser : public parser{
 	selector cur_selector;
 	selector_chain cur_selector_chain;
@@ -150,6 +167,10 @@ document cssdom::read(
 
 namespace{
 const std::array<uint8_t, 1> comma = {{uint8_t(',')}};
+const std::array<uint8_t, 1> open_curly_brace = {{uint8_t('{')}};
+const std::array<uint8_t, 1> close_curly_brace = {{uint8_t('}')}};
+const std::array<uint8_t, 1> semicolon = {{uint8_t(';')}};
+const std::array<uint8_t, 1> colon = {{uint8_t(':')}};
 }
 
 void document::write(
@@ -162,6 +183,8 @@ void document::write(
 
 	for(auto i = this->styles.begin(); i != this->styles.end(); ++i){
 		auto selector_group_start_iter = i;
+
+		// go through selectors which refer to the same property set (selectors in the same selector group)
 		for(auto j = selector_group_start_iter; j != this->styles.end(); ++j){
 			if(j->properties.get() != selector_group_start_iter->properties.get()){
 				break;
@@ -171,10 +194,40 @@ void document::write(
 			if(j != selector_group_start_iter){
 				fi.write(utki::make_span(comma));
 			}
-			// TODO: write selector
+
+			// go through selectors in the selector chain
+			for(auto s = j->selectors.begin(); s != j->selectors.end(); ++s){
+				if(s != j->selectors.begin()){
+					// write combinator
+					auto c = combinator_to_string(s->combinator);
+					fi.write(utki::make_span(reinterpret_cast<const uint8_t*>(c.data()), c.size()));
+				}
+				// write selector
+				fi.write(utki::make_span(s->tag));
+
+				// TODO: write classes
+				// TODO: write attributes
+			}
 		}
 
-		// TODO: write properties
+		// write properties
+		fi.write(utki::make_span(open_curly_brace));
+
+		auto props = selector_group_start_iter->properties.get();
+		ASSERT(props)
+		for(auto& prop : *props){
+			auto name_iter = property_id_to_name_map.find(prop.first);
+			if(name_iter == property_id_to_name_map.end()){
+				continue;
+			}
+			fi.write(utki::make_span(name_iter->second));
+			fi.write(utki::make_span(colon));
+			auto value = property_value_to_string(prop.first, *prop.second);
+			fi.write(utki::make_span(value));
+			fi.write(utki::make_span(semicolon));
+		}
+
+		fi.write(utki::make_span(close_curly_brace));
 	}
 }
 
