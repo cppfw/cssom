@@ -22,8 +22,14 @@ enum class combinator{
  */
 struct selector{
 	/**
+	 * @brief Id selector.
+	 * The id selector is specified with '#' in the CSS.
+	 */
+	std::string id;
+
+	/**
 	 * @brief Tag name.
-	 * The selector tag name can also be empty or *.
+	 * The selector tag name can also be empty or '*'.
 	 */
 	std::string tag;
 
@@ -35,8 +41,6 @@ struct selector{
 	 * @brief Combinator with previous selector in the selector chain.
 	 */
 	cssdom::combinator combinator = cssdom::combinator::descendant;
-
-	unsigned calculate_specificity()const noexcept;
 };
 
 /**
@@ -52,6 +56,8 @@ typedef std::vector<selector> selector_chain;
 struct style{
 	selector_chain selectors;
 	std::shared_ptr<property_list> properties;
+
+	unsigned calculate_specificity()const noexcept;
 };
 
 struct document{

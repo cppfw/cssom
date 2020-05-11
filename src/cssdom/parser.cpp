@@ -2,6 +2,8 @@
 
 #include <sstream>
 
+#include <utki/string.hpp>
+
 using namespace cssdom;
 
 void parser::feed(const utki::span<char> data){
@@ -96,27 +98,29 @@ void parser::parse_selector_tag(utki::span<char>::const_iterator& i, utki::span<
 			case ' ':
 			case '\r':
 			case '\t':
-				this->on_selector_tag(std::string(this->buf.data(), this->buf.size()));
+				this->on_selector_tag(utki::make_string(utki::make_span(this->buf)));
 				this->buf.clear();
 				this->on_selector_end();
 				this->cur_state = state::combinator;
 				return;
 			case '{':
-				this->on_selector_tag(std::string(this->buf.data(), this->buf.size()));
+				this->on_selector_tag(utki::make_string(utki::make_span(this->buf)));
 				this->buf.clear();
 				this->on_selector_end();
 				this->on_selector_chain_end();
 				this->cur_state = state::style_idle;
 				return;
-			// case '.':
-			// 	this->cur_state = state::selector_class;
-			// 	return;
-			// case '[':
-			// 	ASSERT_INFO(false, "parsing of attribute selectors is not implemented")
-			// 	break;
+			case '.':
+				this->on_selector_tag(utki::make_string(utki::make_span(this->buf)));
+				this->buf.clear();
+				this->cur_state = state::selector_class;
+				return;
+			case '[':
+				ASSERT_INFO(false, "parsing of attribute selectors is not implemented")
+				break;
 			default:
 				this->buf.push_back(*i);
-				return;
+				break;
 		}
 	}
 }
@@ -124,22 +128,33 @@ void parser::parse_selector_tag(utki::span<char>::const_iterator& i, utki::span<
 void parser::parse_selector_class(utki::span<char>::const_iterator& i, utki::span<char>::const_iterator& e){
 	for(; i != e; ++i){
 		switch(*i){
-			// case '\n':
-			//	++this->line;
-			// case ' ':
-			// case '\r':
-			// case '\t':
-			// 	break;
-			// case '.':
-			// 	this->cur_state = state::selector_class;
-			// 	return;
-			// case '[':
-			// 	ASSERT_INFO(false, "parsing of attribute selectors is not implemented")
-			// 	break;
-			// default:
-			// 	this->buf.push_back(*i);
-			// 	this->cur_state = state::selector_tag;
-			// 	return;
+			case '\n':
+				++this->line;
+			case ' ':
+			case '\r':
+			case '\t':
+				this->on_selector_class(utki::make_string(utki::make_span(this->buf)));
+				this->buf.clear();
+				this->on_selector_end();
+				this->cur_state = state::combinator;
+				return;
+			case '.':
+				this->on_selector_class(utki::make_string(utki::make_span(this->buf)));
+				this->buf.clear();
+				break;
+			case '[':
+				ASSERT_INFO(false, "parsing of attribute selectors is not implemented")
+				break;
+			case '{':
+				this->on_selector_class(utki::make_string(utki::make_span(this->buf)));
+				this->buf.clear();
+				this->on_selector_end();
+				this->on_selector_chain_end();
+				this->cur_state = state::style_idle;
+				return;
+			default:
+				this->buf.push_back(*i);
+				break;
 		}
 	}
 }
@@ -155,7 +170,7 @@ void parser::parse_combinator(utki::span<char>::const_iterator& i, utki::span<ch
 				if(this->buf.empty()){
 					break;
 				}
-				this->on_combinator(std::string(this->buf.data(), this->buf.size()));
+				this->on_combinator(utki::make_string(utki::make_span(this->buf)));
 				this->buf.clear();
 				this->cur_state = state::idle;
 				return;
@@ -164,7 +179,7 @@ void parser::parse_combinator(utki::span<char>::const_iterator& i, utki::span<ch
 			case '~':
 				if(!this->buf.empty()){
 					std::stringstream ss;
-					ss << "unknown combinator encountered (" << std::string(this->buf.data(), this->buf.size()) << *i << ") at line " << this->line;
+					ss << "unknown combinator encountered (" << utki::make_string(utki::make_span(this->buf)) << *i << ") at line " << this->line;
 					throw malformed_css_error(ss.str());
 				}
 				this->buf.push_back(*i);
@@ -172,14 +187,14 @@ void parser::parse_combinator(utki::span<char>::const_iterator& i, utki::span<ch
 			case '{':
 				if(!this->buf.empty()){
 					std::stringstream ss;
-					ss << "unexpected combinator encountered (" << std::string(this->buf.data(), this->buf.size()) << ") at line " << this->line;
+					ss << "unexpected combinator encountered (" << utki::make_string(utki::make_span(this->buf)) << ") at line " << this->line;
 					throw malformed_css_error(ss.str());
 				}
 				this->on_selector_chain_end();
 				this->cur_state = state::style_idle;
 				return;
 			default:
-				this->on_combinator(std::string(this->buf.data(), this->buf.size()));
+				this->on_combinator(utki::make_string(utki::make_span(this->buf)));
 				this->buf.clear();
 
 				switch(*i){
@@ -211,12 +226,12 @@ void parser::parse_property_name(utki::span<char>::const_iterator& i, utki::span
 				if(this->buf.empty()){
 					break;
 				}
-				this->on_property_name(std::string(this->buf.data(), this->buf.size()));
+				this->on_property_name(utki::make_string(utki::make_span(this->buf)));
 				this->buf.clear();
 				this->cur_state = state::property_value_delimiter;
 				return;
 			case ':':
-				this->on_property_name(std::string(this->buf.data(), this->buf.size()));
+				this->on_property_name(utki::make_string(utki::make_span(this->buf)));
 				this->buf.clear();
 				this->cur_state = state::property_value;
 				return;
@@ -259,12 +274,12 @@ void parser::parse_property_value(utki::span<char>::const_iterator& i, utki::spa
 				if(this->buf.empty()){
 					break;
 				}
-				this->on_property_value(std::string(this->buf.data(), this->buf.size()));
+				this->on_property_value(utki::make_string(utki::make_span(this->buf)));
 				this->buf.clear();
 				this->cur_state = state::property_value_terminator;
 				return;
 			case ';':
-				this->on_property_value(std::string(this->buf.data(), this->buf.size()));
+				this->on_property_value(utki::make_string(utki::make_span(this->buf)));
 				this->buf.clear();
 				this->cur_state = state::style_idle;
 				return;

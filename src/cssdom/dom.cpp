@@ -166,11 +166,12 @@ document cssdom::read(
 }
 
 namespace{
-const std::array<uint8_t, 1> comma = {{uint8_t(',')}};
-const std::array<uint8_t, 1> open_curly_brace = {{uint8_t('{')}};
-const std::array<uint8_t, 1> close_curly_brace = {{uint8_t('}')}};
-const std::array<uint8_t, 1> semicolon = {{uint8_t(';')}};
-const std::array<uint8_t, 1> colon = {{uint8_t(':')}};
+auto comma = utki::make_span(", ");
+auto period = utki::make_span(".");
+auto open_curly_brace = utki::make_span(" {\n\t");
+auto close_curly_brace = utki::make_span("\n}\n");
+auto semicolon = utki::make_span("; ");
+auto colon = utki::make_span(": ");
 }
 
 void document::write(
@@ -187,12 +188,13 @@ void document::write(
 		// go through selectors which refer to the same property set (selectors in the same selector group)
 		for(auto j = selector_group_start_iter; j != this->styles.end(); ++j){
 			if(j->properties.get() != selector_group_start_iter->properties.get()){
+				ASSERT(j > i)
+				i = --j;
 				break;
 			}
-			++i;
 
 			if(j != selector_group_start_iter){
-				fi.write(utki::make_span(comma));
+				fi.write(comma);
 			}
 
 			// go through selectors in the selector chain
@@ -202,16 +204,21 @@ void document::write(
 					auto c = combinator_to_string(s->combinator);
 					fi.write(utki::make_span(reinterpret_cast<const uint8_t*>(c.data()), c.size()));
 				}
-				// write selector
+				// write selector tag
 				fi.write(utki::make_span(s->tag));
 
-				// TODO: write classes
+				// write selctor classes
+				for(auto& c : s->classes){
+					fi.write(period);
+					fi.write(utki::make_span(c));
+				}
+
 				// TODO: write attributes
 			}
 		}
 
 		// write properties
-		fi.write(utki::make_span(open_curly_brace));
+		fi.write(open_curly_brace);
 
 		auto props = selector_group_start_iter->properties.get();
 		ASSERT(props)
@@ -221,17 +228,17 @@ void document::write(
 				continue;
 			}
 			fi.write(utki::make_span(name_iter->second));
-			fi.write(utki::make_span(colon));
+			fi.write(colon);
 			auto value = property_value_to_string(prop.first, *prop.second);
 			fi.write(utki::make_span(value));
-			fi.write(utki::make_span(semicolon));
+			fi.write(semicolon);
 		}
 
-		fi.write(utki::make_span(close_curly_brace));
+		fi.write(close_curly_brace);
 	}
 }
 
-unsigned selector::calculate_specificity()const noexcept{
+unsigned style::calculate_specificity()const noexcept{
 	//TODO:
 	return 0;
 }
