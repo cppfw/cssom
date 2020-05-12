@@ -6,7 +6,7 @@
 
 using namespace cssdom;
 
-void parser::feed(const utki::span<char> data){
+void parser::feed(utki::span<const char> data){
 	for(auto i = data.begin(), e = data.end(); i != e; ++i){
 		switch(this->cur_state){
 			case state::idle:

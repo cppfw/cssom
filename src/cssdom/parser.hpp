@@ -57,14 +57,14 @@ public:
 	 * @brief feed UTF-8 data to parser.
 	 * @param data - data to be fed to parser.
 	 */
-	void feed(const utki::span<char> data);
+	void feed(utki::span<const char> data);
 	
 	/**
 	 * @brief feed UTF-8 data to parser.
 	 * @param data - data to be fed to parser.
 	 */
 	void feed(const utki::span<uint8_t> data){
-		this->feed(utki::make_span(reinterpret_cast<const char*>(&*data.begin()), data.size()));
+		this->feed(utki::make_span(reinterpret_cast<const char*>(data.data()), data.size()));
 	}
 	
 	/**

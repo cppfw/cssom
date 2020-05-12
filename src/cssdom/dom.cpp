@@ -238,7 +238,47 @@ void document::write(
 	}
 }
 
+namespace{
+unsigned calc_dec_order(unsigned x){
+	unsigned ret = 1;
+
+	while(x / ret){
+		ret *= 10;
+	}
+
+	return ret;
+}
+}
+
 unsigned style::calculate_specificity()const noexcept{
-	//TODO:
-	return 0;
+	// According to CSS spec (https://www.w3.org/TR/2018/CR-selectors-3-20180130/#specificity) we need to:
+	// - count the number of ID selectors in the selector (= a)
+    // - count the number of class selectors, attributes selectors, and pseudo-classes in the selector (= b)
+    // - count the number of type selectors and pseudo-elements in the selector (= c)
+    // - ignore the universal selector
+	// and then concatenate the thee numbers 'a:b:c' to get the overall selector chain specificity.
+
+	unsigned num_ids = 0;
+	unsigned num_classes = 0;
+	unsigned num_types = 0;
+	for(auto& s : this->selectors){
+		if(!s.id.empty()){
+			++num_ids;
+		}
+		if(!s.tag.empty()){
+			if(s.tag.back() != '*'){ // if not a universal selector
+				++num_types;
+			}
+			//TODO: add pseudo-elements to num_types
+		}
+		num_classes += s.classes.size();
+		// TODO: add num attributes and pseudo-classes to num_classes
+	}
+
+	// concatenate decimal numbers 'num_ids:num_classes:num_types'
+
+	unsigned num_classes_shift = calc_dec_order(num_types);
+	unsigned num_ids_shift = calc_dec_order(num_classes) + num_classes_shift;
+
+	return num_types + num_classes_shift * num_classes + num_ids_shift * num_ids;
 }
