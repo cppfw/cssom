@@ -66,6 +66,7 @@ public:
 			std::move(cur_selector_chain),
 			cur_property_list // several selectors may refer the same property list, therefore not moving
 		};
+		s.update_specificity();
 		doc.styles.emplace_back(std::move(s));
 		ASSERT(this->cur_selector_chain.empty())
 		ASSERT(this->cur_selector.classes.empty())
@@ -162,6 +163,8 @@ document cssdom::read(
 		}
 	}
 	
+	p.doc.sort_styles_by_specificity();
+
 	return std::move(p.doc);
 }
 
@@ -238,6 +241,20 @@ void document::write(
 	}
 }
 
+void document::sort_styles_by_specificity(){
+	std::sort(
+			this->styles.begin(),
+			this->styles.end(),
+			[](
+					const decltype(this->styles)::value_type& a,
+					const decltype(this->styles)::value_type& b
+				) -> bool
+			{
+				return a.specificity > b.specificity; // descending order
+			}
+		);
+}
+
 namespace{
 unsigned calc_dec_order(unsigned x){
 	unsigned ret = 1;
@@ -250,7 +267,7 @@ unsigned calc_dec_order(unsigned x){
 }
 }
 
-unsigned style::calculate_specificity()const noexcept{
+void style::update_specificity()noexcept{
 	// According to CSS spec (https://www.w3.org/TR/2018/CR-selectors-3-20180130/#specificity) we need to:
 	// - count the number of ID selectors in the selector (= a)
     // - count the number of class selectors, attributes selectors, and pseudo-classes in the selector (= b)
@@ -280,5 +297,5 @@ unsigned style::calculate_specificity()const noexcept{
 	unsigned num_classes_shift = calc_dec_order(num_types);
 	unsigned num_ids_shift = calc_dec_order(num_classes) + num_classes_shift;
 
-	return num_types + num_classes_shift * num_classes + num_ids_shift * num_ids;
+	this->specificity = num_types + num_classes_shift * num_classes + num_ids_shift * num_ids;
 }

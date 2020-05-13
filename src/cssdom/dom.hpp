@@ -57,7 +57,9 @@ struct style{
 	selector_chain selectors;
 	std::shared_ptr<property_list> properties;
 
-	unsigned calculate_specificity()const noexcept;
+	unsigned specificity;
+
+	void update_specificity()noexcept;
 };
 
 struct document{
@@ -77,6 +79,8 @@ struct document{
 	{
 		this->write(fi, property_id_to_name_map, property_value_to_string);
 	}
+
+	void sort_styles_by_specificity();
 };
 
 document read(
