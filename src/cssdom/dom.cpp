@@ -181,7 +181,7 @@ void document::write(
 		papki::file& fi,
 		const std::map<uint32_t, std::string>& property_id_to_name_map,
 		const std::function<std::string(uint32_t, const utki::destructable&)>& property_value_to_string
-	)
+	)const
 {
 	papki::file::guard file_guard(fi, papki::file::mode::create);
 
