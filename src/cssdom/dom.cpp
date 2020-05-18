@@ -299,3 +299,11 @@ void style::update_specificity()noexcept{
 
 	this->specificity = num_types + num_classes_shift * num_classes + num_ids_shift * num_ids;
 }
+
+utki::destructable* document::get_property_value(xml_dom_crawler& crawler, uint32_t property_id){
+	// TODO:
+
+
+	
+	return nullptr;
+}

@@ -73,6 +73,26 @@ struct styleable{
 	virtual ~styleable()noexcept{}
 };
 
+struct xml_dom_crawler{
+	virtual const styleable& get() = 0;
+
+	/**
+	 * @brief Move crawler to parent node.
+	 * @return true if moved.
+	 * @return false if already at root node, could not move to parent node.
+	 */
+	virtual bool move_up() = 0;
+
+	/**
+	 * @brief Move crawler to preceding child.
+	 * @return true if moved.
+	 * @return false if already at the first node, could not move to the preceding node.
+	 */
+	virtual bool move_left() = 0;
+
+	virtual ~xml_dom_crawler()noexcept{}
+};
+
 struct document{
 	std::vector<style> styles;
 
@@ -92,6 +112,13 @@ struct document{
 	}
 
 	void sort_styles_by_specificity();
+
+	/**
+	 * @brief Get property value for given xml document node.
+	 * @return pointer to the property value if given node has matched to some CSS selector which defines requested property.
+	 * @return nullptr if given node has not matched to any CSS selector or no matching selectors define requested property.
+	 */
+	utki::destructable* get_property_value(xml_dom_crawler& crawler, uint32_t property_id);
 };
 
 document read(
