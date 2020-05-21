@@ -19,7 +19,7 @@ endif
 
 this_srcs += $(call prorab-src-dir, .)
 
-this_ldlibs += -lcssdom -lpapki -lclargs -lstdc++
+this_ldlibs += -lcssdom -lpapki -lstdc++
 this_ldflags += -L$(d)../../src/build
 
 ifeq ($(os), linux)
