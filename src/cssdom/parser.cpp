@@ -303,9 +303,13 @@ void parser::parse_property_value_terminator(utki::span<char>::const_iterator& i
 			case ';':
 				this->cur_state = state::style_idle;
 				return;
+			case '}':
+				this->on_style_properties_end();
+				this->cur_state = state::idle;
+				return;
 			default:
 				std::stringstream ss;
-				ss << "unexpected characters after style property value at line " << this->line;
+				ss << "unexpected character (" << *i << ") after style property value at line " << this->line;
 				throw malformed_css_error(ss.str());
 		}
 	}

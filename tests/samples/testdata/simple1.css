@@ -1,0 +1,15 @@
+body.foo.bar {
+    background-color: green;
+}
+
+body.foo h1.bar{
+    background-color: green;
+}
+
+.foo{
+    background-color: green;
+}
+
+.foo h1.bar{
+    background-color: green;
+}

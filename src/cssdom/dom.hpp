@@ -65,10 +65,10 @@ struct style{
 };
 
 struct styleable{
-	virtual std::string& get_id() = 0;
-	virtual std::string& get_tag() = 0;
+	virtual const std::string& get_id()const = 0;
+	virtual const std::string& get_tag()const = 0;
 
-	virtual utki::span<const std::string> get_classes() = 0;
+	virtual utki::span<const std::string> get_classes()const = 0;
 
 	virtual ~styleable()noexcept{}
 };

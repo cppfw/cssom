@@ -1,0 +1,36 @@
+Source: libcssdom
+Section: libs
+Priority: extra
+Maintainer: Ivan Gagis <igagis@gmail.com>
+Build-Depends: debhelper (>= 9), prorab,
+		libc6-dev, libutki-dev, libpapki-dev
+Build-Depends-Indep: doxygen
+Standards-Version: 3.9.2
+
+Package: libcssdom$(soname)
+Section: libs
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: CSS document object model library.
+ Some library.
+
+Package: libcssdom$(soname)-dbg
+Section: debug
+Architecture: any
+Depends: libcssdom$(soname) (= ${binary:Version}), ${misc:Depends}
+Description: debugging symbols for libcssdom$(soname) package.
+
+Package: libcssdom-dev
+Section: libdevel
+Architecture: any
+Depends: libcssdom$(soname) (= ${binary:Version}), libcssdom$(soname)-dbg (= ${binary:Version}), ${misc:Depends}
+Suggests: libcssdom-doc
+Description: CSS document object model library.
+ CSS document object model cross-platform C++ library.
+
+Package: libcssdom-doc
+Section: doc
+Architecture: all
+Depends: ${misc:Depends}
+Description: documentation for libcssdom library.
+ For more details see description to libcssdom-dev package.
