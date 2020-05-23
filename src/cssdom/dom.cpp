@@ -326,20 +326,76 @@ bool selector::is_matching(const styleable& node)const{
 	return true;
 }
 
-bool style::is_matching(xml_dom_crawler& crawler)const{
-	// for(auto iprevious = this->selectors.rbegin(); i != this->selectors.rend(); ++i){
-	// 	if(!i->is_matching(crawler.get())){
-	// 		return false;
-	// 	}
+namespace{
+bool is_descendant_matching(xml_dom_crawler& crawler, const selector& sel){
+	while(crawler.move_up()){
+		if(sel.is_matching(crawler.get())){
+			return true;
+		}
+	}
+	return false;
+}
+}
 
-	// 	switch (i->combinator)
-	// 	{
-	// 		case combinator::descendant:
-	// 			break;
-	// 		case 
-	// 	}
-	// 	// TODO:
-	// }
+namespace{
+bool is_child_matching(xml_dom_crawler& crawler, const selector& sel){
+	if(!crawler.move_up()){
+		return false;
+	}
+	return sel.is_matching(crawler.get());
+}
+}
+
+namespace{
+bool is_next_sibling_matching(xml_dom_crawler& crawler, const selector& sel){
+	if(!crawler.move_left()){
+		return false;
+	}
+	return sel.is_matching(crawler.get());
+}
+}
+
+namespace{
+bool is_subsequent_sibling_matching(xml_dom_crawler& crawler, const selector& sel){
+	while(crawler.move_left()){
+		if(sel.is_matching(crawler.get())){
+			return true;
+		}
+	}
+	return false;
+}
+}
+
+bool style::is_matching(xml_dom_crawler& crawler)const{
+	for(auto i = this->selectors.rbegin(); i != this->selectors.rend(); ++i){
+		switch(i->combinator){
+			case combinator::none:
+				if(!i->is_matching(crawler.get())){
+					return false;
+				}
+				break;
+			case combinator::descendant:
+				if(!is_descendant_matching(crawler, *i)){
+					return false;
+				}
+				break;
+			case combinator::child:
+				if(!is_child_matching(crawler, *i)){
+					return false;
+				}
+				break;
+			case combinator::next_sibling:
+				if(!is_next_sibling_matching(crawler, *i)){
+					return false;
+				}
+				break;
+			case combinator::subsequent_sibling:
+				if(!is_subsequent_sibling_matching(crawler, *i)){
+					return false;
+				}
+				break;
+		}
+	}
 
 	return true;
 }
