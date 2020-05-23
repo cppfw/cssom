@@ -300,10 +300,56 @@ void style::update_specificity()noexcept{
 	this->specificity = num_types + num_classes_shift * num_classes + num_ids_shift * num_ids;
 }
 
+bool selector::is_matching(const styleable& node)const{
+	if(!this->tag.empty() && this->tag.back() != '*'){
+		if(this->tag != node.get_tag()){
+			return false;
+		}
+	}
+
+	if(!this->id.empty()){
+		if(this->id != node.get_id()){
+			return false;
+		}
+	}
+
+	auto nc = node.get_classes();
+	for(auto& cls : this->classes){
+		if(std::find(nc.begin(), nc.end(), cls) == nc.end()){
+			return false;
+		}
+	}
+
+	// TODO: attribute selectors
+
+	return true;
+}
+
+bool style::is_matching(xml_dom_crawler& crawler)const{
+	// for(auto iprevious = this->selectors.rbegin(); i != this->selectors.rend(); ++i){
+	// 	if(!i->is_matching(crawler.get())){
+	// 		return false;
+	// 	}
+
+	// 	switch (i->combinator)
+	// 	{
+	// 		case combinator::descendant:
+	// 			break;
+	// 		case 
+	// 	}
+	// 	// TODO:
+	// }
+
+	return true;
+}
+
 utki::destructable* document::get_property_value(xml_dom_crawler& crawler, uint32_t property_id){
+	// for(auto& s : this->styles){
+	// 	crawler.reset();
+		
+	// }
+
 	// TODO:
-
-
 	
 	return nullptr;
 }

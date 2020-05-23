@@ -9,6 +9,42 @@
 
 namespace cssdom{
 
+struct styleable{
+	virtual const std::string& get_id()const = 0;
+	virtual const std::string& get_tag()const = 0;
+
+	virtual utki::span<const std::string> get_classes()const = 0;
+
+	virtual ~styleable()noexcept{}
+};
+
+struct xml_dom_crawler{
+	virtual const styleable& get() = 0;
+
+	/**
+	 * @brief Move crawler to parent node.
+	 * @return true if moved.
+	 * @return false if already at root node, could not move to parent node.
+	 */
+	virtual bool move_up() = 0;
+
+	/**
+	 * @brief Move crawler to preceding child.
+	 * @return true if moved.
+	 * @return false if already at the first node, could not move to the preceding node.
+	 */
+	virtual bool move_left() = 0;
+
+	/**
+	 * @brief Reset the crawler.
+	 * This function should reset the crawler to its initial state,
+	 * so that it points to the document node for which the property value is queried.
+	 */
+	virtual void reset() = 0;
+
+	virtual ~xml_dom_crawler()noexcept{}
+};
+
 //TODO: doxygen all
 enum class combinator{
 	descendant,
@@ -43,6 +79,8 @@ struct selector{
 	 * @brief Combinator with previous selector in the selector chain.
 	 */
 	cssdom::combinator combinator = cssdom::combinator::descendant;
+
+	bool is_matching(const styleable& node)const;
 };
 
 /**
@@ -62,35 +100,8 @@ struct style{
 	unsigned specificity;
 
 	void update_specificity()noexcept;
-};
 
-struct styleable{
-	virtual const std::string& get_id()const = 0;
-	virtual const std::string& get_tag()const = 0;
-
-	virtual utki::span<const std::string> get_classes()const = 0;
-
-	virtual ~styleable()noexcept{}
-};
-
-struct xml_dom_crawler{
-	virtual const styleable& get() = 0;
-
-	/**
-	 * @brief Move crawler to parent node.
-	 * @return true if moved.
-	 * @return false if already at root node, could not move to parent node.
-	 */
-	virtual bool move_up() = 0;
-
-	/**
-	 * @brief Move crawler to preceding child.
-	 * @return true if moved.
-	 * @return false if already at the first node, could not move to the preceding node.
-	 */
-	virtual bool move_left() = 0;
-
-	virtual ~xml_dom_crawler()noexcept{}
+	bool is_matching(xml_dom_crawler& crawler)const;
 };
 
 struct document{
