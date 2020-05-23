@@ -5,21 +5,7 @@
 
 #include <memory>
 
-enum class property : uint32_t{
-	background_color,
-	background_image
-};
-
-const std::map<std::string, uint32_t> property_name_to_id_map = {
-	{"background-color", uint32_t(property::background_color)},
-	{"background-image", uint32_t(property::background_image)}
-};
-
-struct property_value : public utki::destructable{
-	std::string value;
-
-	property_value(std::string&& value) : value(std::move(value)) {}
-};
+#include "../harness/properties.hpp"
 
 int main(int argc, char** argv){
 	bool help = false;

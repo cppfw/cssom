@@ -6,6 +6,8 @@
 
 #include <utki/tree.hpp>
 
+#include "../harness/properties.hpp"
+
 namespace{
 class dom_node : public cssdom::styleable{
 public:
@@ -36,24 +38,6 @@ public:
 	utki::span<const std::string> get_classes()const override{
 		return utki::make_span(this->classes);
 	}
-};
-}
-
-namespace{
-enum class property_id{
-	fill,
-	stroke,
-	stroke_width
-};
-std::map<std::string, uint32_t> property_name_to_id_map{
-	{"fill", uint32_t(property_id::fill)},
-	
-};
-}
-
-namespace{
-struct property_value : public utki::destructable{
-	std::string value;
 };
 }
 
@@ -137,8 +121,7 @@ int main(int argc, char** argv){
 				papki::span_file(utki::make_span(css)),
 				property_name_to_id_map,
 				[](uint32_t id, std::string&& v) -> std::unique_ptr<utki::destructable> {
-					auto ret = std::make_unique<property_value>();
-					ret->value = std::move(v);
+					auto ret = std::make_unique<property_value>(std::move(v));
 					return ret;
 				}
 			);
@@ -152,13 +135,13 @@ int main(int argc, char** argv){
 
 		crawler cr(dom, {0, 0});
 		
-		// auto p = css_dom.get_property_value(cr, uint32_t(property_id::stroke));
-		// ASSERT_ALWAYS(p);
+		auto p = css_dom.get_property_value(cr, uint32_t(property_id::stroke));
+		ASSERT_ALWAYS(p);
 
-		// ASSERT_ALWAYS(dynamic_cast<property_value*>(p))
+		ASSERT_ALWAYS(dynamic_cast<property_value*>(p))
 
-		// auto pv = static_cast<property_value*>(p);
-		// ASSERT_ALWAYS(pv->value == "blue")
+		auto pv = static_cast<property_value*>(p);
+		ASSERT_ALWAYS(pv->value == "blue")
 	}
 
 	return 0;

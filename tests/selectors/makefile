@@ -18,6 +18,7 @@ else
 endif
 
 this_srcs += $(call prorab-src-dir, .)
+this_srcs += ../harness/properties.cpp
 
 this_ldlibs += -lcssdom -lpapki -lstdc++
 this_ldflags += -L$(d)../../src/build

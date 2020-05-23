@@ -401,12 +401,16 @@ bool style::is_matching(xml_dom_crawler& crawler)const{
 }
 
 utki::destructable* document::get_property_value(xml_dom_crawler& crawler, uint32_t property_id){
-	// for(auto& s : this->styles){
-	// 	crawler.reset();
+	for(auto& s : this->styles){
+		crawler.reset();
 		
-	// }
-
-	// TODO:
+		if(s.is_matching(crawler)){
+			auto i = s.properties->find(property_id);
+			if(i != s.properties->end()){
+				return i->second.get();
+			}
+		}
+	}
 	
 	return nullptr;
 }

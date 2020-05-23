@@ -18,6 +18,7 @@ else
 endif
 
 this_srcs += main.cpp
+this_srcs += ../harness/properties.cpp
 
 this_ldlibs += -lcssdom -lpapki -lclargs -lstdc++
 this_ldflags += -L$(d)../../src/build
