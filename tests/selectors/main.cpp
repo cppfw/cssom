@@ -152,13 +152,13 @@ int main(int argc, char** argv){
 
 		crawler cr(dom, {0, 0});
 		
-		auto p = css_dom.get_property_value(cr, uint32_t(property_id::stroke));
-		ASSERT_ALWAYS(p);
+		// auto p = css_dom.get_property_value(cr, uint32_t(property_id::stroke));
+		// ASSERT_ALWAYS(p);
 
-		ASSERT_ALWAYS(dynamic_cast<property_value*>(p))
+		// ASSERT_ALWAYS(dynamic_cast<property_value*>(p))
 
-		auto pv = static_cast<property_value*>(p);
-		ASSERT_ALWAYS(pv->value == "blue")
+		// auto pv = static_cast<property_value*>(p);
+		// ASSERT_ALWAYS(pv->value == "blue")
 	}
 
 	return 0;

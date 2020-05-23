@@ -47,6 +47,7 @@ struct xml_dom_crawler{
 
 //TODO: doxygen all
 enum class combinator{
+	none,
 	descendant,
 	child,
 	next_sibling,
@@ -76,9 +77,9 @@ struct selector{
 	// TODO: attribute selectors, pseido-class, pseudo-element etc.
 
 	/**
-	 * @brief Combinator with previous selector in the selector chain.
+	 * @brief Combinator with next selector in the selector chain.
 	 */
-	cssdom::combinator combinator = cssdom::combinator::descendant;
+	cssdom::combinator combinator = cssdom::combinator::none;
 
 	bool is_matching(const styleable& node)const;
 };

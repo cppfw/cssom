@@ -26,11 +26,12 @@ std::string combinator_to_string(combinator c){
 		case combinator::descendant:
 			return " ";
 		case combinator::child:
-			return ">";
+			return " > ";
 		case combinator::next_sibling:
-			return "+";
+			return " + ";
 		case combinator::subsequent_sibling:
-			return "~";
+			return " ~ ";
+		case combinator::none:
 		default:
 			return "";
 	}
@@ -94,7 +95,8 @@ public:
 		ASSERT(this->cur_selector.classes.empty())
 		ASSERT(this->cur_selector.tag.empty())
 		//TODO: add assert attributes of current selector are empty
-		this->cur_selector.combinator = ::parse_combinator(str);
+		ASSERT(!this->cur_selector_chain.empty())
+		this->cur_selector_chain.back().combinator = ::parse_combinator(str);
 	}
 
 	virtual void on_style_properties_end()override{
@@ -202,11 +204,6 @@ void document::write(
 
 			// go through selectors in the selector chain
 			for(auto s = j->selectors.begin(); s != j->selectors.end(); ++s){
-				if(s != j->selectors.begin()){
-					// write combinator
-					auto c = combinator_to_string(s->combinator);
-					fi.write(utki::make_span(reinterpret_cast<const uint8_t*>(c.data()), c.size()));
-				}
 				// write selector tag
 				fi.write(utki::make_span(s->tag));
 
@@ -217,6 +214,10 @@ void document::write(
 				}
 
 				// TODO: write attributes
+
+				// write combinator
+				auto c = combinator_to_string(s->combinator);
+				fi.write(utki::make_span(c));
 			}
 		}
 
