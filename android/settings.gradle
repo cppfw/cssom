@@ -1,0 +1,3 @@
+rootProject.name='cssdom_test'
+include ':app'
+include ':cssdom'
