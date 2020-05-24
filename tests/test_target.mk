@@ -1,6 +1,6 @@
 ifeq ($(os),windows)
     # to avoid /C converted to C:\ need to escape it as //C
-    this_test_cmd := (cd $(d) && cmd //C 'set PATH=../../src/build;%PATH% && $(this_out_dir)/$$(notdir $$^)')
+    this_test_cmd := (cd $(d)$(this_out_dir) && cmd //C 'set PATH=../../../src/build;%PATH% && $$(notdir $$^)')
 else ifeq ($(os),macosx)
     this_test_cmd := (cd $(d) && DYLD_LIBRARY_PATH=../../src/build $(this_out_dir)/$$(notdir $$^))
 else ifeq ($(os),linux)
@@ -22,7 +22,7 @@ $(eval $(this_rule))
 
 ifeq ($(os),windows)
     # to avoid /C converted to C:\ need to escape it as //C
-    this_gdb_cmd := (cd $(d) && cmd //C 'set PATH=../../src/build;%PATH% && gdb $(this_out_dir)/$$(notdir $$^)')
+    this_gdb_cmd := (cd $(d)$(this_out_dir) && cmd //C 'set PATH=../../../src/build;%PATH% && gdb $$(notdir $$^)')
 else ifeq ($(os),macosx)
     this_gdb_cmd := (cd $(d) && DYLD_LIBRARY_PATH=../../src/build gdb $(this_out_dir)/$$(notdir $$^))
 else ifeq ($(os),linux)
