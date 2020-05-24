@@ -44,7 +44,7 @@ this_samples := $(patsubst %.svg,%,$(shell ls $(d)testdata/*.css))
 define this_rules
 test:: $(prorab_this_name)
 $(.RECIPEPREFIX)@myci-running-test.sh $(this_test)
-$(.RECIPEPREFIX)$(a)cp $(d)../../src/build/*.dll $(d) || true
+$(.RECIPEPREFIX)$(a)cp $(d)../../src/build/*.dll $(d)build || true
 $(.RECIPEPREFIX)$(a)for f in $(this_samples); do \
 	    echo "checking file $$$$f" && \
 	    LD_LIBRARY_PATH=$(d)../../src/build DYLD_LIBRARY_PATH=$$$$LD_LIBRARY_PATH $(d)./build/parsecss --out-file=$(d)out.css $$$$f && \
