@@ -289,7 +289,7 @@ void style::update_specificity()noexcept{
 			}
 			//TODO: add pseudo-elements to num_types
 		}
-		num_classes += s.classes.size();
+		num_classes += unsigned(s.classes.size());
 		// TODO: add num attributes and pseudo-classes to num_classes
 	}
 
