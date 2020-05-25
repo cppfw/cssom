@@ -1,0 +1,6 @@
+circle.myGreen {
+	fill: #00cc00; stroke: #006600; 
+}
+circle.myRed {
+	fill: #cc0000; stroke: #660000; 
+}
