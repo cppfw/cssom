@@ -48,11 +48,11 @@ public:
 	document doc;
 
 	const std::map<std::string, uint32_t>& property_name_to_id_map;
-	const std::function<std::unique_ptr<utki::destructable>(uint32_t, std::string&&)>& parse_property;
+	const std::function<std::unique_ptr<cssdom::property_value_base>(uint32_t, std::string&&)>& parse_property;
 
 	dom_parser(
 			const std::map<std::string, uint32_t>& property_name_to_id_map,
-			const std::function<std::unique_ptr<utki::destructable>(uint32_t, std::string&&)>& parse_property
+			const std::function<std::unique_ptr<cssdom::property_value_base>(uint32_t, std::string&&)>& parse_property
 		) :
 			property_name_to_id_map(property_name_to_id_map),
 			parse_property(parse_property)
@@ -141,7 +141,7 @@ public:
 document cssdom::read(
 		const papki::file& fi,
 		const std::map<std::string, uint32_t>& property_name_to_id_map,
-		const std::function<std::unique_ptr<utki::destructable>(uint32_t, std::string&&)>& parse_property
+		const std::function<std::unique_ptr<cssdom::property_value_base>(uint32_t, std::string&&)>& parse_property
 	)
 {
 	if(!parse_property){
@@ -182,7 +182,7 @@ auto colon = utki::make_span(": ");
 void document::write(
 		papki::file& fi,
 		const std::map<uint32_t, std::string>& property_id_to_name_map,
-		const std::function<std::string(uint32_t, const utki::destructable&)>& property_value_to_string
+		const std::function<std::string(uint32_t, const property_value_base&)>& property_value_to_string
 	)const
 {
 	papki::file::guard file_guard(fi, papki::file::mode::create);
@@ -400,17 +400,17 @@ bool style::is_matching(xml_dom_crawler& crawler)const{
 	return true;
 }
 
-utki::destructable* document::get_property_value(xml_dom_crawler& crawler, uint32_t property_id){
+document::query_result document::get_property_value(xml_dom_crawler& crawler, uint32_t property_id){
 	for(auto& s : this->styles){
 		crawler.reset();
 		
 		if(s.is_matching(crawler)){
 			auto i = s.properties->find(property_id);
 			if(i != s.properties->end()){
-				return i->second.get();
+				return query_result{i->second.get(), s.specificity};
 			}
 		}
 	}
 	
-	return nullptr;
+	return query_result{nullptr, 0};
 }

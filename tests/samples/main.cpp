@@ -39,7 +39,7 @@ int main(int argc, char** argv){
 	auto doc = cssdom::read(
 			papki::fs_file(in_filename),
 			property_name_to_id_map,
-			[](uint32_t id, std::string&& value) -> std::unique_ptr<utki::destructable> {
+			[](uint32_t id, std::string&& value) -> std::unique_ptr<cssdom::property_value_base> {
 				return std::make_unique<property_value>(std::move(value));
 			}
 		);
@@ -47,7 +47,7 @@ int main(int argc, char** argv){
 	doc.write(
 			papki::fs_file(out_filename),
 			utki::flip_map(property_name_to_id_map),
-			[](uint32_t id, const utki::destructable& value) -> std::string{
+			[](uint32_t id, const cssdom::property_value_base& value) -> std::string{
 				auto& v = static_cast<const property_value&>(value);
 				return v.value;
 			}

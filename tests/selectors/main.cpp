@@ -120,7 +120,7 @@ int main(int argc, char** argv){
 		auto css_dom = cssdom::read(
 				papki::span_file(utki::make_span(css)),
 				property_name_to_id_map,
-				[](uint32_t id, std::string&& v) -> std::unique_ptr<utki::destructable> {
+				[](uint32_t id, std::string&& v) -> std::unique_ptr<cssdom::property_value_base> {
 					auto ret = std::make_unique<property_value>(std::move(v));
 					return ret;
 				}
@@ -135,12 +135,12 @@ int main(int argc, char** argv){
 
 		crawler cr(dom, {0, 0});
 		
-		auto p = css_dom.get_property_value(cr, uint32_t(property_id::stroke));
-		ASSERT_ALWAYS(p);
+		auto qr = css_dom.get_property_value(cr, uint32_t(property_id::stroke));
+		ASSERT_ALWAYS(qr.value);
 
-		ASSERT_ALWAYS(dynamic_cast<property_value*>(p))
+		ASSERT_ALWAYS(dynamic_cast<const property_value*>(qr.value))
 
-		auto pv = static_cast<property_value*>(p);
+		auto pv = static_cast<const property_value*>(qr.value);
 		ASSERT_ALWAYS(pv->value == "blue")
 	}
 
