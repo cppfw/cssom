@@ -1,3 +1,9 @@
+libcssdom (0.1.2) unstable; urgency=medium
+
+  * fixed nuget package headers directory name
+
+ -- Ivan Gagis <igagis@gmail.com>  Thu, 28 May 2020 21:30:58 +0300
+
 libcssdom (0.1.1) unstable; urgency=medium
 
   * initial release
