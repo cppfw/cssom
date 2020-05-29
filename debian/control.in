@@ -23,7 +23,8 @@ Description: debugging symbols for libcssdom$(soname) package.
 Package: libcssdom-dev
 Section: libdevel
 Architecture: any
-Depends: libcssdom$(soname) (= ${binary:Version}), libcssdom$(soname)-dbg (= ${binary:Version}), ${misc:Depends}
+Depends: libcssdom$(soname) (= ${binary:Version}), libcssdom$(soname)-dbg (= ${binary:Version}), ${misc:Depends},
+		libutki-dev, libpapki-dev
 Suggests: libcssdom-doc
 Description: CSS document object model library.
  CSS document object model cross-platform C++ library.
