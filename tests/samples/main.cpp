@@ -36,13 +36,11 @@ int main(int argc, char** argv){
 		in_filename = extras.front();
 	}
 
-	auto& pntim = property_name_to_id_map;
-
 	auto doc = cssdom::read(
 			papki::fs_file(in_filename),
-			[&pntim](const std::string& name) -> uint32_t{
-				auto i = pntim.find(name);
-				if(i == pntim.end()){
+			[](const std::string& name) -> uint32_t{
+				auto i = property_name_to_id_map.find(name);
+				if(i == property_name_to_id_map.end()){
 					return uint32_t(property_id::ENUM_SIZE);
 				}
 				return uint32_t(i->second);
