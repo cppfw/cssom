@@ -36,17 +36,33 @@ int main(int argc, char** argv){
 		in_filename = extras.front();
 	}
 
+	auto& pntim = property_name_to_id_map;
+
 	auto doc = cssdom::read(
 			papki::fs_file(in_filename),
-			property_name_to_id_map,
+			[&pntim](const std::string& name) -> uint32_t{
+				auto i = pntim.find(name);
+				if(i == pntim.end()){
+					return uint32_t(property_id::ENUM_SIZE);
+				}
+				return uint32_t(i->second);
+			},
 			[](uint32_t id, std::string&& value) -> std::unique_ptr<cssdom::property_value_base> {
 				return std::make_unique<property_value>(std::move(value));
 			}
 		);
 	
+	auto pitnm = utki::flip_map(property_name_to_id_map);
+
 	doc.write(
 			papki::fs_file(out_filename),
-			utki::flip_map(property_name_to_id_map),
+			[&pitnm](uint32_t id) -> std::string{
+				auto i = pitnm.find(id);
+				if(i == pitnm.end()){
+					return std::string();
+				}
+				return i->second;
+			},
 			[](uint32_t id, const cssdom::property_value_base& value) -> std::string{
 				auto& v = static_cast<const property_value&>(value);
 				return v.value;

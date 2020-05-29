@@ -47,14 +47,14 @@ class dom_parser : public parser{
 public:
 	document doc;
 
-	const std::map<std::string, uint32_t>& property_name_to_id_map;
+	const std::function<uint32_t(const std::string&)>& property_name_to_id;
 	const std::function<std::unique_ptr<cssdom::property_value_base>(uint32_t, std::string&&)>& parse_property;
 
 	dom_parser(
-			const std::map<std::string, uint32_t>& property_name_to_id_map,
+			const std::function<uint32_t(const std::string&)>& property_name_to_id,
 			const std::function<std::unique_ptr<cssdom::property_value_base>(uint32_t, std::string&&)>& parse_property
 		) :
-			property_name_to_id_map(property_name_to_id_map),
+			property_name_to_id(property_name_to_id),
 			parse_property(parse_property)
 	{}
 
@@ -115,14 +115,8 @@ public:
 		
 		ASSERT(!this->cur_property_name.empty())
 
-		auto i = this->property_name_to_id_map.find(this->cur_property_name);
-		this->cur_property_name.clear();
-		if(i == this->property_name_to_id_map.end()){
-			// unknown property name, ignore
-			return;
-		}
-
-		uint32_t id = i->second;
+		ASSERT(this->property_name_to_id)
+		uint32_t id = this->property_name_to_id(this->cur_property_name);
 
 		ASSERT(this->parse_property)
 		auto value = this->parse_property(id, std::move(str));
@@ -140,15 +134,18 @@ public:
 
 document cssdom::read(
 		const papki::file& fi,
-		const std::map<std::string, uint32_t>& property_name_to_id_map,
+		const std::function<uint32_t(const std::string&)> property_name_to_id,
 		const std::function<std::unique_ptr<cssdom::property_value_base>(uint32_t, std::string&&)>& parse_property
 	)
 {
+	if(!property_name_to_id){
+		throw std::logic_error("cssdom::read(): passed in 'property_name_to_id' function is nullptr");
+	}
 	if(!parse_property){
 		throw std::logic_error("cssdom::read(): passed in 'parse_property' function is nullptr");
 	}
 
-	dom_parser p(property_name_to_id_map, parse_property);
+	dom_parser p(property_name_to_id, parse_property);
 	
 	{
 		papki::file::guard file_guard(fi);
@@ -181,7 +178,7 @@ auto colon = utki::make_span(": ");
 
 void document::write(
 		papki::file& fi,
-		const std::map<uint32_t, std::string>& property_id_to_name_map,
+		const std::function<std::string(uint32_t)>& property_id_to_name,
 		const std::function<std::string(uint32_t, const property_value_base&)>& property_value_to_string
 	)const
 {
@@ -227,11 +224,13 @@ void document::write(
 		auto props = selector_group_start_iter->properties.get();
 		ASSERT(props)
 		for(auto& prop : *props){
-			auto name_iter = property_id_to_name_map.find(prop.first);
-			if(name_iter == property_id_to_name_map.end()){
+			auto name = property_id_to_name(prop.first);
+			
+			if(name.empty()){
 				continue;
 			}
-			fi.write(utki::make_span(name_iter->second));
+
+			fi.write(utki::make_span(name));
 			fi.write(colon);
 			auto value = property_value_to_string(prop.first, *prop.second);
 			fi.write(utki::make_span(value));

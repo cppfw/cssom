@@ -114,17 +114,17 @@ struct document{
 
 	void write(
 			papki::file& fi,
-			const std::map<uint32_t, std::string>& property_id_to_name_map,
+			const std::function<std::string(uint32_t)>& property_id_to_name,
 			const std::function<std::string(uint32_t, const property_value_base&)>& property_value_to_string
 		)const;
 
 	void write(
 			papki::file&& fi,
-			const std::map<uint32_t, std::string>& property_id_to_name_map,
+			const std::function<std::string(uint32_t)>& property_id_to_name,
 			const std::function<std::string(uint32_t, const property_value_base&)>& property_value_to_string
 		)const
 	{
-		this->write(fi, property_id_to_name_map, property_value_to_string);
+		this->write(fi, property_id_to_name, property_value_to_string);
 	}
 
 	void sort_styles_by_specificity();
@@ -153,7 +153,7 @@ struct document{
 
 document read(
 		const papki::file& fi,
-		const std::map<std::string, uint32_t>& property_name_to_id_map,
+		const std::function<uint32_t(const std::string&)> property_name_to_id,
 		const std::function<std::unique_ptr<property_value_base>(uint32_t, std::string&&)>& parse_property_value
 	);
 
