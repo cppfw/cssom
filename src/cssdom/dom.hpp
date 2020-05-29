@@ -115,16 +115,18 @@ struct document{
 	void write(
 			papki::file& fi,
 			const std::function<std::string(uint32_t)>& property_id_to_name,
-			const std::function<std::string(uint32_t, const property_value_base&)>& property_value_to_string
+			const std::function<std::string(uint32_t, const property_value_base&)>& property_value_to_string,
+			const std::string& indent = std::string()
 		)const;
 
 	void write(
 			papki::file&& fi,
 			const std::function<std::string(uint32_t)>& property_id_to_name,
-			const std::function<std::string(uint32_t, const property_value_base&)>& property_value_to_string
+			const std::function<std::string(uint32_t, const property_value_base&)>& property_value_to_string,
+			const std::string& indent = std::string()
 		)const
 	{
-		this->write(fi, property_id_to_name, property_value_to_string);
+		this->write(fi, property_id_to_name, property_value_to_string, indent);
 	}
 
 	void sort_styles_by_specificity();

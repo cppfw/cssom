@@ -170,8 +170,10 @@ document cssdom::read(
 namespace{
 auto comma = utki::make_span(", ");
 auto period = utki::make_span(".");
-auto open_curly_brace = utki::make_span(" {\n\t");
-auto close_curly_brace = utki::make_span("\n}\n");
+auto open_curly_brace = utki::make_span(" {\n");
+auto tab_char = utki::make_span("\t");
+auto new_line_char = utki::make_span("\n");
+auto close_curly_brace = utki::make_span("}\n");
 auto semicolon = utki::make_span("; ");
 auto colon = utki::make_span(": ");
 }
@@ -179,7 +181,8 @@ auto colon = utki::make_span(": ");
 void document::write(
 		papki::file& fi,
 		const std::function<std::string(uint32_t)>& property_id_to_name,
-		const std::function<std::string(uint32_t, const property_value_base&)>& property_value_to_string
+		const std::function<std::string(uint32_t, const property_value_base&)>& property_value_to_string,
+		const std::string& indent
 	)const
 {
 	papki::file::guard file_guard(fi, papki::file::mode::create);
@@ -197,6 +200,8 @@ void document::write(
 
 			if(j != selector_group_start_iter){
 				fi.write(comma);
+			}else{
+				fi.write(utki::make_span(indent));
 			}
 
 			// go through selectors in the selector chain
@@ -220,6 +225,8 @@ void document::write(
 
 		// write properties
 		fi.write(open_curly_brace);
+		fi.write(utki::make_span(indent));
+		fi.write(tab_char);
 
 		auto props = selector_group_start_iter->properties.get();
 		ASSERT(props)
@@ -237,6 +244,8 @@ void document::write(
 			fi.write(semicolon);
 		}
 
+		fi.write(new_line_char);
+		fi.write(utki::make_span(indent));
 		fi.write(close_curly_brace);
 	}
 }
