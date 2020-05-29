@@ -1,7 +1,5 @@
 include prorab.mk
 
-debug := false
-
 this_name := cssdom
 
 this_out_dir := build

@@ -1,6 +1,8 @@
 include prorab.mk
 
-this_name := tests
+this_name := harness
+
+this_soname := 0
 
 this_out_dir := build
 
@@ -19,9 +21,8 @@ endif
 
 this_srcs += $(call prorab-src-dir, .)
 
-this_ldlibs += -lharness -lcssdom -lpapki -lstdc++
+this_ldlibs += -lcssdom -lpapki -lstdc++
 this_ldflags += -L$(d)../../src/build
-this_ldflags += -L$(d)../harness/build
 
 ifeq ($(os), linux)
     this_cxxflags += -fPIC
@@ -34,15 +35,9 @@ endif
 
 this_no_install := true
 
-$(eval $(prorab-build-app))
-
-include $(d)../test_target.mk
+$(eval $(prorab-build-lib))
 
 # add dependency on libcssdom
 $(prorab_this_name): $(abspath $(d)../../src/build/libcssdom$(dot_so))
 
-# add dependency on libharness
-$(prorab_this_name): $(abspath $(d)../harness/build/libharness$(dot_so))
-
 $(eval $(call prorab-include, ../../src/makefile))
-$(eval $(call prorab-include, ../harness/makefile))

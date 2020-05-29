@@ -131,6 +131,8 @@ struct document{
 
 	void sort_styles_by_specificity();
 
+	void append(document&& d);
+
 	struct query_result{
 		/**
 		 * @brief Value of the queried property.

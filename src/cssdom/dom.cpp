@@ -422,3 +422,11 @@ document::query_result document::get_property_value(xml_dom_crawler& crawler, ui
 	
 	return query_result{nullptr, 0};
 }
+
+void document::append(document&& d){
+	using std::begin;
+	using std::end;
+	std::move(begin(d.styles), end(d.styles), std::back_inserter(this->styles));
+	d.styles.clear();
+	this->sort_styles_by_specificity();
+}
