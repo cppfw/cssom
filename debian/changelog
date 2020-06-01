@@ -1,3 +1,9 @@
+libcssdom (0.1.7) unstable; urgency=medium
+
+  * document::get_property_value() function made constant
+
+ -- Ivan Gagis <igagis@gmail.com>  Mon, 01 Jun 2020 23:23:59 +0300
+
 libcssdom (0.1.6) unstable; urgency=medium
 
   * fixed debian dev package dependency
