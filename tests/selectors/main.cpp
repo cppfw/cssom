@@ -22,7 +22,7 @@ int main(int argc, char** argv){
 
 		auto pntim = &property_name_to_id_map;
 
-		auto css_dom = cssdom::read(
+		const auto css_dom = cssdom::read(
 				papki::span_file(utki::make_span(css)),
 				[pntim](const std::string& name) -> uint32_t{
 					auto i = pntim->find(name);

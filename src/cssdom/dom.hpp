@@ -152,7 +152,7 @@ struct document{
 	 * @return pointer to the property value if given node has matched to some CSS selector which defines requested property.
 	 * @return nullptr if given node has not matched to any CSS selector or no matching selectors define requested property.
 	 */
-	query_result get_property_value(xml_dom_crawler& crawler, uint32_t property_id);
+	query_result get_property_value(xml_dom_crawler& crawler, uint32_t property_id)const;
 };
 
 document read(

@@ -408,7 +408,7 @@ bool style::is_matching(xml_dom_crawler& crawler)const{
 	return true;
 }
 
-document::query_result document::get_property_value(xml_dom_crawler& crawler, uint32_t property_id){
+document::query_result document::get_property_value(xml_dom_crawler& crawler, uint32_t property_id)const{
 	for(auto& s : this->styles){
 		crawler.reset();
 		
