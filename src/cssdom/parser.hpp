@@ -68,8 +68,8 @@ public:
 	}
 	
 	/**
-	 * @brief Parse in string.
-	 * @param str - string to parse.
+	 * @brief feed UTF-8 string to parser.
+	 * @param str - string to be fed parser.
 	 */
 	void feed(const std::string& str){
 		this->feed(utki::make_span(str.c_str(), str.length()));

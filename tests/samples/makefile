@@ -39,7 +39,7 @@ $(eval $(prorab-build-app))
 this_dirs := $(subst /, ,$(d))
 this_test := $(word $(words $(this_dirs)),$(this_dirs))
 
-this_samples := $(patsubst %.svg,%,$(shell ls $(d)testdata/*.css))
+this_samples := $(shell ls $(d)testdata/*.css)
 
 define this_rules
 test:: $(prorab_this_name)
