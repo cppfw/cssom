@@ -1,4 +1,4 @@
-package io.github.igagis.cssdom_test;
+package io.github.cppfw.cssdom_test;
 
 import org.junit.Test;
 

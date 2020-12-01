@@ -5,7 +5,7 @@ android {
 
 
     defaultConfig {
-        applicationId "io.github.igagis.cssdom_test"
+        applicationId "io.github.cppfw.cssdom_test"
         minSdkVersion 16
         targetSdkVersion 28
         versionCode 1

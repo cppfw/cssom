@@ -18,9 +18,9 @@ nuget{
 		title: C++ CSS DOM library;
 		authors: {Ivan Gagis};
 		owners: {Ivan Gagis};
-		licenseUrl: "https://raw.githubusercontent.com/igagis/cssdom/master/LICENSE";
-		projectUrl: "https://github.com/igagis/cssdom";
-		iconUrl: "https://github.com/igagis/cssdom/blob/master/logo.svg";
+		licenseUrl: "https://raw.githubusercontent.com/cppfw/cssdom/master/LICENSE";
+		projectUrl: "https://github.com/cppfw/cssdom";
+		iconUrl: "https://github.com/cppfw/cssdom/blob/master/logo.svg";
 		requireLicenseAcceptance:false;
 		summary: C++ CSS DOM library;
 

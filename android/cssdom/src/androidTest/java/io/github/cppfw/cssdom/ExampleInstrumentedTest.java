@@ -1,4 +1,4 @@
-package io.github.igagis.cssdom;
+package io.github.cppfw.cssdom;
 
 import android.content.Context;
 
@@ -22,6 +22,6 @@ public class ExampleInstrumentedTest {
         // Context of the app under test.
         Context appContext = InstrumentationRegistry.getInstrumentation().getTargetContext();
 
-        assertEquals("io.github.igagis.cssdom.test", appContext.getPackageName());
+        assertEquals("io.github.cppfw.cssdom.test", appContext.getPackageName());
     }
 }
