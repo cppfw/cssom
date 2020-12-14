@@ -1,3 +1,9 @@
+libcssdom (0.1.12) unstable; urgency=medium
+
+  * build for ubuntu focal
+
+ -- Ivan Gagis <igagis@gmail.com>  Tue, 15 Dec 2020 01:29:45 +0200
+
 libcssdom (0.1.11) unstable; urgency=medium
 
   * github actions
