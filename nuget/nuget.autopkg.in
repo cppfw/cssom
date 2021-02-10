@@ -31,8 +31,8 @@ nuget{
 	}
 	dependencies {
 		packages : {
-			libutki/1.0.30;
-			libpapki/1.0.26;
+			libutki/1.0.111;
+			libpapki/1.0.91;
 		};
 	}
 	files {
