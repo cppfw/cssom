@@ -59,7 +59,7 @@ public:
 	{}
 
 	virtual void on_selector_chain_end()override{
-		TRACE(<< "selector chain END" << std::endl)
+		// TRACE(<< "selector chain END" << std::endl)
 		if(!this->cur_property_list){
 			this->cur_property_list = std::make_shared<property_list>();
 		}
@@ -76,22 +76,22 @@ public:
 	}
 
 	virtual void on_selector_end()override{
-		TRACE(<< "selector END" << std::endl)
+		// TRACE(<< "selector END" << std::endl)
 		this->cur_selector_chain.push_back(std::move(this->cur_selector));
 	}
 
 	virtual void on_selector_tag(std::string&& str)override{
-		TRACE(<< "selector tag: " << str << std::endl)
+		// TRACE(<< "selector tag: " << str << std::endl)
 		this->cur_selector.tag = std::move(str);
 	}
 
 	virtual void on_selector_class(std::string&& str)override{
-		TRACE(<< "selector class: " << str << std::endl)
+		// TRACE(<< "selector class: " << str << std::endl)
 		this->cur_selector.classes.push_back(std::move(str));
 	}
 
 	virtual void on_combinator(std::string&& str)override{
-		TRACE(<< "combinator: " << str << std::endl)
+		// TRACE(<< "combinator: " << str << std::endl)
 		ASSERT(this->cur_selector.classes.empty())
 		ASSERT(this->cur_selector.tag.empty())
 		//TODO: add assert attributes of current selector are empty
@@ -100,18 +100,18 @@ public:
 	}
 
 	virtual void on_style_properties_end()override{
-		TRACE(<< "style properties END" << std::endl)
+		// TRACE(<< "style properties END" << std::endl)
 		this->cur_property_list.reset();
 	}
 
 	virtual void on_property_name(std::string&& str)override{
-		TRACE(<< "property name: " << str << std::endl)
+		// TRACE(<< "property name: " << str << std::endl)
 		ASSERT(this->cur_property_list)
 		this->cur_property_name = std::move(str);
 	}
 
 	virtual void on_property_value(std::string&& str)override{
-		TRACE(<< "property value: " << str << std::endl)
+		// TRACE(<< "property value: " << str << std::endl)
 		
 		ASSERT(!this->cur_property_name.empty())
 
