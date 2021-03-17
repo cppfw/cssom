@@ -1,3 +1,9 @@
+libcssdom (0.1.16) unstable; urgency=medium
+
+  * msvs: disable whole program optimization
+
+ -- Ivan Gagis <igagis@gmail.com>  Wed, 17 Mar 2021 03:13:31 +0200
+
 libcssdom (0.1.15) unstable; urgency=medium
 
   * remove console output
