@@ -74,7 +74,7 @@ struct selector{
 
 	std::vector<std::string> classes;
 
-	// TODO: attribute selectors, pseido-class, pseudo-element etc.
+	// TODO: attribute selectors, pseudo-class, pseudo-element etc.
 
 	/**
 	 * @brief Combinator with next selector in the selector chain.
