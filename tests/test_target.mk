@@ -9,12 +9,9 @@ else
     $(error "Unknown OS")
 endif
 
-this_dirs := $(subst /, ,$(d))
-this_test := $(word $(words $(this_dirs)), $(this_dirs))
-
 define this_rule
 test:: $(prorab_this_name)
-$(.RECIPEPREFIX)@myci-running-test.sh $(this_test)
+$(.RECIPEPREFIX)@myci-running-test.sh $(notdir $(abspath $(d)))
 $(.RECIPEPREFIX)$(a)$(this_test_cmd) || myci-error.sh "test failed"
 $(.RECIPEPREFIX)@myci-passed.sh
 endef
