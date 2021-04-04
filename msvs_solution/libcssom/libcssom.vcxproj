@@ -591,7 +591,7 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\src\cssom\dom.cpp" />
+    <ClCompile Include="..\..\src\cssom\om.cpp" />
     <ClCompile Include="..\..\src\cssom\parser.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
