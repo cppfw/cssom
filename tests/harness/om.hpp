@@ -98,4 +98,4 @@ public:
 	}
 };
 
-cssom::document read_css(const char* str);
+cssom::sheet read_css(const char* str);

@@ -1,8 +1,8 @@
 include prorab.mk
 
-this_name := tests
+$(eval $(call prorab-config, ../../config))
 
-this_out_dir := build
+this_name := tests
 
 this_cxxflags += -Wall
 this_cxxflags += -Werror
@@ -20,8 +20,8 @@ endif
 this_srcs += $(call prorab-src-dir, .)
 
 this_ldlibs += -lharness -lcssom -lpapki -lstdc++
-this_ldflags += -L$(d)../../src/build
-this_ldflags += -L$(d)../harness/build
+this_ldflags += -L$(d)../../src/out/$(c)
+this_ldflags += -L$(d)../harness/out/$(c)
 
 ifeq ($(os), linux)
     this_cxxflags += -fPIC
@@ -39,10 +39,10 @@ $(eval $(prorab-build-app))
 include $(d)../test_target.mk
 
 # add dependency on libcssom
-$(prorab_this_name): $(abspath $(d)../../src/build/libcssom$(dot_so))
+$(prorab_this_name): $(abspath $(d)../../src/out/$(c)/libcssom$(dot_so))
 
 # add dependency on libharness
-$(prorab_this_name): $(abspath $(d)../harness/build/libharness$(dot_so))
+$(prorab_this_name): $(abspath $(d)../harness/out/$(c)/libharness$(dot_so))
 
 $(eval $(call prorab-include, ../../src/makefile))
 $(eval $(call prorab-include, ../harness/makefile))

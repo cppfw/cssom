@@ -39,18 +39,18 @@ std::string combinator_to_string(combinator c){
 }
 
 namespace{
-class dom_parser : public parser{
+class om_parser : public parser{
 	selector cur_selector;
 	selector_chain cur_selector_chain;
 	std::shared_ptr<property_list> cur_property_list;
 	std::string cur_property_name;
 public:
-	document doc;
+	sheet doc;
 
 	const std::function<uint32_t(const std::string&)>& property_name_to_id;
 	const std::function<std::unique_ptr<cssom::property_value_base>(uint32_t, std::string&&)>& parse_property;
 
-	dom_parser(
+	om_parser(
 			const std::function<uint32_t(const std::string&)>& property_name_to_id,
 			const std::function<std::unique_ptr<cssom::property_value_base>(uint32_t, std::string&&)>& parse_property
 		) :
@@ -132,7 +132,7 @@ public:
 };
 }
 
-document cssom::read(
+sheet cssom::read(
 		const papki::file& fi,
 		const std::function<uint32_t(const std::string&)> property_name_to_id,
 		const std::function<std::unique_ptr<cssom::property_value_base>(uint32_t, std::string&&)>& parse_property
@@ -145,7 +145,7 @@ document cssom::read(
 		throw std::logic_error("cssom::read(): passed in 'parse_property' function is nullptr");
 	}
 
-	dom_parser p(property_name_to_id, parse_property);
+	om_parser p(property_name_to_id, parse_property);
 	
 	{
 		papki::file::guard file_guard(fi);
@@ -178,7 +178,7 @@ auto semicolon = utki::make_span("; ");
 auto colon = utki::make_span(": ");
 }
 
-void document::write(
+void sheet::write(
 		papki::file& fi,
 		const std::function<std::string(uint32_t)>& property_id_to_name,
 		const std::function<std::string(uint32_t, const property_value_base&)>& property_value_to_string,
@@ -250,7 +250,7 @@ void document::write(
 	}
 }
 
-void document::sort_styles_by_specificity(){
+void sheet::sort_styles_by_specificity(){
 	std::sort(
 			this->styles.begin(),
 			this->styles.end(),
@@ -408,7 +408,7 @@ bool style::is_matching(xml_dom_crawler& crawler)const{
 	return true;
 }
 
-document::query_result document::get_property_value(xml_dom_crawler& crawler, uint32_t property_id)const{
+sheet::query_result sheet::get_property_value(xml_dom_crawler& crawler, uint32_t property_id)const{
 	for(auto& s : this->styles){
 		crawler.reset();
 		
@@ -423,7 +423,7 @@ document::query_result document::get_property_value(xml_dom_crawler& crawler, ui
 	return query_result{nullptr, 0};
 }
 
-void document::append(document&& d){
+void sheet::append(sheet&& d){
 	using std::begin;
 	using std::end;
 	std::move(begin(d.styles), end(d.styles), std::back_inserter(this->styles));

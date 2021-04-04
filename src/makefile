@@ -1,8 +1,8 @@
 include prorab.mk
 
-this_name := cssom
+$(eval $(call prorab-config, ../config))
 
-this_out_dir := build
+this_name := cssom
 
 this_soname := $(shell cat $(d)soname.txt)
 

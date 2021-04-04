@@ -3,7 +3,7 @@
 
 #include <papki/span_file.hpp>
 
-cssom::document read_css(const char* css){
+cssom::sheet read_css(const char* css){
 	auto pntim = &property_name_to_id_map;
 
 	return cssom::read(

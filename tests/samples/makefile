@@ -1,8 +1,8 @@
 include prorab.mk
 
-this_name := parsecss
+$(eval $(call prorab-config, ../../config))
 
-this_out_dir := build
+this_name := parsecss
 
 this_cxxflags += -Wall
 this_cxxflags += -Werror
@@ -21,7 +21,7 @@ this_srcs += main.cpp
 this_srcs += ../harness/properties.cpp
 
 this_ldlibs += -lcssom -lpapki -lclargs -lstdc++
-this_ldflags += -L$(d)../../src/build
+this_ldflags += -L$(d)../../src/out/$(c)
 
 ifeq ($(os), linux)
     this_cxxflags += -fPIC
@@ -44,10 +44,10 @@ this_samples := $(shell ls $(d)testdata/*.css)
 define this_rules
 test:: $(prorab_this_name)
 $(.RECIPEPREFIX)@myci-running-test.sh $(this_test)
-$(.RECIPEPREFIX)$(a)cp $(d)../../src/build/*.dll $(d)build || true
+$(.RECIPEPREFIX)$(a)cp $(d)../../src/out/$(c)/*.dll $(d)out/$(c) || true
 $(.RECIPEPREFIX)$(a)for f in $(this_samples); do \
 	    echo "checking file $$$$f" && \
-	    LD_LIBRARY_PATH=$(d)../../src/build DYLD_LIBRARY_PATH=$$$$LD_LIBRARY_PATH $(d)./build/parsecss --out-file=$(d)out.css $$$$f && \
+	    LD_LIBRARY_PATH=$(d)../../src/out/$(c) DYLD_LIBRARY_PATH=$$$$LD_LIBRARY_PATH $(d)./out/$(c)/parsecss --out-file=$(d)out.css $$$$f && \
 	    cmp $(d)out.css $$$$f.cmp; \
 	    if [ $$$$? -ne 0 ]; then myci-error.sh "parsed CSS did not match etalon sample"; exit 1; fi \
 	done
@@ -56,6 +56,6 @@ endef
 $(eval $(this_rules))
 
 # add dependency on libcssom
-$(prorab_this_name): $(abspath $(d)../../src/build/libcssom$(dot_so))
+$(prorab_this_name): $(abspath $(d)../../src/out/$(c)/libcssom$(dot_so))
 
 $(eval $(call prorab-include, ../../src/makefile))

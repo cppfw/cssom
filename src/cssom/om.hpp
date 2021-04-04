@@ -45,7 +45,7 @@ struct xml_dom_crawler{
 	virtual ~xml_dom_crawler()noexcept{}
 };
 
-//TODO: doxygen all
+// TODO: doxygen all
 enum class combinator{
 	none,
 	descendant,
@@ -109,7 +109,7 @@ struct style{
 	bool is_matching(xml_dom_crawler& crawler)const;
 };
 
-struct document{
+struct sheet{
 	std::vector<style> styles;
 
 	void write(
@@ -131,7 +131,7 @@ struct document{
 
 	void sort_styles_by_specificity();
 
-	void append(document&& d);
+	void append(sheet&& d);
 
 	struct query_result{
 		/**
@@ -155,7 +155,7 @@ struct document{
 	query_result get_property_value(xml_dom_crawler& crawler, uint32_t property_id)const;
 };
 
-document read(
+sheet read(
 		const papki::file& fi,
 		const std::function<uint32_t(const std::string&)> property_name_to_id,
 		const std::function<std::unique_ptr<property_value_base>(uint32_t, std::string&&)>& parse_property_value

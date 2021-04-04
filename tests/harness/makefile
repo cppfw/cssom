@@ -1,10 +1,10 @@
 include prorab.mk
 
+$(eval $(call prorab-config, ../../config))
+
 this_name := harness
 
 this_soname := 0
-
-this_out_dir := build
 
 this_cxxflags += -Wall
 this_cxxflags += -Werror
@@ -22,7 +22,7 @@ endif
 this_srcs += $(call prorab-src-dir, .)
 
 this_ldlibs += -lcssom -lpapki -lstdc++
-this_ldflags += -L$(d)../../src/build
+this_ldflags += -L$(d)../../src/out/$(c)
 
 ifeq ($(os), linux)
     this_cxxflags += -fPIC
@@ -38,6 +38,6 @@ this_no_install := true
 $(eval $(prorab-build-lib))
 
 # add dependency on libcssom
-$(prorab_this_name): $(abspath $(d)../../src/build/libcssom$(dot_so))
+$(prorab_this_name): $(abspath $(d)../../src/out/$(c)/libcssom$(dot_so))
 
 $(eval $(call prorab-include, ../../src/makefile))
