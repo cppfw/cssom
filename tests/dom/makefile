@@ -19,7 +19,7 @@ endif
 
 this_srcs += $(call prorab-src-dir, .)
 
-this_ldlibs += -lharness -lcssdom -lpapki -lstdc++
+this_ldlibs += -lharness -lcssom -lpapki -lstdc++
 this_ldflags += -L$(d)../../src/build
 this_ldflags += -L$(d)../harness/build
 
@@ -38,8 +38,8 @@ $(eval $(prorab-build-app))
 
 include $(d)../test_target.mk
 
-# add dependency on libcssdom
-$(prorab_this_name): $(abspath $(d)../../src/build/libcssdom$(dot_so))
+# add dependency on libcssom
+$(prorab_this_name): $(abspath $(d)../../src/build/libcssom$(dot_so))
 
 # add dependency on libharness
 $(prorab_this_name): $(abspath $(d)../harness/build/libharness$(dot_so))

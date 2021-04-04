@@ -1,4 +1,4 @@
-#include "../../src/cssdom/dom.hpp"
+#include "../../src/cssom/om.hpp"
 
 #include <map>
 
@@ -7,7 +7,7 @@
 #include <utki/tree.hpp>
 
 #include "../harness/properties.hpp"
-#include "../harness/dom.hpp"
+#include "../harness/om.hpp"
 
 int main(int argc, char** argv){
 	// test basic property value query
@@ -28,7 +28,7 @@ int main(int argc, char** argv){
 
 		auto pntim = &property_name_to_id_map;
 
-		const auto css_dom = cssdom::read(
+		const auto css_dom = cssom::read(
 				papki::span_file(utki::make_span(css)),
 				[pntim](const std::string& name) -> uint32_t{
 					auto i = pntim->find(name);
@@ -37,17 +37,17 @@ int main(int argc, char** argv){
 					}
 					return uint32_t(i->second);
 				},
-				[](uint32_t id, std::string&& v) -> std::unique_ptr<cssdom::property_value_base> {
+				[](uint32_t id, std::string&& v) -> std::unique_ptr<cssom::property_value_base> {
 					auto ret = std::make_unique<property_value>(std::move(v));
 					return ret;
 				}
 			);
 
-		typedef utki::tree<dom_node> node;
+		typedef utki::tree<om_node> node;
 		node::container_type dom{
-			node(dom_node("body"), {
-				node(dom_node("rect")),
-				node(dom_node("circle", std::string(), {"myGreen"}))
+			node(om_node("body"), {
+				node(om_node("rect")),
+				node(om_node("circle", std::string(), {"myGreen"}))
 			})
 		};
 

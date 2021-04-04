@@ -1,5 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="io.github.cppfw.cssdom_test">
+    package="io.github.cppfw.cssom_test">
 
     <application
         android:allowBackup="true"

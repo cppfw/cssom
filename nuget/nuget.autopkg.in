@@ -13,14 +13,14 @@ configurations {
 
 nuget{
 	nuspec{
-		id = libcssdom;
+		id = libcssom;
 		version : $(version);
 		title: C++ CSS DOM library;
 		authors: {Ivan Gagis};
 		owners: {Ivan Gagis};
-		licenseUrl: "https://raw.githubusercontent.com/cppfw/cssdom/master/LICENSE";
-		projectUrl: "https://github.com/cppfw/cssdom";
-		iconUrl: "https://github.com/cppfw/cssdom/blob/master/logo.svg";
+		licenseUrl: "https://raw.githubusercontent.com/cppfw/cssom/master/LICENSE";
+		projectUrl: "https://github.com/cppfw/cssom";
+		iconUrl: "https://github.com/cppfw/cssom/blob/master/logo.svg";
 		requireLicenseAcceptance:false;
 		summary: C++ CSS DOM library;
 
@@ -38,65 +38,65 @@ nuget{
 	files {
 		// this is needed to put headers in the base folder
 		nestedInclude: {
-			#destination = ${d_include}cssdom;
-			"..\src\cssdom\**\*.hpp"
+			#destination = ${d_include}cssom;
+			"..\src\cssom\**\*.hpp"
 		};
 
 		//==== v140 tools ====
 
 		[x86,v140,release] {
-			lib: ..\msvs_solution\v140_Release\libcssdom.lib;
+			lib: ..\msvs_solution\v140_Release\libcssom.lib;
 		}
 		[x86,v140,debug] {
-			lib: ..\msvs_solution\v140_Debug\libcssdom.lib;
+			lib: ..\msvs_solution\v140_Debug\libcssom.lib;
 		}
 		[x64,v140,release] {
-			lib: ..\msvs_solution\x64\v140_Release\libcssdom.lib;
+			lib: ..\msvs_solution\x64\v140_Release\libcssom.lib;
 		}
 		[x64,v140,debug] {
-			lib: ..\msvs_solution\x64\v140_Debug\libcssdom.lib;
+			lib: ..\msvs_solution\x64\v140_Debug\libcssom.lib;
 		}
 
 		//==== v141 tools ====
 
 		[x86,v141,release] {
-			lib: ..\msvs_solution\v141_Release\libcssdom.lib;
+			lib: ..\msvs_solution\v141_Release\libcssom.lib;
 		}
 		[x86,v141,debug] {
-			lib: ..\msvs_solution\v141_Debug\libcssdom.lib;
+			lib: ..\msvs_solution\v141_Debug\libcssom.lib;
 		}
 		[x64,v141,release] {
-			lib: ..\msvs_solution\x64\v141_Release\libcssdom.lib;
+			lib: ..\msvs_solution\x64\v141_Release\libcssom.lib;
 		}
 		[x64,v141,debug] {
-			lib: ..\msvs_solution\x64\v141_Debug\libcssdom.lib;
+			lib: ..\msvs_solution\x64\v141_Debug\libcssom.lib;
 		}
 
 		//==== v142 tools ====
 
 		[x86,v142,release,MultiThreaded] {
-			lib: ..\msvs_solution\v142_Release_MT\libcssdom.lib;
+			lib: ..\msvs_solution\v142_Release_MT\libcssom.lib;
 		}
 		[x86,v142,debug,MultiThreadedDebug] {
-			lib: ..\msvs_solution\v142_Debug_MT\libcssdom.lib;
+			lib: ..\msvs_solution\v142_Debug_MT\libcssom.lib;
 		}
 		[x64,v142,release,MultiThreaded] {
-			lib: ..\msvs_solution\x64\v142_Release_MT\libcssdom.lib;
+			lib: ..\msvs_solution\x64\v142_Release_MT\libcssom.lib;
 		}
 		[x64,v142,debug,MultiThreadedDebug] {
-			lib: ..\msvs_solution\x64\v142_Debug_MT\libcssdom.lib;
+			lib: ..\msvs_solution\x64\v142_Debug_MT\libcssom.lib;
 		}
 		[x86,v142,release,MultiThreadedDLL] {
-			lib: ..\msvs_solution\v142_Release_MD\libcssdom.lib;
+			lib: ..\msvs_solution\v142_Release_MD\libcssom.lib;
 		}
 		[x86,v142,debug,MultiThreadedDebugDLL] {
-			lib: ..\msvs_solution\v142_Debug_MD\libcssdom.lib;
+			lib: ..\msvs_solution\v142_Debug_MD\libcssom.lib;
 		}
 		[x64,v142,release,MultiThreadedDLL] {
-			lib: ..\msvs_solution\x64\v142_Release_MD\libcssdom.lib;
+			lib: ..\msvs_solution\x64\v142_Release_MD\libcssom.lib;
 		}
 		[x64,v142,debug,MultiThreadedDebugDLL] {
-			lib: ..\msvs_solution\x64\v142_Debug_MD\libcssdom.lib;
+			lib: ..\msvs_solution\x64\v142_Debug_MD\libcssom.lib;
 		}
 
 	}

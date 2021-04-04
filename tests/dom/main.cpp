@@ -1,9 +1,9 @@
-#include "../../src/cssdom/dom.hpp"
+#include "../../src/cssom/om.hpp"
 
 #include <papki/span_file.hpp>
 
 #include "../harness/properties.hpp"
-#include "../harness/dom.hpp"
+#include "../harness/om.hpp"
 
 int main(int argc, char** argv){
 	// test append

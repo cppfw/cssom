@@ -1,4 +1,4 @@
-#include "../../src/cssdom/dom.hpp"
+#include "../../src/cssom/om.hpp"
 
 #include <clargs/parser.hpp>
 #include <papki/fs_file.hpp>
@@ -36,7 +36,7 @@ int main(int argc, char** argv){
 		in_filename = extras.front();
 	}
 
-	auto doc = cssdom::read(
+	auto doc = cssom::read(
 			papki::fs_file(in_filename),
 			[](const std::string& name) -> uint32_t{
 				auto i = property_name_to_id_map.find(name);
@@ -45,7 +45,7 @@ int main(int argc, char** argv){
 				}
 				return uint32_t(i->second);
 			},
-			[](uint32_t id, std::string&& value) -> std::unique_ptr<cssdom::property_value_base> {
+			[](uint32_t id, std::string&& value) -> std::unique_ptr<cssom::property_value_base> {
 				return std::make_unique<property_value>(std::move(value));
 			}
 		);
@@ -61,7 +61,7 @@ int main(int argc, char** argv){
 				}
 				return i->second;
 			},
-			[](uint32_t id, const cssdom::property_value_base& value) -> std::string{
+			[](uint32_t id, const cssom::property_value_base& value) -> std::string{
 				auto& v = static_cast<const property_value&>(value);
 				return v.value;
 			}

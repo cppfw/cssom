@@ -20,7 +20,7 @@ endif
 this_srcs += main.cpp
 this_srcs += ../harness/properties.cpp
 
-this_ldlibs += -lcssdom -lpapki -lclargs -lstdc++
+this_ldlibs += -lcssom -lpapki -lclargs -lstdc++
 this_ldflags += -L$(d)../../src/build
 
 ifeq ($(os), linux)
@@ -55,7 +55,7 @@ $(.RECIPEPREFIX)@myci-passed.sh
 endef
 $(eval $(this_rules))
 
-# add dependency on libcssdom
-$(prorab_this_name): $(abspath $(d)../../src/build/libcssdom$(dot_so))
+# add dependency on libcssom
+$(prorab_this_name): $(abspath $(d)../../src/build/libcssom$(dot_so))
 
 $(eval $(call prorab-include, ../../src/makefile))

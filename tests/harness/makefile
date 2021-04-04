@@ -21,7 +21,7 @@ endif
 
 this_srcs += $(call prorab-src-dir, .)
 
-this_ldlibs += -lcssdom -lpapki -lstdc++
+this_ldlibs += -lcssom -lpapki -lstdc++
 this_ldflags += -L$(d)../../src/build
 
 ifeq ($(os), linux)
@@ -37,7 +37,7 @@ this_no_install := true
 
 $(eval $(prorab-build-lib))
 
-# add dependency on libcssdom
-$(prorab_this_name): $(abspath $(d)../../src/build/libcssdom$(dot_so))
+# add dependency on libcssom
+$(prorab_this_name): $(abspath $(d)../../src/build/libcssom$(dot_so))
 
 $(eval $(call prorab-include, ../../src/makefile))

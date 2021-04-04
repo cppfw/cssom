@@ -1,6 +1,6 @@
 include prorab.mk
 
-this_name := cssdom
+this_name := cssom
 
 this_out_dir := build
 

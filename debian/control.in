@@ -1,4 +1,4 @@
-Source: libcssdom
+Source: libcssom
 Section: libs
 Priority: extra
 Maintainer: Ivan Gagis <igagis@gmail.com>
@@ -7,31 +7,31 @@ Build-Depends: debhelper (>= 9), myci, prorab, prorab-extra,
 Build-Depends-Indep: doxygen
 Standards-Version: 3.9.2
 
-Package: libcssdom$(soname)
+Package: libcssom$(soname)
 Section: libs
 Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends}
 Description: CSS document object model library.
  Some library.
 
-Package: libcssdom$(soname)-dbg
+Package: libcssom$(soname)-dbg
 Section: debug
 Architecture: any
-Depends: libcssdom$(soname) (= ${binary:Version}), ${misc:Depends}
-Description: debugging symbols for libcssdom$(soname) package.
+Depends: libcssom$(soname) (= ${binary:Version}), ${misc:Depends}
+Description: debugging symbols for libcssom$(soname) package.
 
-Package: libcssdom-dev
+Package: libcssom-dev
 Section: libdevel
 Architecture: any
-Depends: libcssdom$(soname) (= ${binary:Version}), libcssdom$(soname)-dbg (= ${binary:Version}), ${misc:Depends},
+Depends: libcssom$(soname) (= ${binary:Version}), libcssom$(soname)-dbg (= ${binary:Version}), ${misc:Depends},
 		libutki-dev, libpapki-dev
-Suggests: libcssdom-doc
+Suggests: libcssom-doc
 Description: CSS document object model library.
  CSS document object model cross-platform C++ library.
 
-Package: libcssdom-doc
+Package: libcssom-doc
 Section: doc
 Architecture: all
 Depends: ${misc:Depends}
-Description: documentation for libcssdom library.
- For more details see description to libcssdom-dev package.
+Description: documentation for libcssom library.
+ For more details see description to libcssom-dev package.

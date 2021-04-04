@@ -1,0 +1,69 @@
+apply plugin: 'com.android.library'
+apply plugin: 'com.ydq.android.gradle.native-aar.export' // must go after android gradle plugin
+apply plugin: 'com.ydq.android.gradle.native-aar.import' // must go after android gradle plugin
+
+android {
+    compileSdkVersion 28
+
+    defaultConfig {
+        minSdkVersion 21
+        targetSdkVersion 28
+        versionCode 1
+        versionName "1.0"
+
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+
+        externalNativeBuild {
+            cmake {
+                targets "cssom"
+            }
+        }
+    }
+
+    nativeBundleExport {
+        headerDir = "${project.projectDir}/../../src/"
+        bundleStatic = true
+        includeHeaderFilter.add("**/*.hpp")
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+        debug {}
+    }
+
+    // Encapsulates your external native build configurations.
+    externalNativeBuild {
+        // Encapsulates your CMake build configurations.
+        cmake {
+            // Provides a relative path to your CMake build script.
+            path "CMakeLists.txt"
+        }
+    }
+}
+
+repositories {
+    maven {
+        url 'https://dl.bintray.com/cppfw/android/'
+    }
+}
+dependencies {
+    implementation 'io.github.cppfw:utki:+'
+    implementation 'io.github.cppfw:papki:+'
+}
+
+// copy and rename release AAR to unified name
+task copy_aar(type: Copy) {
+    from file("build/outputs/aar/")
+    into file("../")
+    include("*-static-release.aar")
+    rename { String fileName ->
+        fileName.replace("static-release.aar", "\$(version).aar.in")
+    }
+}
+
+afterEvaluate {
+    copy_aar.dependsOn(assembleRelease)
+}

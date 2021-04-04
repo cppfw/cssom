@@ -1,100 +1,100 @@
-libcssdom (0.1.16) unstable; urgency=medium
+libcssom (0.1.16) unstable; urgency=medium
 
   * msvs: disable whole program optimization
 
  -- Ivan Gagis <igagis@gmail.com>  Wed, 17 Mar 2021 03:13:31 +0200
 
-libcssdom (0.1.15) unstable; urgency=medium
+libcssom (0.1.15) unstable; urgency=medium
 
   * remove console output
 
  -- Ivan Gagis <igagis@gmail.com>  Tue, 02 Mar 2021 23:38:50 +0200
 
-libcssdom (0.1.14) unstable; urgency=medium
+libcssom (0.1.14) unstable; urgency=medium
 
   * update dependency versions
 
  -- Ivan Gagis <igagis@gmail.com>  Wed, 10 Feb 2021 13:46:44 +0200
 
-libcssdom (0.1.13) unstable; urgency=medium
+libcssom (0.1.13) unstable; urgency=medium
 
   * github actions build for raspbain
 
  -- Ivan Gagis <igagis@gmail.com>  Mon, 28 Dec 2020 01:51:29 +0200
 
-libcssdom (0.1.12) unstable; urgency=medium
+libcssom (0.1.12) unstable; urgency=medium
 
   * build for ubuntu focal
 
  -- Ivan Gagis <igagis@gmail.com>  Tue, 15 Dec 2020 01:29:45 +0200
 
-libcssdom (0.1.11) unstable; urgency=medium
+libcssom (0.1.11) unstable; urgency=medium
 
   * github actions
 
  -- Ivan Gagis <igagis@gmail.com>  Tue, 01 Dec 2020 02:22:03 +0200
 
-libcssdom (0.1.10) unstable; urgency=medium
+libcssom (0.1.10) unstable; urgency=medium
 
   * msvs: link against latest SDK
 
  -- Ivan Gagis <igagis@gmail.com>  Tue, 17 Nov 2020 03:29:54 +0200
 
-libcssdom (0.1.9) unstable; urgency=medium
+libcssom (0.1.9) unstable; urgency=medium
 
   * deploy to raspbian buster
 
  -- Ivan Gagis <igagis@gmail.com>  Tue, 11 Aug 2020 18:22:25 +0300
 
-libcssdom (0.1.8) unstable; urgency=medium
+libcssom (0.1.8) unstable; urgency=medium
 
   * use android native bundle plugin
 
  -- Ivan Gagis <igagis@gmail.com>  Fri, 19 Jun 2020 01:45:13 +0300
 
-libcssdom (0.1.7) unstable; urgency=medium
+libcssom (0.1.7) unstable; urgency=medium
 
   * document::get_property_value() function made constant
 
  -- Ivan Gagis <igagis@gmail.com>  Mon, 01 Jun 2020 23:23:59 +0300
 
-libcssdom (0.1.6) unstable; urgency=medium
+libcssom (0.1.6) unstable; urgency=medium
 
   * fixed debian dev package dependency
 
  -- Ivan Gagis <igagis@gmail.com>  Sat, 30 May 2020 00:34:47 +0300
 
-libcssdom (0.1.5) unstable; urgency=medium
+libcssom (0.1.5) unstable; urgency=medium
 
   * added document::append() function
 
  -- Ivan Gagis <igagis@gmail.com>  Fri, 29 May 2020 15:50:23 +0300
 
-libcssdom (0.1.4) unstable; urgency=medium
+libcssom (0.1.4) unstable; urgency=medium
 
   * added indent feature to write() function
 
  -- Ivan Gagis <igagis@gmail.com>  Fri, 29 May 2020 13:44:46 +0300
 
-libcssdom (0.1.3) unstable; urgency=medium
+libcssom (0.1.3) unstable; urgency=medium
 
   * property name to id API changed
 
  -- Ivan Gagis <igagis@gmail.com>  Fri, 29 May 2020 05:52:17 +0300
 
-libcssdom (0.1.2) unstable; urgency=medium
+libcssom (0.1.2) unstable; urgency=medium
 
   * fixed nuget package headers directory name
 
  -- Ivan Gagis <igagis@gmail.com>  Thu, 28 May 2020 21:30:58 +0300
 
-libcssdom (0.1.1) unstable; urgency=medium
+libcssom (0.1.1) unstable; urgency=medium
 
   * initial release
 
  -- Ivan Gagis <igagis@gmail.com>  Thu, 28 May 2020 00:08:39 +0300
 
-libcssdom (0.1.0) unstable; urgency=low
+libcssom (0.1.0) unstable; urgency=low
 
   * Initial release
 

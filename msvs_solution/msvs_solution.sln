@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30002.166
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libcssdom", "libcssdom\libcssdom.vcxproj", "{98D9123C-ECCC-4AC8-83DC-0FD28E4ADC63}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libcssom", "libcssom\libcssom.vcxproj", "{98D9123C-ECCC-4AC8-83DC-0FD28E4ADC63}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
