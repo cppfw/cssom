@@ -1,3 +1,9 @@
+libcssom (0.1.19) unstable; urgency=medium
+
+  * deploy to jfrog
+
+ -- Ivan Gagis <igagis@gmail.com>  Thu, 08 Apr 2021 23:19:39 +0300
+
 libcssom (0.1.18) unstable; urgency=medium
 
   * rename document to sheet
