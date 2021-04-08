@@ -29,9 +29,9 @@ int main(int argc, char** argv){
 
 		css_om1.append(std::move(css_om2));
 
-		ASSERT_ALWAYS(css_om1.styles.size() == 2)
-		ASSERT_INFO_ALWAYS(css_om1.styles.front().specificity == 2, "specificity = " << css_om1.styles.front().specificity)
-		ASSERT_INFO_ALWAYS(css_om1.styles.back().specificity == 1, "specificity = " << css_om1.styles.back().specificity)
+		utki::assert(css_om1.styles.size() == 2, SL);
+		utki::assert(css_om1.styles.front().specificity == 2, [&](auto&o){o << "specificity = " << css_om1.styles.front().specificity;}, SL);
+		utki::assert(css_om1.styles.back().specificity == 1, [&](auto&o){o << "specificity = " << css_om1.styles.back().specificity;}, SL);
 	}
 
 	return 0;

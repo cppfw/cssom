@@ -202,7 +202,7 @@ void parser::parse_combinator(utki::span<char>::const_iterator& i, utki::span<ch
 						this->cur_state = state::selector_class;
 						break;
 					case '[':
-						ASSERT_INFO_ALWAYS(false, "attribute selectors are not implemented")
+						utki::assert(false, [](auto&o){o << "attribute selectors are not implemented";}, SL);
 						break;
 					default:
 						this->buf.push_back(*i);

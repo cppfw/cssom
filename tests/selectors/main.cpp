@@ -55,23 +55,23 @@ int main(int argc, char** argv){
 			crawler cr(dom, {0, 0});
 			
 			auto qr = css_dom.get_property_value(cr, uint32_t(property_id::stroke));
-			ASSERT_ALWAYS(qr.value);
+			utki::assert(qr.value, SL);
 
-			ASSERT_ALWAYS(dynamic_cast<const property_value*>(qr.value))
+			utki::assert(dynamic_cast<const property_value*>(qr.value), SL);
 
 			auto pv = static_cast<const property_value*>(qr.value);
-			ASSERT_ALWAYS(pv->value == "blue")
+			utki::assert(pv->value == "blue", SL);
 		}
 		{
 			crawler cr(dom, {0, 1});
 			
 			auto qr = css_dom.get_property_value(cr, uint32_t(property_id::stroke));
-			ASSERT_ALWAYS(qr.value);
+			utki::assert(qr.value, SL);
 
-			ASSERT_ALWAYS(dynamic_cast<const property_value*>(qr.value))
+			utki::assert(dynamic_cast<const property_value*>(qr.value), SL);
 
 			auto pv = static_cast<const property_value*>(qr.value);
-			ASSERT_ALWAYS(pv->value == "#006600")
+			utki::assert(pv->value == "#006600", SL);
 		}
 	}
 
