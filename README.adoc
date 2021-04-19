@@ -6,4 +6,18 @@
 | link:https://github.com/cppfw/{name}/releases[image:https://img.shields.io/github/tag/cppfw/{name}.svg[releases]] | link:https://github.com/cppfw/{name}/actions[image:https://github.com/cppfw/{name}/workflows/ci/badge.svg[ci status]]
 |====
 
-CSS document object model C++ library
+CSS object model C++ library
+
+== Installation
+:package_name: {name}
+
+. Setup your OS-preferred package system repo following link:https://github.com/cppfw/wiki/blob/master/enable_repo/enable_repo.adoc[this manual]
+. Install package
++
+- **conan** (multi-OS): `{package_name}`
+- **deb** (Linux): `lib{package_name}-dev`
+- **homebrew** (MacOS X): `lib{package_name}`
+- **Android**: `io.github.cppfw:{package_name}`
+- **cocoapods** (iOS): `{package_name}`
+- **Msys2** (Windows): `mingw-w64-i686-{package_name}`, `mingw-w64-x86_64-{package_name}`
+- **Nuget** (Windows, Visual Studio): `lib{package_name}`
