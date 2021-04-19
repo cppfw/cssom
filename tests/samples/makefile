@@ -11,7 +11,7 @@ this_name := parsecss
 this_srcs += main.cpp
 this_srcs += ../harness/properties.cpp
 
-this_ldlibs += -lcssom -lpapki -lclargs
+this_ldlibs += -lcssom -lpapki -lclargs -lutki
 this_ldflags += -L$(d)../../src/out/$(c)
 
 this_cxxflags += $(addprefix -I,$(CONAN_INCLUDE_DIRS))
