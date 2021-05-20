@@ -43,7 +43,7 @@ void parser::feed(utki::span<const char> data){
 	}
 }
 
-void parser::parse_idle(utki::span<char>::const_iterator& i, utki::span<char>::const_iterator& e){
+void parser::parse_idle(utki::span<const char>::iterator& i, utki::span<const char>::iterator& e){
 	for(; i != e; ++i){
 		ASSERT(this->buf.empty())
 		switch(*i){
@@ -67,7 +67,7 @@ void parser::parse_idle(utki::span<char>::const_iterator& i, utki::span<char>::c
 	}
 }
 
-void parser::parse_style_idle(utki::span<char>::const_iterator& i, utki::span<char>::const_iterator& e){
+void parser::parse_style_idle(utki::span<const char>::iterator& i, utki::span<const char>::iterator& e){
 	for(; i != e; ++i){
 		ASSERT(this->buf.empty())
 		switch(*i){
@@ -89,7 +89,7 @@ void parser::parse_style_idle(utki::span<char>::const_iterator& i, utki::span<ch
 	}
 }
 
-void parser::parse_selector_tag(utki::span<char>::const_iterator& i, utki::span<char>::const_iterator& e){
+void parser::parse_selector_tag(utki::span<const char>::iterator& i, utki::span<const char>::iterator& e){
 	for(; i != e; ++i){
 		ASSERT(!this->buf.empty())
 		switch(*i){
@@ -125,7 +125,7 @@ void parser::parse_selector_tag(utki::span<char>::const_iterator& i, utki::span<
 	}
 }
 
-void parser::parse_selector_class(utki::span<char>::const_iterator& i, utki::span<char>::const_iterator& e){
+void parser::parse_selector_class(utki::span<const char>::iterator& i, utki::span<const char>::iterator& e){
 	for(; i != e; ++i){
 		switch(*i){
 			case '\n':
@@ -159,7 +159,7 @@ void parser::parse_selector_class(utki::span<char>::const_iterator& i, utki::spa
 	}
 }
 
-void parser::parse_combinator(utki::span<char>::const_iterator& i, utki::span<char>::const_iterator& e){
+void parser::parse_combinator(utki::span<const char>::iterator& i, utki::span<const char>::iterator& e){
 	for(; i != e; ++i){
 		switch(*i){
 			case '\n':
@@ -215,7 +215,7 @@ void parser::parse_combinator(utki::span<char>::const_iterator& i, utki::span<ch
 	}
 }
 
-void parser::parse_property_name(utki::span<char>::const_iterator& i, utki::span<char>::const_iterator& e){
+void parser::parse_property_name(utki::span<const char>::iterator& i, utki::span<const char>::iterator& e){
 	for(; i != e; ++i){
 		switch(*i){
 			case '\n':
@@ -242,7 +242,7 @@ void parser::parse_property_name(utki::span<char>::const_iterator& i, utki::span
 	}
 }
 
-void parser::parse_property_value_delimiter(utki::span<char>::const_iterator& i, utki::span<char>::const_iterator& e){
+void parser::parse_property_value_delimiter(utki::span<const char>::iterator& i, utki::span<const char>::iterator& e){
 	for(; i != e; ++i){
 		ASSERT(this->buf.empty())
 		switch(*i){
@@ -263,7 +263,7 @@ void parser::parse_property_value_delimiter(utki::span<char>::const_iterator& i,
 	}
 }
 
-void parser::parse_property_value(utki::span<char>::const_iterator& i, utki::span<char>::const_iterator& e){
+void parser::parse_property_value(utki::span<const char>::iterator& i, utki::span<const char>::iterator& e){
 	for(; i != e; ++i){
 		switch(*i){
 			case '\n':
@@ -290,7 +290,7 @@ void parser::parse_property_value(utki::span<char>::const_iterator& i, utki::spa
 	}
 }
 
-void parser::parse_property_value_terminator(utki::span<char>::const_iterator& i, utki::span<char>::const_iterator& e){
+void parser::parse_property_value_terminator(utki::span<const char>::iterator& i, utki::span<const char>::iterator& e){
 	for(; i != e; ++i){
 		ASSERT(this->buf.empty())
 		switch(*i){

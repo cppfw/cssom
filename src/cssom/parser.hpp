@@ -30,15 +30,15 @@ class parser{
 
 	std::vector<char> buf;
 
-	void parse_idle(utki::span<char>::const_iterator& i, utki::span<char>::const_iterator& e);
-	void parse_style_idle(utki::span<char>::const_iterator& i, utki::span<char>::const_iterator& e);
-	void parse_selector_tag(utki::span<char>::const_iterator& i, utki::span<char>::const_iterator& e);
-	void parse_selector_class(utki::span<char>::const_iterator& i, utki::span<char>::const_iterator& e);
-	void parse_combinator(utki::span<char>::const_iterator& i, utki::span<char>::const_iterator& e);
-	void parse_property_name(utki::span<char>::const_iterator& i, utki::span<char>::const_iterator& e);
-	void parse_property_value_delimiter(utki::span<char>::const_iterator& i, utki::span<char>::const_iterator& e);
-	void parse_property_value(utki::span<char>::const_iterator& i, utki::span<char>::const_iterator& e);
-	void parse_property_value_terminator(utki::span<char>::const_iterator& i, utki::span<char>::const_iterator& e);
+	void parse_idle(utki::span<const char>::iterator& i, utki::span<const char>::iterator& e);
+	void parse_style_idle(utki::span<const char>::iterator& i, utki::span<const char>::iterator& e);
+	void parse_selector_tag(utki::span<const char>::iterator& i, utki::span<const char>::iterator& e);
+	void parse_selector_class(utki::span<const char>::iterator& i, utki::span<const char>::iterator& e);
+	void parse_combinator(utki::span<const char>::iterator& i, utki::span<const char>::iterator& e);
+	void parse_property_name(utki::span<const char>::iterator& i, utki::span<const char>::iterator& e);
+	void parse_property_value_delimiter(utki::span<const char>::iterator& i, utki::span<const char>::iterator& e);
+	void parse_property_value(utki::span<const char>::iterator& i, utki::span<const char>::iterator& e);
+	void parse_property_value_terminator(utki::span<const char>::iterator& i, utki::span<const char>::iterator& e);
 public:
 	parser() = default;
 
