@@ -1,3 +1,9 @@
+libcssom (0.1.23) unstable; urgency=medium
+
+  * relink to latest utki
+
+ -- Ivan Gagis <igagis@gmail.com>  Tue, 01 Jun 2021 14:01:36 +0300
+
 libcssom (0.1.22) unstable; urgency=medium
 
   * update to latest utki
