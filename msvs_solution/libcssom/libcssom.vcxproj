@@ -610,9 +610,6 @@
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
-    <Import Project="..\packages\zlib_static.1.2.11.5\build\native\zlib_static.targets" Condition="Exists('..\packages\zlib_static.1.2.11.5\build\native\zlib_static.targets')" />
-    <Import Project="..\packages\libutki.1.1.101\build\native\libutki.targets" Condition="Exists('..\packages\libutki.1.1.101\build\native\libutki.targets')" />
-    <Import Project="..\packages\libpapki.1.0.84\build\native\libpapki.targets" Condition="Exists('..\packages\libpapki.1.0.84\build\native\libpapki.targets')" />
     <Import Project="..\packages\libutki.1.1.147\build\native\libutki.targets" Condition="Exists('..\packages\libutki.1.1.147\build\native\libutki.targets')" />
     <Import Project="..\packages\zlib_static.1.2.11.9\build\native\zlib_static.targets" Condition="Exists('..\packages\zlib_static.1.2.11.9\build\native\zlib_static.targets')" />
     <Import Project="..\packages\libpapki.1.0.99\build\native\libpapki.targets" Condition="Exists('..\packages\libpapki.1.0.99\build\native\libpapki.targets')" />
@@ -621,9 +618,6 @@
     <PropertyGroup>
       <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
     </PropertyGroup>
-    <Error Condition="!Exists('..\packages\zlib_static.1.2.11.5\build\native\zlib_static.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\zlib_static.1.2.11.5\build\native\zlib_static.targets'))" />
-    <Error Condition="!Exists('..\packages\libutki.1.1.101\build\native\libutki.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\libutki.1.1.101\build\native\libutki.targets'))" />
-    <Error Condition="!Exists('..\packages\libpapki.1.0.84\build\native\libpapki.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\libpapki.1.0.84\build\native\libpapki.targets'))" />
     <Error Condition="!Exists('..\packages\libutki.1.1.147\build\native\libutki.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\libutki.1.1.147\build\native\libutki.targets'))" />
     <Error Condition="!Exists('..\packages\zlib_static.1.2.11.9\build\native\zlib_static.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\zlib_static.1.2.11.9\build\native\zlib_static.targets'))" />
     <Error Condition="!Exists('..\packages\libpapki.1.0.99\build\native\libpapki.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\libpapki.1.0.99\build\native\libpapki.targets'))" />
