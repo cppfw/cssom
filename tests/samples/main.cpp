@@ -45,7 +45,7 @@ int main(int argc, char** argv){
 				}
 				return uint32_t(i->second);
 			},
-			[](uint32_t id, std::string&& value) -> std::unique_ptr<cssom::property_value_base> {
+			[](uint32_t id, std::string&& value) -> std::unique_ptr<cssom::property_value_base>{
 				return std::make_unique<property_value>(std::move(value));
 			}
 		);
