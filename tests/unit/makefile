@@ -10,7 +10,7 @@ this_name := tests
 
 this_srcs += $(call prorab-src-dir, .)
 
-this_ldlibs += -lharness -lcssom -lpapki -lutki -ltst
+this_ldlibs += -lharness -lcssom -lpapki -lutki -ltst $(addprefix -l,$(CONAN_LIBS))
 this_ldflags += -L$(d)../../src/out/$(c)
 this_ldflags += -L$(d)../harness/out/$(c)
 
