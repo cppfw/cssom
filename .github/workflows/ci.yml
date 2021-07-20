@@ -55,12 +55,12 @@ jobs:
         run: myci-deb-install-build-deps.sh
       - name: build
         run: dpkg-buildpackage --unsigned-source --unsigned-changes
-      - name: publish test report
-        uses: EnricoMi/publish-unit-test-result-action/composite@v1.19
-        if: always()
-        with:
-          files: tests/**/junit*.xml
-          check_name: "test report: ${{ github.job }} - ${{ matrix.image_owner }}${{ matrix.os }}:${{ matrix.codename }}"
+      # - name: publish test report
+      #   uses: EnricoMi/publish-unit-test-result-action/composite@v1.19
+      #   if: always()
+      #   with:
+      #     files: tests/**/junit*.xml
+      #     check_name: "test report: ${{ github.job }} - ${{ matrix.image_owner }}${{ matrix.os }}:${{ matrix.codename }}"
       - name: deploy deb packages
         run: |
           echo "${{ secrets.MYCI_REPO_SSH_KEY }}" > repo_key_rsa && chmod 600 repo_key_rsa
