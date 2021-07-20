@@ -1,3 +1,9 @@
+libcssom (0.1.25) unstable; urgency=medium
+
+  * deploy to own repo
+
+ -- Ivan Gagis <igagis@gmail.com>  Tue, 20 Jul 2021 17:54:38 +0300
+
 libcssom (0.1.24) unstable; urgency=medium
 
   * relink to latest libs
