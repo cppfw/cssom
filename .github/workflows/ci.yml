@@ -56,7 +56,7 @@ jobs:
       - name: build
         run: dpkg-buildpackage --unsigned-source --unsigned-changes
       - name: publish test report
-        uses: EnricoMi/publish-unit-test-result-action/composite@v1
+        uses: EnricoMi/publish-unit-test-result-action/composite@v1.19
         if: always()
         with:
           files: tests/**/junit*.xml
