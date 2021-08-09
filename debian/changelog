@@ -1,3 +1,9 @@
+libcssom (0.1.26) unstable; urgency=medium
+
+  * rebuild for conan
+
+ -- Ivan Gagis <igagis@gmail.com>  Mon, 09 Aug 2021 18:36:13 +0300
+
 libcssom (0.1.25) unstable; urgency=medium
 
   * deploy to own repo
