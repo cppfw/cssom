@@ -1,3 +1,9 @@
+libcssom (0.1.28) unstable; urgency=medium
+
+  * msvs: build for v141 tools
+
+ -- Ivan Gagis <igagis@gmail.com>  Sun, 15 Aug 2021 14:31:42 +0300
+
 libcssom (0.1.27) unstable; urgency=medium
 
   * use latest make in homebrew formulae
