@@ -2,9 +2,9 @@ source 'https://github.com/cppfw/cocoapods-repo.git'
 
 project 'cssom/cssom.xcodeproj'
 
-platform :ios, '8.0'
+platform :ios, '11.0'
 
 target "cssom" do
-	pod 'utki', '>= 1.1.122'
-	pod 'papki', '>= 1.0.93'
+	pod 'utki', '>= 1.1.164'
+	pod 'papki', '>= 1.0.111'
 end
