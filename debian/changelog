@@ -1,3 +1,9 @@
+libcssom (0.1.30) unstable; urgency=medium
+
+  * ios: static framework
+
+ -- Ivan Gagis <igagis@gmail.com>  Sat, 30 Oct 2021 02:54:16 +0300
+
 libcssom (0.1.29) unstable; urgency=medium
 
   * build for debian bullseye
