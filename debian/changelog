@@ -1,3 +1,9 @@
+libcssom (0.1.31) unstable; urgency=medium
+
+  * build for ios 9.0
+
+ -- Ivan Gagis <igagis@gmail.com>  Sun, 31 Oct 2021 15:35:32 +0200
+
 libcssom (0.1.30) unstable; urgency=medium
 
   * ios: static framework
