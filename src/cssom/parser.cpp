@@ -83,7 +83,7 @@ void parser::parse_idle(utki::span<const char>::iterator& i, utki::span<const ch
 				this->cur_state = state::selector_class;
 				return;
 			case '[':
-				ASSERT_INFO(false, "parsing of attribute selectors is not implemented")
+				ASSERT(false, [&](auto&o){o << "parsing of attribute selectors is not implemented";})
 				break;
 			default:
 				this->buf.push_back(*i);
@@ -142,7 +142,7 @@ void parser::parse_selector_tag(utki::span<const char>::iterator& i, utki::span<
 				this->cur_state = state::selector_class;
 				return;
 			case '[':
-				ASSERT_INFO(false, "parsing of attribute selectors is not implemented")
+				ASSERT(false, [&](auto&o){o << "parsing of attribute selectors is not implemented";})
 				break;
 			default:
 				this->buf.push_back(*i);
@@ -169,7 +169,7 @@ void parser::parse_selector_class(utki::span<const char>::iterator& i, utki::spa
 				this->buf.clear();
 				break;
 			case '[':
-				ASSERT_INFO(false, "parsing of attribute selectors is not implemented")
+				ASSERT(false, [&](auto&o){o << "parsing of attribute selectors is not implemented";})
 				break;
 			case '{':
 				this->on_selector_class(utki::make_string(utki::make_span(this->buf)));
