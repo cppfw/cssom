@@ -30,6 +30,10 @@ SOFTWARE.
 
 #include <utki/string.hpp>
 
+#ifdef assert
+#	undef assert
+#endif
+
 using namespace cssom;
 
 void parser::feed(utki::span<const char> data){

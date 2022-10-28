@@ -27,6 +27,10 @@ SOFTWARE.
 #include "om.hpp"
 #include "parser.hpp"
 
+#ifdef assert
+#	undef assert
+#endif
+
 using namespace cssom;
 
 namespace{
