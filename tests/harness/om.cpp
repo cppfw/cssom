@@ -11,7 +11,7 @@ cssom::sheet read_css(const char* css){
 			[pntim](const std::string& name) -> uint32_t{
 				auto i = pntim->find(name);
 				if(i == pntim->end()){
-					return uint32_t(property_id::ENUM_SIZE);
+					return uint32_t(property_id::enum_size);
 				}
 				return uint32_t(i->second);
 			},

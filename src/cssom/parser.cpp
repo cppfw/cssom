@@ -136,6 +136,13 @@ void parser::parse_selector_tag(utki::span<const char>::iterator& i, utki::span<
 				this->on_selector_chain_end();
 				this->cur_state = state::style_idle;
 				return;
+			case ',':
+				this->on_selector_tag(utki::make_string(utki::make_span(this->buf)));
+				this->buf.clear();
+				this->on_selector_end();
+				this->on_selector_chain_end();
+				this->cur_state = state::idle;
+				return;
 			case '.':
 				this->on_selector_tag(utki::make_string(utki::make_span(this->buf)));
 				this->buf.clear();
@@ -169,7 +176,7 @@ void parser::parse_selector_class(utki::span<const char>::iterator& i, utki::spa
 				this->buf.clear();
 				break;
 			case '[':
-				ASSERT(false, [&](auto&o){o << "parsing of attribute selectors is not implemented";})
+				throw std::runtime_error("parsing of attribute selectors is not implemented");
 				break;
 			case '{':
 				this->on_selector_class(utki::make_string(utki::make_span(this->buf)));
@@ -177,6 +184,13 @@ void parser::parse_selector_class(utki::span<const char>::iterator& i, utki::spa
 				this->on_selector_end();
 				this->on_selector_chain_end();
 				this->cur_state = state::style_idle;
+				return;
+			case ',':
+				this->on_selector_class(utki::make_string(utki::make_span(this->buf)));
+				this->buf.clear();
+				this->on_selector_end();
+				this->on_selector_chain_end();
+				this->cur_state = state::idle;
 				return;
 			default:
 				this->buf.push_back(*i);
@@ -218,6 +232,15 @@ void parser::parse_combinator(utki::span<const char>::iterator& i, utki::span<co
 				}
 				this->on_selector_chain_end();
 				this->cur_state = state::style_idle;
+				return;
+			case ',':
+				if(!this->buf.empty()){
+					std::stringstream ss;
+					ss << "unexpected combinator encountered (" << utki::make_string(utki::make_span(this->buf)) << ") at line " << this->line;
+					throw malformed_css_error(ss.str());
+				}
+				this->on_selector_chain_end();
+				this->cur_state = state::idle;
 				return;
 			default:
 				this->on_combinator(utki::make_string(utki::make_span(this->buf)));

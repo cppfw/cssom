@@ -214,15 +214,18 @@ void sheet::write(
 	papki::file::guard file_guard(fi, papki::file::mode::create);
 
 	for(auto i = this->styles.begin(); i != this->styles.end(); ++i){
+		// Go through selector chains which refer to the same property set (selectors in the same selector group).
+		// These are selector chains specified as comma separated list before defining their properties in CSS sheet,
+		// such selector chains will go in a row.
 		auto selector_group_start_iter = i;
-
-		// go through selectors which refer to the same property set (selectors in the same selector group)
 		for(auto j = selector_group_start_iter; j != this->styles.end(); ++j){
 			if(j->properties.get() != selector_group_start_iter->properties.get()){
 				ASSERT(j > i)
 				i = --j;
 				break;
 			}
+
+			i = j;
 
 			if(j != selector_group_start_iter){
 				fi.write(comma);

@@ -13,8 +13,9 @@ enum class property_id{
 	stroke_width,
 	background_color,
 	background_image,
+	fill_rule,
 
-	ENUM_SIZE
+	enum_size
 };
 
 extern std::map<std::string, uint32_t> property_name_to_id_map;
