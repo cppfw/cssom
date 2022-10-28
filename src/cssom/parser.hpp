@@ -1,7 +1,7 @@
 /*
 MIT License
 
-Copyright (c) 2020-2021 Ivan Gagis
+Copyright (c) 2020-2022 Ivan Gagis
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -43,6 +43,7 @@ class parser{
 	enum class state{
 		idle,
 		style_idle, // idle state inside style block
+		selector_id,
 		selector_tag,
 		selector_class,
 		combinator,
@@ -59,12 +60,17 @@ class parser{
 	void parse_idle(utki::span<const char>::iterator& i, utki::span<const char>::iterator& e);
 	void parse_style_idle(utki::span<const char>::iterator& i, utki::span<const char>::iterator& e);
 	void parse_selector_tag(utki::span<const char>::iterator& i, utki::span<const char>::iterator& e);
+	void parse_selector_id(utki::span<const char>::iterator& i, utki::span<const char>::iterator& e);
 	void parse_selector_class(utki::span<const char>::iterator& i, utki::span<const char>::iterator& e);
 	void parse_combinator(utki::span<const char>::iterator& i, utki::span<const char>::iterator& e);
 	void parse_property_name(utki::span<const char>::iterator& i, utki::span<const char>::iterator& e);
 	void parse_property_value_delimiter(utki::span<const char>::iterator& i, utki::span<const char>::iterator& e);
 	void parse_property_value(utki::span<const char>::iterator& i, utki::span<const char>::iterator& e);
 	void parse_property_value_terminator(utki::span<const char>::iterator& i, utki::span<const char>::iterator& e);
+
+	void notify_selector_tag();
+	void notify_selector_id();
+	void notify_selector_class();
 public:
 	parser() = default;
 
@@ -73,6 +79,7 @@ public:
 	virtual void on_selector_chain_end() = 0;
 	virtual void on_selector_end() = 0;
 	virtual void on_selector_tag(std::string&& str) = 0;
+	virtual void on_selector_id(std::string&& str) = 0;
 	virtual void on_selector_class(std::string&& str) = 0;
 	virtual void on_combinator(std::string&& str) = 0;
 	virtual void on_style_properties_end() = 0;

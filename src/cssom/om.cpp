@@ -1,7 +1,7 @@
 /*
 MIT License
 
-Copyright (c) 2020-2021 Ivan Gagis
+Copyright (c) 2020-2022 Ivan Gagis
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -26,6 +26,10 @@ SOFTWARE.
 
 #include "om.hpp"
 #include "parser.hpp"
+
+#ifdef assert
+#	undef assert
+#endif
 
 using namespace cssom;
 
@@ -98,7 +102,7 @@ public:
 		ASSERT(this->cur_selector_chain.empty())
 		ASSERT(this->cur_selector.classes.empty())
 		ASSERT(this->cur_selector.tag.empty())
-		//TODO: add assert attributes of current selector are empty
+		//TODO: add assert(attributes of current selector are empty)
 	}
 
 	virtual void on_selector_end()override{
@@ -109,6 +113,11 @@ public:
 	virtual void on_selector_tag(std::string&& str)override{
 		// TRACE(<< "selector tag: " << str << std::endl)
 		this->cur_selector.tag = std::move(str);
+	}
+
+	virtual void on_selector_id(std::string&& str)override{
+		// TRACE(<< "selector id: " << str << std::endl)
+		this->cur_selector.id = std::move(str);
 	}
 
 	virtual void on_selector_class(std::string&& str)override{
@@ -196,6 +205,7 @@ sheet cssom::read(
 namespace{
 auto comma = utki::make_span(", ");
 auto period = utki::make_span(".");
+auto hash_sign = utki::make_span("#");
 auto open_curly_brace = utki::make_span(" {\n");
 auto tab_char = utki::make_span("\t");
 auto new_line_char = utki::make_span("\n");
@@ -214,15 +224,18 @@ void sheet::write(
 	papki::file::guard file_guard(fi, papki::file::mode::create);
 
 	for(auto i = this->styles.begin(); i != this->styles.end(); ++i){
+		// Go through selector chains which refer to the same property set (selectors in the same selector group).
+		// These are selector chains specified as comma separated list before defining their properties in CSS sheet,
+		// such selector chains will go in a row.
 		auto selector_group_start_iter = i;
-
-		// go through selectors which refer to the same property set (selectors in the same selector group)
 		for(auto j = selector_group_start_iter; j != this->styles.end(); ++j){
 			if(j->properties.get() != selector_group_start_iter->properties.get()){
 				ASSERT(j > i)
 				i = --j;
 				break;
 			}
+
+			i = j;
 
 			if(j != selector_group_start_iter){
 				fi.write(comma);
@@ -235,13 +248,19 @@ void sheet::write(
 				// write selector tag
 				fi.write(utki::make_span(s->tag));
 
+				// write selector id
+				if(!s->id.empty()){
+					fi.write(hash_sign);
+					fi.write(utki::make_span(s->id));
+				}
+
 				// write selctor classes
 				for(auto& c : s->classes){
 					fi.write(period);
 					fi.write(utki::make_span(c));
 				}
 
-				// TODO: write attributes
+				// TODO: write selector attributes
 
 				// write combinator
 				auto c = combinator_to_string(s->combinator);

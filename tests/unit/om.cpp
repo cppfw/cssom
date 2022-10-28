@@ -1,9 +1,9 @@
 #include <tst/set.hpp>
 #include <tst/check.hpp>
 
-#include "../../src/cssom/om.hpp"
-
 #include <papki/span_file.hpp>
+
+#include <cssom/om.hpp>
 
 #include "../harness/properties.hpp"
 #include "../harness/om.hpp"

@@ -41,7 +41,7 @@ tst::set set("samples", [](tst::suite& suite){
                     [](const std::string& name) -> uint32_t{
                         auto i = property_name_to_id_map.find(name);
                         if(i == property_name_to_id_map.end()){
-                            return uint32_t(property_id::ENUM_SIZE);
+                            return uint32_t(property_id::enum_size);
                         }
                         return uint32_t(i->second);
                     },
@@ -71,10 +71,18 @@ tst::set set("samples", [](tst::suite& suite){
             
             auto out_data = out_file.reset_data();
 
-            auto cmp_data = papki::fs_file(in_file_name + ".cmp").load();
+            decltype(out_data) cmp_data;
+
+            papki::fs_file cmp_file(in_file_name + ".cmp");
+
+            try{
+                cmp_data = cmp_file.load();
+            }catch(std::system_error& e){
+                std::cout << "could not load file: " << cmp_file.path() << std::endl;
+            }
 
             if(out_data != cmp_data){
-                papki::fs_file failed_file(p + ".out");
+                papki::fs_file failed_file(data_dir + p + ".out");
 
                 failed_file.open(papki::file::mode::create);
                 failed_file.write(out_data);
