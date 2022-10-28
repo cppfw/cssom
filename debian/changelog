@@ -1,3 +1,10 @@
+libcssom (0.2.0) UNRELEASED; urgency=medium
+
+  * implement parsing of id selectors
+  * implement parsing of grouped selectors
+
+ -- Ivan Gagis <igagis@gmail.com>  Sat, 29 Oct 2022 00:15:50 +0300
+
 libcssom (0.1.36) unstable; urgency=medium
 
   * build for ubuntu jammy
