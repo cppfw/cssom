@@ -98,7 +98,7 @@ public:
 		ASSERT(this->cur_selector_chain.empty())
 		ASSERT(this->cur_selector.classes.empty())
 		ASSERT(this->cur_selector.tag.empty())
-		//TODO: add assert attributes of current selector are empty
+		//TODO: add assert(attributes of current selector are empty)
 	}
 
 	virtual void on_selector_end()override{
@@ -109,6 +109,11 @@ public:
 	virtual void on_selector_tag(std::string&& str)override{
 		// TRACE(<< "selector tag: " << str << std::endl)
 		this->cur_selector.tag = std::move(str);
+	}
+
+	virtual void on_selector_id(std::string&& str)override{
+		// TRACE(<< "selector id: " << str << std::endl)
+		this->cur_selector.id = std::move(str);
 	}
 
 	virtual void on_selector_class(std::string&& str)override{
@@ -196,6 +201,7 @@ sheet cssom::read(
 namespace{
 auto comma = utki::make_span(", ");
 auto period = utki::make_span(".");
+auto hash_sign = utki::make_span("#");
 auto open_curly_brace = utki::make_span(" {\n");
 auto tab_char = utki::make_span("\t");
 auto new_line_char = utki::make_span("\n");
@@ -238,13 +244,19 @@ void sheet::write(
 				// write selector tag
 				fi.write(utki::make_span(s->tag));
 
+				// write selector id
+				if(!s->id.empty()){
+					fi.write(hash_sign);
+					fi.write(utki::make_span(s->id));
+				}
+
 				// write selctor classes
 				for(auto& c : s->classes){
 					fi.write(period);
 					fi.write(utki::make_span(c));
 				}
 
-				// TODO: write attributes
+				// TODO: write selector attributes
 
 				// write combinator
 				auto c = combinator_to_string(s->combinator);

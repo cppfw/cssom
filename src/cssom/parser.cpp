@@ -44,6 +44,9 @@ void parser::feed(utki::span<const char> data){
 			case state::selector_tag:
 				this->parse_selector_tag(i, e);
 				break;
+			case state::selector_id:
+				this->parse_selector_id(i, e);
+				break;
 			case state::selector_class:
 				this->parse_selector_class(i, e);
 				break;
@@ -82,8 +85,11 @@ void parser::parse_idle(utki::span<const char>::iterator& i, utki::span<const ch
 			case '.':
 				this->cur_state = state::selector_class;
 				return;
+			case '#':
+				this->cur_state = state::selector_id;
+				return;
 			case '[':
-				ASSERT(false, [&](auto&o){o << "parsing of attribute selectors is not implemented";})
+				throw std::runtime_error("parsing of attribute selectors is not implemented");
 				break;
 			default:
 				this->buf.push_back(*i);
@@ -115,6 +121,12 @@ void parser::parse_style_idle(utki::span<const char>::iterator& i, utki::span<co
 	}
 }
 
+void parser::notify_selector_tag(){
+	this->on_selector_tag(utki::make_string(utki::make_span(this->buf)));
+	this->buf.clear();
+	this->on_selector_end();
+}
+
 void parser::parse_selector_tag(utki::span<const char>::iterator& i, utki::span<const char>::iterator& e){
 	for(; i != e; ++i){
 		ASSERT(!this->buf.empty())
@@ -124,22 +136,16 @@ void parser::parse_selector_tag(utki::span<const char>::iterator& i, utki::span<
 			case ' ':
 			case '\r':
 			case '\t':
-				this->on_selector_tag(utki::make_string(utki::make_span(this->buf)));
-				this->buf.clear();
-				this->on_selector_end();
+				this->notify_selector_tag();
 				this->cur_state = state::combinator;
 				return;
 			case '{':
-				this->on_selector_tag(utki::make_string(utki::make_span(this->buf)));
-				this->buf.clear();
-				this->on_selector_end();
+				this->notify_selector_tag();
 				this->on_selector_chain_end();
 				this->cur_state = state::style_idle;
 				return;
 			case ',':
-				this->on_selector_tag(utki::make_string(utki::make_span(this->buf)));
-				this->buf.clear();
-				this->on_selector_end();
+				this->notify_selector_tag();
 				this->on_selector_chain_end();
 				this->cur_state = state::idle;
 				return;
@@ -148,14 +154,73 @@ void parser::parse_selector_tag(utki::span<const char>::iterator& i, utki::span<
 				this->buf.clear();
 				this->cur_state = state::selector_class;
 				return;
+			case '#':
+				this->on_selector_tag(utki::make_string(utki::make_span(this->buf)));
+				this->buf.clear();
+				this->cur_state = state::selector_id;
+				return;
 			case '[':
-				ASSERT(false, [&](auto&o){o << "parsing of attribute selectors is not implemented";})
+				throw std::runtime_error("parsing of attribute selectors is not implemented");
 				break;
 			default:
 				this->buf.push_back(*i);
 				break;
 		}
 	}
+}
+
+void parser::notify_selector_id(){
+	this->on_selector_id(utki::make_string(utki::make_span(this->buf)));
+	this->buf.clear();
+	this->on_selector_end();
+}
+
+void parser::parse_selector_id(utki::span<const char>::iterator& i, utki::span<const char>::iterator& e){
+	for(; i != e; ++i){
+		switch(*i){
+			case '\n':
+				++this->line;
+			case ' ':
+			case '\r':
+			case '\t':
+				this->notify_selector_id();
+				this->cur_state = state::combinator;
+				return;
+			case '{':
+				this->notify_selector_id();
+				this->on_selector_chain_end();
+				this->cur_state = state::style_idle;
+				return;
+			case ',':
+				this->notify_selector_id();
+				this->on_selector_chain_end();
+				this->cur_state = state::idle;
+				return;
+			case '.':
+				this->on_selector_id(utki::make_string(utki::make_span(this->buf)));
+				this->buf.clear();
+				this->cur_state = state::selector_class;
+				return;
+			case '#':
+				{
+					std::stringstream ss;
+					ss << "unexpected # encountered at line " << this->line;
+					throw malformed_css_error(ss.str());
+				}
+			case '[':
+				throw std::runtime_error("parsing of attribute selectors is not implemented");
+				break;
+			default:
+				this->buf.push_back(*i);
+				break;
+		}
+	}
+}
+
+void parser::notify_selector_class(){
+	this->on_selector_class(utki::make_string(utki::make_span(this->buf)));
+	this->buf.clear();
+	this->on_selector_end();
 }
 
 void parser::parse_selector_class(utki::span<const char>::iterator& i, utki::span<const char>::iterator& e){
@@ -166,9 +231,7 @@ void parser::parse_selector_class(utki::span<const char>::iterator& i, utki::spa
 			case ' ':
 			case '\r':
 			case '\t':
-				this->on_selector_class(utki::make_string(utki::make_span(this->buf)));
-				this->buf.clear();
-				this->on_selector_end();
+				this->notify_selector_class();
 				this->cur_state = state::combinator;
 				return;
 			case '.':
@@ -178,17 +241,18 @@ void parser::parse_selector_class(utki::span<const char>::iterator& i, utki::spa
 			case '[':
 				throw std::runtime_error("parsing of attribute selectors is not implemented");
 				break;
-			case '{':
-				this->on_selector_class(utki::make_string(utki::make_span(this->buf)));
+			case '#':
+				this->on_selector_tag(utki::make_string(utki::make_span(this->buf)));
 				this->buf.clear();
-				this->on_selector_end();
+				this->cur_state = state::selector_id;
+				return;
+			case '{':
+				this->notify_selector_class();
 				this->on_selector_chain_end();
 				this->cur_state = state::style_idle;
 				return;
 			case ',':
-				this->on_selector_class(utki::make_string(utki::make_span(this->buf)));
-				this->buf.clear();
-				this->on_selector_end();
+				this->notify_selector_class();
 				this->on_selector_chain_end();
 				this->cur_state = state::idle;
 				return;
