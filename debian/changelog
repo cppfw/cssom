@@ -1,3 +1,9 @@
+libcssom (0.2.1) unstable; urgency=medium
+
+  * msvs: build v143 configs
+
+ -- Ivan Gagis <igagis@gmail.com>  Wed, 28 Dec 2022 17:10:14 +0200
+
 libcssom (0.2.0) unstable; urgency=medium
 
   * implement parsing of id selectors
