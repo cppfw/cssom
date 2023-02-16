@@ -59,7 +59,7 @@ tst::set set("samples", [](tst::suite& suite){
                     [&pitnm](uint32_t id) -> std::string{
                         auto i = pitnm.find(id);
                         if(i == pitnm.end()){
-                            return std::string();
+                            return {};
                         }
                         return i->second;
                     },

@@ -8,6 +8,7 @@ Build-Depends:
 		prorab,
 		prorab-extra,
 		clang-tidy,
+		clang-format,
 		libc6-dev,
 		libutki-dev (>= 1.1.122),
 		libpapki-dev (>= 1.0.93),

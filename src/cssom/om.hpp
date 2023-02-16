@@ -26,25 +26,24 @@ SOFTWARE.
 
 #pragma once
 
-#include <papki/file.hpp>
+#include <map>
 
+#include <papki/file.hpp>
 #include <utki/destructable.hpp>
 #include <utki/span.hpp>
 
-#include <map>
+namespace cssom {
 
-namespace cssom{
+struct styleable {
+	virtual const std::string& get_id() const = 0;
+	virtual const std::string& get_tag() const = 0;
 
-struct styleable{
-	virtual const std::string& get_id()const = 0;
-	virtual const std::string& get_tag()const = 0;
+	virtual utki::span<const std::string> get_classes() const = 0;
 
-	virtual utki::span<const std::string> get_classes()const = 0;
-
-	virtual ~styleable()noexcept{}
+	virtual ~styleable() noexcept = default;
 };
 
-struct xml_dom_crawler{
+struct xml_dom_crawler {
 	virtual const styleable& get() = 0;
 
 	/**
@@ -68,11 +67,11 @@ struct xml_dom_crawler{
 	 */
 	virtual void reset() = 0;
 
-	virtual ~xml_dom_crawler()noexcept{}
+	virtual ~xml_dom_crawler() noexcept = default;
 };
 
 // TODO: doxygen all
-enum class combinator{
+enum class combinator {
 	none,
 	descendant,
 	child,
@@ -85,7 +84,9 @@ enum class combinator{
  * The 'simple selector' term is defined in CSS spec.
  * selectors can be combined into a selector chain with combinators.
  */
-struct selector{
+// TODO: why lint complains here io macos?
+// NOLINTNEXTLINE(bugprone-exception-escape, "error: an exception may be thrown")
+struct selector {
 	/**
 	 * @brief Id selector.
 	 * The id selector is specified with '#' in the CSS.
@@ -107,50 +108,48 @@ struct selector{
 	 */
 	cssom::combinator combinator = cssom::combinator::none;
 
-	bool is_matching(const styleable& node)const;
+	bool is_matching(const styleable& node) const;
 };
 
-struct property_value_base : public utki::destructable{
-
-};
+struct property_value_base : public utki::destructable {};
 
 /**
  * @brief List of style properties corresponding to a CSS selector.
  */
-typedef std::map<uint32_t, std::unique_ptr<property_value_base>> property_list;
+using property_list = std::map<uint32_t, std::unique_ptr<property_value_base>>;
 
 /**
  * @brief Simple selector chain.
  */
-typedef std::vector<selector> selector_chain;
+using selector_chain = std::vector<selector>;
 
-struct style{
+struct style {
 	selector_chain selectors;
 	std::shared_ptr<property_list> properties;
 
 	unsigned specificity;
 
-	void update_specificity()noexcept;
+	void update_specificity() noexcept;
 
-	bool is_matching(xml_dom_crawler& crawler)const;
+	bool is_matching(xml_dom_crawler& crawler) const;
 };
 
-struct sheet{
+struct sheet {
 	std::vector<style> styles;
 
 	void write(
-			papki::file& fi,
-			const std::function<std::string(uint32_t)>& property_id_to_name,
-			const std::function<std::string(uint32_t, const property_value_base&)>& property_value_to_string,
-			const std::string& indent = std::string()
-		)const;
+		papki::file& fi,
+		const std::function<std::string(uint32_t)>& property_id_to_name,
+		const std::function<std::string(uint32_t, const property_value_base&)>& property_value_to_string,
+		const std::string& indent = std::string()
+	) const;
 
 	void write(
-			papki::file&& fi,
-			const std::function<std::string(uint32_t)>& property_id_to_name,
-			const std::function<std::string(uint32_t, const property_value_base&)>& property_value_to_string,
-			const std::string& indent = std::string()
-		)const
+		papki::file&& fi,
+		const std::function<std::string(uint32_t)>& property_id_to_name,
+		const std::function<std::string(uint32_t, const property_value_base&)>& property_value_to_string,
+		const std::string& indent = std::string()
+	) const
 	{
 		this->write(fi, property_id_to_name, property_value_to_string, indent);
 	}
@@ -159,7 +158,7 @@ struct sheet{
 
 	void append(sheet&& d);
 
-	struct query_result{
+	struct query_result {
 		/**
 		 * @brief Value of the queried property.
 		 * Can be nullptr if no property was found.
@@ -175,16 +174,18 @@ struct sheet{
 
 	/**
 	 * @brief Get property value for given xml document node.
-	 * @return pointer to the property value if given node has matched to some CSS selector which defines requested property.
-	 * @return nullptr if given node has not matched to any CSS selector or no matching selectors define requested property.
+	 * @return pointer to the property value if given node has matched to some CSS selector which defines requested
+	 * property.
+	 * @return nullptr if given node has not matched to any CSS selector or no matching selectors define requested
+	 * property.
 	 */
-	query_result get_property_value(xml_dom_crawler& crawler, uint32_t property_id)const;
+	query_result get_property_value(xml_dom_crawler& crawler, uint32_t property_id) const;
 };
 
 sheet read(
-		const papki::file& fi,
-		const std::function<uint32_t(const std::string&)> property_name_to_id,
-		const std::function<std::unique_ptr<property_value_base>(uint32_t, std::string&&)>& parse_property_value
-	);
+	const papki::file& fi,
+	const std::function<uint32_t(const std::string&)> property_name_to_id,
+	const std::function<std::unique_ptr<property_value_base>(uint32_t, std::string&&)>& parse_property_value
+);
 
-}
+} // namespace cssom

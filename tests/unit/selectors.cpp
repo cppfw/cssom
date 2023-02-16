@@ -27,7 +27,7 @@ tst::set set("selectors", [](auto& suite){
 
             const auto css_dom = read_css(css);
 
-            typedef utki::tree<om_node> node;
+            using node = utki::tree<om_node>;
             node::container_type dom{
                 node(om_node("body"), {
                     node(om_node("rect")),

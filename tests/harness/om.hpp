@@ -4,6 +4,8 @@
 
 #include "../../src/cssom/om.hpp"
 
+// TODO: why does lint complain here on macos?
+// NOLINTNEXTLINE(bugprone-exception-escape, "error: an exception may be thrown in function 'om_node' which should not throw exceptions")
 class om_node : public cssom::styleable{
 public:
 	std::string id;
@@ -37,7 +39,7 @@ public:
 
 class crawler : public cssom::xml_dom_crawler{
 	const utki::tree<om_node>::container_type& root;
-	typedef std::remove_reference<decltype(root)>::type container_type;
+	using container_type = std::remove_reference<decltype(root)>::type;
 	std::vector<std::pair<
 			container_type*,
 			container_type::const_iterator
@@ -56,7 +58,7 @@ public:
 		this->stack.clear();
 
 		if(this->index.empty()){
-			this->stack.push_back(std::make_pair(&this->root, this->root.begin()));
+			this->stack.emplace_back(&this->root, this->root.begin());
 			return;
 		}
 		
@@ -65,7 +67,7 @@ public:
 		
 		for(auto i : this->index){
 			std::advance(iter, i);
-			this->stack.push_back(std::make_pair(cont, iter));
+			this->stack.emplace_back(cont, iter);
 			cont = &iter->children;
 			iter = cont->begin();
 		}

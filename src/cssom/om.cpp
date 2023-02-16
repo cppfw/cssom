@@ -25,6 +25,7 @@ SOFTWARE.
 /* ================ LICENSE END ================ */
 
 #include "om.hpp"
+
 #include "parser.hpp"
 
 #ifdef assert
@@ -33,26 +34,28 @@ SOFTWARE.
 
 using namespace cssom;
 
-namespace{
-combinator parse_combinator(const std::string& str){
-	if(str.empty()){
+namespace {
+combinator parse_combinator(const std::string& str)
+{
+	if (str.empty()) {
 		return combinator::descendant;
-	}else if(str == ">"){
+	} else if (str == ">") {
 		return combinator::child;
-	}else if(str == "+"){
+	} else if (str == "+") {
 		return combinator::next_sibling;
-	}else if(str == "~"){
+	} else if (str == "~") {
 		return combinator::subsequent_sibling;
 	}
 	std::stringstream ss;
 	ss << "unknown combinator: " << str;
 	throw std::logic_error(ss.str());
 }
-}
+} // namespace
 
-namespace{
-std::string combinator_to_string(combinator c){
-	switch(c){
+namespace {
+std::string combinator_to_string(combinator c)
+{
+	switch (c) {
 		case combinator::descendant:
 			return " ";
 		case combinator::child:
@@ -66,14 +69,16 @@ std::string combinator_to_string(combinator c){
 			return "";
 	}
 }
-}
+} // namespace
 
-namespace{
-class om_parser : public parser{
+namespace {
+class om_parser : public parser
+{
 	selector cur_selector;
 	selector_chain cur_selector_chain;
 	std::shared_ptr<property_list> cur_property_list;
 	std::string cur_property_name;
+
 public:
 	sheet doc;
 
@@ -81,16 +86,17 @@ public:
 	const std::function<std::unique_ptr<cssom::property_value_base>(uint32_t, std::string&&)>& parse_property;
 
 	om_parser(
-			const std::function<uint32_t(const std::string&)>& property_name_to_id,
-			const std::function<std::unique_ptr<cssom::property_value_base>(uint32_t, std::string&&)>& parse_property
-		) :
-			property_name_to_id(property_name_to_id),
-			parse_property(parse_property)
+		const std::function<uint32_t(const std::string&)>& property_name_to_id,
+		const std::function<std::unique_ptr<cssom::property_value_base>(uint32_t, std::string&&)>& parse_property
+	) :
+		property_name_to_id(property_name_to_id),
+		parse_property(parse_property)
 	{}
 
-	virtual void on_selector_chain_end()override{
+	void on_selector_chain_end() override
+	{
 		// TRACE(<< "selector chain END" << std::endl)
-		if(!this->cur_property_list){
+		if (!this->cur_property_list) {
 			this->cur_property_list = std::make_shared<property_list>();
 		}
 		style s{
@@ -102,52 +108,60 @@ public:
 		ASSERT(this->cur_selector_chain.empty())
 		ASSERT(this->cur_selector.classes.empty())
 		ASSERT(this->cur_selector.tag.empty())
-		//TODO: add assert(attributes of current selector are empty)
+		// TODO: add assert(attributes of current selector are empty)
 	}
 
-	virtual void on_selector_end()override{
+	void on_selector_end() override
+	{
 		// TRACE(<< "selector END" << std::endl)
 		this->cur_selector_chain.push_back(std::move(this->cur_selector));
 	}
 
-	virtual void on_selector_tag(std::string&& str)override{
+	void on_selector_tag(std::string&& str) override
+	{
 		// TRACE(<< "selector tag: " << str << std::endl)
 		this->cur_selector.tag = std::move(str);
 	}
 
-	virtual void on_selector_id(std::string&& str)override{
+	void on_selector_id(std::string&& str) override
+	{
 		// TRACE(<< "selector id: " << str << std::endl)
 		this->cur_selector.id = std::move(str);
 	}
 
-	virtual void on_selector_class(std::string&& str)override{
+	void on_selector_class(std::string&& str) override
+	{
 		// TRACE(<< "selector class: " << str << std::endl)
 		this->cur_selector.classes.push_back(std::move(str));
 	}
 
-	virtual void on_combinator(std::string&& str)override{
+	void on_combinator(std::string&& str) override
+	{
 		// TRACE(<< "combinator: " << str << std::endl)
 		ASSERT(this->cur_selector.classes.empty())
 		ASSERT(this->cur_selector.tag.empty())
-		//TODO: add assert attributes of current selector are empty
+		// TODO: add assert attributes of current selector are empty
 		ASSERT(!this->cur_selector_chain.empty())
 		this->cur_selector_chain.back().combinator = ::parse_combinator(str);
 	}
 
-	virtual void on_style_properties_end()override{
+	void on_style_properties_end() override
+	{
 		// TRACE(<< "style properties END" << std::endl)
 		this->cur_property_list.reset();
 	}
 
-	virtual void on_property_name(std::string&& str)override{
+	void on_property_name(std::string&& str) override
+	{
 		// TRACE(<< "property name: " << str << std::endl)
 		ASSERT(this->cur_property_list)
 		this->cur_property_name = std::move(str);
 	}
 
-	virtual void on_property_value(std::string&& str)override{
+	void on_property_value(std::string&& str) override
+	{
 		// TRACE(<< "property value: " << str << std::endl)
-		
+
 		ASSERT(!this->cur_property_name.empty())
 
 		ASSERT(this->property_name_to_id)
@@ -156,7 +170,7 @@ public:
 		ASSERT(this->parse_property)
 		auto value = this->parse_property(id, std::move(str));
 
-		if(!value){
+		if (!value) {
 			// could not parse style property value, ignore
 			return;
 		}
@@ -165,44 +179,44 @@ public:
 		(*this->cur_property_list)[id] = std::move(value);
 	}
 };
-}
+} // namespace
 
 sheet cssom::read(
-		const papki::file& fi,
-		const std::function<uint32_t(const std::string&)> property_name_to_id,
-		const std::function<std::unique_ptr<cssom::property_value_base>(uint32_t, std::string&&)>& parse_property
-	)
+	const papki::file& fi,
+	const std::function<uint32_t(const std::string&)> property_name_to_id,
+	const std::function<std::unique_ptr<cssom::property_value_base>(uint32_t, std::string&&)>& parse_property
+)
 {
-	if(!property_name_to_id){
+	if (!property_name_to_id) {
 		throw std::logic_error("cssom::read(): passed in 'property_name_to_id' function is nullptr");
 	}
-	if(!parse_property){
+	if (!parse_property) {
 		throw std::logic_error("cssom::read(): passed in 'parse_property' function is nullptr");
 	}
 
 	om_parser p(property_name_to_id, parse_property);
-	
+
 	{
 		papki::file::guard file_guard(fi);
 
 		std::array<uint8_t, 4096> buf; // 4k
 
-		while(true){
+		while (true) {
 			auto res = fi.read(utki::make_span(buf));
 			utki::assert(res <= buf.size(), SL);
-			if(res == 0){
+			if (res == 0) {
 				break;
 			}
 			p.feed(utki::make_span(buf.data(), res));
 		}
 	}
-	
+
 	p.doc.sort_styles_by_specificity();
 
 	return std::move(p.doc);
 }
 
-namespace{
+namespace {
 auto comma = utki::make_span(", ");
 auto period = utki::make_span(".");
 auto hash_sign = utki::make_span("#");
@@ -212,24 +226,24 @@ auto new_line_char = utki::make_span("\n");
 auto close_curly_brace = utki::make_span("}\n");
 auto semicolon = utki::make_span("; ");
 auto colon = utki::make_span(": ");
-}
+} // namespace
 
 void sheet::write(
-		papki::file& fi,
-		const std::function<std::string(uint32_t)>& property_id_to_name,
-		const std::function<std::string(uint32_t, const property_value_base&)>& property_value_to_string,
-		const std::string& indent
-	)const
+	papki::file& fi,
+	const std::function<std::string(uint32_t)>& property_id_to_name,
+	const std::function<std::string(uint32_t, const property_value_base&)>& property_value_to_string,
+	const std::string& indent
+) const
 {
 	papki::file::guard file_guard(fi, papki::file::mode::create);
 
-	for(auto i = this->styles.begin(); i != this->styles.end(); ++i){
+	for (auto i = this->styles.begin(); i != this->styles.end(); ++i) {
 		// Go through selector chains which refer to the same property set (selectors in the same selector group).
 		// These are selector chains specified as comma separated list before defining their properties in CSS sheet,
 		// such selector chains will go in a row.
 		auto selector_group_start_iter = i;
-		for(auto j = selector_group_start_iter; j != this->styles.end(); ++j){
-			if(j->properties.get() != selector_group_start_iter->properties.get()){
+		for (auto j = selector_group_start_iter; j != this->styles.end(); ++j) {
+			if (j->properties.get() != selector_group_start_iter->properties.get()) {
 				ASSERT(j > i)
 				i = --j;
 				break;
@@ -237,25 +251,25 @@ void sheet::write(
 
 			i = j;
 
-			if(j != selector_group_start_iter){
+			if (j != selector_group_start_iter) {
 				fi.write(comma);
-			}else{
+			} else {
 				fi.write(utki::make_span(indent));
 			}
 
 			// go through selectors in the selector chain
-			for(auto s = j->selectors.begin(); s != j->selectors.end(); ++s){
+			for (const auto& s : j->selectors) {
 				// write selector tag
-				fi.write(utki::make_span(s->tag));
+				fi.write(utki::make_span(s.tag));
 
 				// write selector id
-				if(!s->id.empty()){
+				if (!s.id.empty()) {
 					fi.write(hash_sign);
-					fi.write(utki::make_span(s->id));
+					fi.write(utki::make_span(s.id));
 				}
 
 				// write selctor classes
-				for(auto& c : s->classes){
+				for (auto& c : s.classes) {
 					fi.write(period);
 					fi.write(utki::make_span(c));
 				}
@@ -263,7 +277,7 @@ void sheet::write(
 				// TODO: write selector attributes
 
 				// write combinator
-				auto c = combinator_to_string(s->combinator);
+				auto c = combinator_to_string(s.combinator);
 				fi.write(utki::make_span(c));
 			}
 		}
@@ -275,10 +289,10 @@ void sheet::write(
 
 		auto props = selector_group_start_iter->properties.get();
 		ASSERT(props)
-		for(auto& prop : *props){
+		for (auto& prop : *props) {
 			auto name = property_id_to_name(prop.first);
-			
-			if(name.empty()){
+
+			if (name.empty()) {
 				continue;
 			}
 
@@ -295,52 +309,51 @@ void sheet::write(
 	}
 }
 
-void sheet::sort_styles_by_specificity(){
+void sheet::sort_styles_by_specificity()
+{
 	std::sort(
-			this->styles.begin(),
-			this->styles.end(),
-			[](
-					const decltype(this->styles)::value_type& a,
-					const decltype(this->styles)::value_type& b
-				) -> bool
-			{
-				return a.specificity > b.specificity; // descending order
-			}
-		);
+		this->styles.begin(),
+		this->styles.end(),
+		[](const decltype(this->styles)::value_type& a, const decltype(this->styles)::value_type& b) -> bool {
+			return a.specificity > b.specificity; // descending order
+		}
+	);
 }
 
-namespace{
-unsigned calc_dec_order(unsigned x){
+namespace {
+unsigned calc_dec_order(unsigned x)
+{
 	unsigned ret = 1;
 
-	while(x / ret){
+	while (x / ret) {
 		ret *= 10;
 	}
 
 	return ret;
 }
-}
+} // namespace
 
-void style::update_specificity()noexcept{
+void style::update_specificity() noexcept
+{
 	// According to CSS spec (https://www.w3.org/TR/2018/CR-selectors-3-20180130/#specificity) we need to:
 	// - count the number of ID selectors in the selector (= a)
-    // - count the number of class selectors, attributes selectors, and pseudo-classes in the selector (= b)
-    // - count the number of type selectors and pseudo-elements in the selector (= c)
-    // - ignore the universal selector
+	// - count the number of class selectors, attributes selectors, and pseudo-classes in the selector (= b)
+	// - count the number of type selectors and pseudo-elements in the selector (= c)
+	// - ignore the universal selector
 	// and then concatenate the thee numbers 'a:b:c' to get the overall selector chain specificity.
 
 	unsigned num_ids = 0;
 	unsigned num_classes = 0;
 	unsigned num_types = 0;
-	for(auto& s : this->selectors){
-		if(!s.id.empty()){
+	for (auto& s : this->selectors) {
+		if (!s.id.empty()) {
 			++num_ids;
 		}
-		if(!s.tag.empty()){
-			if(s.tag.back() != '*'){ // if not a universal selector
+		if (!s.tag.empty()) {
+			if (s.tag.back() != '*') { // if not a universal selector
 				++num_types;
 			}
-			//TODO: add pseudo-elements to num_types
+			// TODO: add pseudo-elements to num_types
 		}
 		num_classes += unsigned(s.classes.size());
 		// TODO: add num attributes and pseudo-classes to num_classes
@@ -354,22 +367,23 @@ void style::update_specificity()noexcept{
 	this->specificity = num_types + num_classes_shift * num_classes + num_ids_shift * num_ids;
 }
 
-bool selector::is_matching(const styleable& node)const{
-	if(!this->tag.empty() && this->tag.back() != '*'){
-		if(this->tag != node.get_tag()){
+bool selector::is_matching(const styleable& node) const
+{
+	if (!this->tag.empty() && this->tag.back() != '*') {
+		if (this->tag != node.get_tag()) {
 			return false;
 		}
 	}
 
-	if(!this->id.empty()){
-		if(this->id != node.get_id()){
+	if (!this->id.empty()) {
+		if (this->id != node.get_id()) {
 			return false;
 		}
 	}
 
 	auto nc = node.get_classes();
-	for(auto& cls : this->classes){
-		if(std::find(nc.begin(), nc.end(), cls) == nc.end()){
+	for (auto& cls : this->classes) {
+		if (std::find(nc.begin(), nc.end(), cls) == nc.end()) {
 			return false;
 		}
 	}
@@ -379,71 +393,76 @@ bool selector::is_matching(const styleable& node)const{
 	return true;
 }
 
-namespace{
-bool is_descendant_matching(xml_dom_crawler& crawler, const selector& sel){
-	while(crawler.move_up()){
-		if(sel.is_matching(crawler.get())){
+namespace {
+bool is_descendant_matching(xml_dom_crawler& crawler, const selector& sel)
+{
+	while (crawler.move_up()) {
+		if (sel.is_matching(crawler.get())) {
 			return true;
 		}
 	}
 	return false;
 }
-}
+} // namespace
 
-namespace{
-bool is_child_matching(xml_dom_crawler& crawler, const selector& sel){
-	if(!crawler.move_up()){
+namespace {
+bool is_child_matching(xml_dom_crawler& crawler, const selector& sel)
+{
+	if (!crawler.move_up()) {
 		return false;
 	}
 	return sel.is_matching(crawler.get());
 }
-}
+} // namespace
 
-namespace{
-bool is_next_sibling_matching(xml_dom_crawler& crawler, const selector& sel){
-	if(!crawler.move_left()){
+namespace {
+bool is_next_sibling_matching(xml_dom_crawler& crawler, const selector& sel)
+{
+	if (!crawler.move_left()) {
 		return false;
 	}
 	return sel.is_matching(crawler.get());
 }
-}
+} // namespace
 
-namespace{
-bool is_subsequent_sibling_matching(xml_dom_crawler& crawler, const selector& sel){
-	while(crawler.move_left()){
-		if(sel.is_matching(crawler.get())){
+namespace {
+bool is_subsequent_sibling_matching(xml_dom_crawler& crawler, const selector& sel)
+{
+	while (crawler.move_left()) {
+		if (sel.is_matching(crawler.get())) {
 			return true;
 		}
 	}
 	return false;
 }
-}
+} // namespace
 
-bool style::is_matching(xml_dom_crawler& crawler)const{
-	for(auto i = this->selectors.rbegin(); i != this->selectors.rend(); ++i){
-		switch(i->combinator){
+bool style::is_matching(xml_dom_crawler& crawler) const
+{
+	for (auto i = this->selectors.rbegin(); i != this->selectors.rend(); ++i) {
+		switch (i->combinator) {
 			case combinator::none:
-				if(!i->is_matching(crawler.get())){
+				if (!i->is_matching(crawler.get())) {
 					return false;
 				}
 				break;
 			case combinator::descendant:
-				if(!is_descendant_matching(crawler, *i)){
+				if (!is_descendant_matching(crawler, *i)) {
 					return false;
 				}
 				break;
 			case combinator::child:
-				if(!is_child_matching(crawler, *i)){
+				if (!is_child_matching(crawler, *i)) {
 					return false;
 				}
 				break;
 			case combinator::next_sibling:
-				if(!is_next_sibling_matching(crawler, *i)){
+				if (!is_next_sibling_matching(crawler, *i)) {
 					return false;
 				}
 				break;
 			case combinator::subsequent_sibling:
-				if(!is_subsequent_sibling_matching(crawler, *i)){
+				if (!is_subsequent_sibling_matching(crawler, *i)) {
 					return false;
 				}
 				break;
@@ -453,22 +472,24 @@ bool style::is_matching(xml_dom_crawler& crawler)const{
 	return true;
 }
 
-sheet::query_result sheet::get_property_value(xml_dom_crawler& crawler, uint32_t property_id)const{
-	for(auto& s : this->styles){
+sheet::query_result sheet::get_property_value(xml_dom_crawler& crawler, uint32_t property_id) const
+{
+	for (auto& s : this->styles) {
 		crawler.reset();
-		
-		if(s.is_matching(crawler)){
+
+		if (s.is_matching(crawler)) {
 			auto i = s.properties->find(property_id);
-			if(i != s.properties->end()){
+			if (i != s.properties->end()) {
 				return query_result{i->second.get(), s.specificity};
 			}
 		}
 	}
-	
+
 	return query_result{nullptr, 0};
 }
 
-void sheet::append(sheet&& d){
+void sheet::append(sheet&& d)
+{
 	using std::begin;
 	using std::end;
 	std::move(begin(d.styles), end(d.styles), std::back_inserter(this->styles));

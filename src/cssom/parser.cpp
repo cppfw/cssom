@@ -36,9 +36,10 @@ SOFTWARE.
 
 using namespace cssom;
 
-void parser::feed(utki::span<const char> data){
-	for(auto i = data.begin(), e = data.end(); i != e; ++i){
-		switch(this->cur_state){
+void parser::feed(utki::span<const char> data)
+{
+	for (auto i = data.begin(), e = data.end(); i != e; ++i) {
+		switch (this->cur_state) {
 			case state::idle:
 				this->parse_idle(i, e);
 				break;
@@ -70,16 +71,17 @@ void parser::feed(utki::span<const char> data){
 				this->parse_property_value_terminator(i, e);
 				break;
 		}
-		if(i == e){
+		if (i == e) {
 			return;
 		}
 	}
 }
 
-void parser::parse_idle(utki::span<const char>::iterator& i, utki::span<const char>::iterator& e){
-	for(; i != e; ++i){
+void parser::parse_idle(utki::span<const char>::iterator& i, utki::span<const char>::iterator& e)
+{
+	for (; i != e; ++i) {
 		ASSERT(this->buf.empty())
-		switch(*i){
+		switch (*i) {
 			case '\n':
 				++this->line;
 			case ' ':
@@ -103,10 +105,11 @@ void parser::parse_idle(utki::span<const char>::iterator& i, utki::span<const ch
 	}
 }
 
-void parser::parse_style_idle(utki::span<const char>::iterator& i, utki::span<const char>::iterator& e){
-	for(; i != e; ++i){
+void parser::parse_style_idle(utki::span<const char>::iterator& i, utki::span<const char>::iterator& e)
+{
+	for (; i != e; ++i) {
 		ASSERT(this->buf.empty())
-		switch(*i){
+		switch (*i) {
 			case '\n':
 				++this->line;
 			case ' ':
@@ -125,16 +128,18 @@ void parser::parse_style_idle(utki::span<const char>::iterator& i, utki::span<co
 	}
 }
 
-void parser::notify_selector_tag(){
+void parser::notify_selector_tag()
+{
 	this->on_selector_tag(utki::make_string(utki::make_span(this->buf)));
 	this->buf.clear();
 	this->on_selector_end();
 }
 
-void parser::parse_selector_tag(utki::span<const char>::iterator& i, utki::span<const char>::iterator& e){
-	for(; i != e; ++i){
+void parser::parse_selector_tag(utki::span<const char>::iterator& i, utki::span<const char>::iterator& e)
+{
+	for (; i != e; ++i) {
 		ASSERT(!this->buf.empty())
-		switch(*i){
+		switch (*i) {
 			case '\n':
 				++this->line;
 			case ' ':
@@ -173,15 +178,17 @@ void parser::parse_selector_tag(utki::span<const char>::iterator& i, utki::span<
 	}
 }
 
-void parser::notify_selector_id(){
+void parser::notify_selector_id()
+{
 	this->on_selector_id(utki::make_string(utki::make_span(this->buf)));
 	this->buf.clear();
 	this->on_selector_end();
 }
 
-void parser::parse_selector_id(utki::span<const char>::iterator& i, utki::span<const char>::iterator& e){
-	for(; i != e; ++i){
-		switch(*i){
+void parser::parse_selector_id(utki::span<const char>::iterator& i, utki::span<const char>::iterator& e)
+{
+	for (; i != e; ++i) {
+		switch (*i) {
 			case '\n':
 				++this->line;
 			case ' ':
@@ -221,15 +228,17 @@ void parser::parse_selector_id(utki::span<const char>::iterator& i, utki::span<c
 	}
 }
 
-void parser::notify_selector_class(){
+void parser::notify_selector_class()
+{
 	this->on_selector_class(utki::make_string(utki::make_span(this->buf)));
 	this->buf.clear();
 	this->on_selector_end();
 }
 
-void parser::parse_selector_class(utki::span<const char>::iterator& i, utki::span<const char>::iterator& e){
-	for(; i != e; ++i){
-		switch(*i){
+void parser::parse_selector_class(utki::span<const char>::iterator& i, utki::span<const char>::iterator& e)
+{
+	for (; i != e; ++i) {
+		switch (*i) {
 			case '\n':
 				++this->line;
 			case ' ':
@@ -267,15 +276,16 @@ void parser::parse_selector_class(utki::span<const char>::iterator& i, utki::spa
 	}
 }
 
-void parser::parse_combinator(utki::span<const char>::iterator& i, utki::span<const char>::iterator& e){
-	for(; i != e; ++i){
-		switch(*i){
+void parser::parse_combinator(utki::span<const char>::iterator& i, utki::span<const char>::iterator& e)
+{
+	for (; i != e; ++i) {
+		switch (*i) {
 			case '\n':
 				++this->line;
 			case ' ':
 			case '\r':
 			case '\t':
-				if(this->buf.empty()){
+				if (this->buf.empty()) {
 					break;
 				}
 				this->on_combinator(utki::make_string(utki::make_span(this->buf)));
@@ -285,26 +295,29 @@ void parser::parse_combinator(utki::span<const char>::iterator& i, utki::span<co
 			case '>':
 			case '+':
 			case '~':
-				if(!this->buf.empty()){
+				if (!this->buf.empty()) {
 					std::stringstream ss;
-					ss << "unknown combinator encountered (" << utki::make_string(utki::make_span(this->buf)) << *i << ") at line " << this->line;
+					ss << "unknown combinator encountered (" << utki::make_string(utki::make_span(this->buf)) << *i
+					   << ") at line " << this->line;
 					throw malformed_css_error(ss.str());
 				}
 				this->buf.push_back(*i);
 				break;
 			case '{':
-				if(!this->buf.empty()){
+				if (!this->buf.empty()) {
 					std::stringstream ss;
-					ss << "unexpected combinator encountered (" << utki::make_string(utki::make_span(this->buf)) << ") at line " << this->line;
+					ss << "unexpected combinator encountered (" << utki::make_string(utki::make_span(this->buf))
+					   << ") at line " << this->line;
 					throw malformed_css_error(ss.str());
 				}
 				this->on_selector_chain_end();
 				this->cur_state = state::style_idle;
 				return;
 			case ',':
-				if(!this->buf.empty()){
+				if (!this->buf.empty()) {
 					std::stringstream ss;
-					ss << "unexpected combinator encountered (" << utki::make_string(utki::make_span(this->buf)) << ") at line " << this->line;
+					ss << "unexpected combinator encountered (" << utki::make_string(utki::make_span(this->buf))
+					   << ") at line " << this->line;
 					throw malformed_css_error(ss.str());
 				}
 				this->on_selector_chain_end();
@@ -314,33 +327,40 @@ void parser::parse_combinator(utki::span<const char>::iterator& i, utki::span<co
 				this->on_combinator(utki::make_string(utki::make_span(this->buf)));
 				this->buf.clear();
 
-				switch(*i){
+				switch (*i) {
 					case '.':
 						this->cur_state = state::selector_class;
 						break;
 					case '[':
-						utki::assert(false, [](auto&o){o << "attribute selectors are not implemented";}, SL);
+						utki::assert(
+							false,
+							[](auto& o) {
+								o << "attribute selectors are not implemented";
+							},
+							SL
+						);
 						break;
 					default:
 						this->buf.push_back(*i);
 						this->cur_state = state::selector_tag;
 						break;
 				}
-				
+
 				return;
 		}
 	}
 }
 
-void parser::parse_property_name(utki::span<const char>::iterator& i, utki::span<const char>::iterator& e){
-	for(; i != e; ++i){
-		switch(*i){
+void parser::parse_property_name(utki::span<const char>::iterator& i, utki::span<const char>::iterator& e)
+{
+	for (; i != e; ++i) {
+		switch (*i) {
 			case '\n':
 				++this->line;
 			case ' ':
 			case '\r':
 			case '\t':
-				if(this->buf.empty()){
+				if (this->buf.empty()) {
 					break;
 				}
 				this->on_property_name(utki::make_string(utki::make_span(this->buf)));
@@ -359,10 +379,11 @@ void parser::parse_property_name(utki::span<const char>::iterator& i, utki::span
 	}
 }
 
-void parser::parse_property_value_delimiter(utki::span<const char>::iterator& i, utki::span<const char>::iterator& e){
-	for(; i != e; ++i){
+void parser::parse_property_value_delimiter(utki::span<const char>::iterator& i, utki::span<const char>::iterator& e)
+{
+	for (; i != e; ++i) {
 		ASSERT(this->buf.empty())
-		switch(*i){
+		switch (*i) {
 			case '\n':
 				++this->line;
 			case ' ':
@@ -380,15 +401,16 @@ void parser::parse_property_value_delimiter(utki::span<const char>::iterator& i,
 	}
 }
 
-void parser::parse_property_value(utki::span<const char>::iterator& i, utki::span<const char>::iterator& e){
-	for(; i != e; ++i){
-		switch(*i){
+void parser::parse_property_value(utki::span<const char>::iterator& i, utki::span<const char>::iterator& e)
+{
+	for (; i != e; ++i) {
+		switch (*i) {
 			case '\n':
 				++this->line;
 			case ' ':
 			case '\r':
 			case '\t':
-				if(this->buf.empty()){
+				if (this->buf.empty()) {
 					break;
 				}
 				this->on_property_value(utki::make_string(utki::make_span(this->buf)));
@@ -407,10 +429,11 @@ void parser::parse_property_value(utki::span<const char>::iterator& i, utki::spa
 	}
 }
 
-void parser::parse_property_value_terminator(utki::span<const char>::iterator& i, utki::span<const char>::iterator& e){
-	for(; i != e; ++i){
+void parser::parse_property_value_terminator(utki::span<const char>::iterator& i, utki::span<const char>::iterator& e)
+{
+	for (; i != e; ++i) {
 		ASSERT(this->buf.empty())
-		switch(*i){
+		switch (*i) {
 			case '\n':
 				++this->line;
 			case ' ':

@@ -28,19 +28,21 @@ SOFTWARE.
 
 #include <utki/span.hpp>
 
-namespace cssom{
+namespace cssom {
 
-class malformed_css_error : public std::logic_error{
+class malformed_css_error : public std::logic_error
+{
 public:
 	malformed_css_error(const std::string& message) :
-			std::logic_error(message)
+		std::logic_error(message)
 	{}
 };
 
-class parser{
+class parser
+{
 	uint32_t line = 0;
 
-	enum class state{
+	enum class state {
 		idle,
 		style_idle, // idle state inside style block
 		selector_id,
@@ -71,10 +73,11 @@ class parser{
 	void notify_selector_tag();
 	void notify_selector_id();
 	void notify_selector_class();
+
 public:
 	parser() = default;
 
-	virtual ~parser()noexcept{}
+	virtual ~parser() noexcept = default;
 
 	virtual void on_selector_chain_end() = 0;
 	virtual void on_selector_end() = 0;
@@ -91,23 +94,24 @@ public:
 	 * @param data - data to be fed to parser.
 	 */
 	void feed(utki::span<const char> data);
-	
+
 	/**
 	 * @brief feed UTF-8 data to parser.
 	 * @param data - data to be fed to parser.
 	 */
-	void feed(const utki::span<uint8_t> data){
+	void feed(const utki::span<uint8_t> data)
+	{
 		this->feed(utki::make_span(reinterpret_cast<const char*>(data.data()), data.size()));
 	}
-	
+
 	/**
 	 * @brief feed UTF-8 string to parser.
 	 * @param str - string to be fed parser.
 	 */
-	void feed(const std::string& str){
+	void feed(const std::string& str)
+	{
 		this->feed(utki::make_span(str.c_str(), str.length()));
 	}
-	
 };
 
-}
+} // namespace cssom
