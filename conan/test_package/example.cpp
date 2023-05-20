@@ -5,4 +5,6 @@
 int main(int argc, const char** argv){
 
 	std::cout << "Hello cssom!" << '\n';
+
+	return 0;
 }
