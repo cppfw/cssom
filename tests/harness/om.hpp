@@ -39,7 +39,7 @@ public:
 
 class crawler : public cssom::xml_dom_crawler{
 	const utki::tree<om_node>::container_type& root;
-	using container_type = std::remove_reference<decltype(root)>::type;
+	using container_type = std::remove_reference_t<decltype(root)>;
 	std::vector<std::pair<
 			container_type*,
 			container_type::const_iterator
@@ -51,7 +51,7 @@ public:
 			root(std::move(root)),
 			index(std::move(index))
 	{
-		this->reset();
+		this->crawler::reset();
 	}
 
 	void reset()override{
