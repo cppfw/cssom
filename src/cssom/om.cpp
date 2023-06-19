@@ -29,6 +29,7 @@ SOFTWARE.
 #include <algorithm>
 
 #include <utki/string.hpp>
+#include <utki/util.hpp>
 
 #include "parser.hpp"
 
@@ -203,8 +204,8 @@ sheet cssom::read(
 	{
 		papki::file::guard file_guard(fi);
 
-		// NOLINTNEXTLINE(cppcoreguidelines-pro-type-member-init, cppcoreguidelines-avoid-magic-numbers)
-		std::array<uint8_t, size_t(1024) * 4> buf; // TODO: use utki::kilobyte
+		// NOLINTNEXTLINE(cppcoreguidelines-pro-type-member-init)
+		std::array<uint8_t, size_t(utki::kilobyte) * 4> buf;
 
 		while (true) {
 			auto res = fi.read(utki::make_span(buf));
