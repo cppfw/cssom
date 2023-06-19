@@ -26,6 +26,8 @@ SOFTWARE.
 
 #include "om.hpp"
 
+#include <utki/string.hpp>
+
 #include "parser.hpp"
 
 #ifdef assert
@@ -83,11 +85,11 @@ public:
 	sheet doc;
 
 	const std::function<uint32_t(const std::string&)>& property_name_to_id;
-	const std::function<std::unique_ptr<cssom::property_value_base>(uint32_t, std::string&&)>& parse_property;
+	const std::function<std::unique_ptr<cssom::property_value_base>(uint32_t, std::string)>& parse_property;
 
 	om_parser(
 		const std::function<uint32_t(const std::string&)>& property_name_to_id,
-		const std::function<std::unique_ptr<cssom::property_value_base>(uint32_t, std::string&&)>& parse_property
+		const std::function<std::unique_ptr<cssom::property_value_base>(uint32_t, std::string)>& parse_property
 	) :
 		property_name_to_id(property_name_to_id),
 		parse_property(parse_property)
@@ -117,25 +119,25 @@ public:
 		this->cur_selector_chain.push_back(std::move(this->cur_selector));
 	}
 
-	void on_selector_tag(std::string&& str) override
+	void on_selector_tag(std::string str) override
 	{
 		// TRACE(<< "selector tag: " << str << std::endl)
 		this->cur_selector.tag = std::move(str);
 	}
 
-	void on_selector_id(std::string&& str) override
+	void on_selector_id(std::string str) override
 	{
 		// TRACE(<< "selector id: " << str << std::endl)
 		this->cur_selector.id = std::move(str);
 	}
 
-	void on_selector_class(std::string&& str) override
+	void on_selector_class(std::string str) override
 	{
 		// TRACE(<< "selector class: " << str << std::endl)
 		this->cur_selector.classes.push_back(std::move(str));
 	}
 
-	void on_combinator(std::string&& str) override
+	void on_combinator(std::string str) override
 	{
 		// TRACE(<< "combinator: " << str << std::endl)
 		ASSERT(this->cur_selector.classes.empty())
@@ -151,14 +153,14 @@ public:
 		this->cur_property_list.reset();
 	}
 
-	void on_property_name(std::string&& str) override
+	void on_property_name(std::string str) override
 	{
 		// TRACE(<< "property name: " << str << std::endl)
 		ASSERT(this->cur_property_list)
 		this->cur_property_name = std::move(str);
 	}
 
-	void on_property_value(std::string&& str) override
+	void on_property_value(std::string str) override
 	{
 		// TRACE(<< "property value: " << str << std::endl)
 
@@ -184,7 +186,7 @@ public:
 sheet cssom::read(
 	const papki::file& fi,
 	const std::function<uint32_t(const std::string&)> property_name_to_id,
-	const std::function<std::unique_ptr<cssom::property_value_base>(uint32_t, std::string&&)>& parse_property
+	const std::function<std::unique_ptr<cssom::property_value_base>(uint32_t, std::string)>& parse_property
 )
 {
 	if (!property_name_to_id) {
@@ -199,7 +201,8 @@ sheet cssom::read(
 	{
 		papki::file::guard file_guard(fi);
 
-		std::array<uint8_t, 4096> buf; // 4k
+		// NOLINTNEXTLINE(cppcoreguidelines-pro-type-member-init, cppcoreguidelines-avoid-magic-numbers)
+		std::array<uint8_t, size_t(1024) * 4> buf; // TODO: use utki::kilobyte
 
 		while (true) {
 			auto res = fi.read(utki::make_span(buf));
@@ -217,15 +220,15 @@ sheet cssom::read(
 }
 
 namespace {
-auto comma = utki::make_span(", ");
-auto period = utki::make_span(".");
-auto hash_sign = utki::make_span("#");
-auto open_curly_brace = utki::make_span(" {\n");
-auto tab_char = utki::make_span("\t");
-auto new_line_char = utki::make_span("\n");
-auto close_curly_brace = utki::make_span("}\n");
-auto semicolon = utki::make_span("; ");
-auto colon = utki::make_span(": ");
+const auto comma = utki::make_span(", ");
+const auto period = utki::make_span(".");
+const auto hash_sign = utki::make_span("#");
+const auto open_curly_brace = utki::make_span(" {\n");
+const auto tab_char = utki::make_span("\t");
+const auto new_line_char = utki::make_span("\n");
+const auto close_curly_brace = utki::make_span("}\n");
+const auto semicolon = utki::make_span("; ");
+const auto colon = utki::make_span(": ");
 } // namespace
 
 void sheet::write(
@@ -326,7 +329,7 @@ unsigned calc_dec_order(unsigned x)
 	unsigned ret = 1;
 
 	while (x / ret) {
-		ret *= 10;
+		ret *= utki::to_int(utki::integer_base::dec);
 	}
 
 	return ret;
@@ -488,7 +491,7 @@ sheet::query_result sheet::get_property_value(xml_dom_crawler& crawler, uint32_t
 	return query_result{nullptr, 0};
 }
 
-void sheet::append(sheet&& d)
+void sheet::append(sheet d)
 {
 	using std::begin;
 	using std::end;

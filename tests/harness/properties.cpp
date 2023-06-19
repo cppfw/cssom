@@ -1,6 +1,6 @@
 #include "properties.hpp"
 
-std::map<std::string, uint32_t> property_name_to_id_map{
+const std::map<std::string, uint32_t> property_name_to_id_map{
 	{"fill", uint32_t(property_id::fill)},
 	{"stroke", uint32_t(property_id::stroke)},
 	{"stroke-width", uint32_t(property_id::stroke_width)},

@@ -18,7 +18,7 @@ enum class property_id{
 	enum_size
 };
 
-extern std::map<std::string, uint32_t> property_name_to_id_map;
+extern const std::map<std::string, uint32_t> property_name_to_id_map;
 
 struct property_value : public cssom::property_value_base{
 	std::string value;

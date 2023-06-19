@@ -40,6 +40,14 @@ struct styleable {
 
 	virtual utki::span<const std::string> get_classes() const = 0;
 
+	styleable() = default;
+
+	styleable(const styleable&) = default;
+	styleable& operator=(const styleable&) = default;
+
+	styleable(styleable&&) = default;
+	styleable& operator=(styleable&&) = default;
+
 	virtual ~styleable() noexcept = default;
 };
 
@@ -66,6 +74,14 @@ struct xml_dom_crawler {
 	 * so that it points to the document node for which the property value is queried.
 	 */
 	virtual void reset() = 0;
+
+	xml_dom_crawler() = default;
+
+	xml_dom_crawler(const xml_dom_crawler&) = default;
+	xml_dom_crawler& operator=(const xml_dom_crawler&) = default;
+
+	xml_dom_crawler(xml_dom_crawler&&) = default;
+	xml_dom_crawler& operator=(xml_dom_crawler&&) = default;
 
 	virtual ~xml_dom_crawler() noexcept = default;
 };
@@ -144,19 +160,9 @@ struct sheet {
 		const std::string& indent = std::string()
 	) const;
 
-	void write(
-		papki::file&& fi,
-		const std::function<std::string(uint32_t)>& property_id_to_name,
-		const std::function<std::string(uint32_t, const property_value_base&)>& property_value_to_string,
-		const std::string& indent = std::string()
-	) const
-	{
-		this->write(fi, property_id_to_name, property_value_to_string, indent);
-	}
-
 	void sort_styles_by_specificity();
 
-	void append(sheet&& d);
+	void append(sheet d);
 
 	struct query_result {
 		/**
@@ -185,7 +191,7 @@ struct sheet {
 sheet read(
 	const papki::file& fi,
 	const std::function<uint32_t(const std::string&)> property_name_to_id,
-	const std::function<std::unique_ptr<property_value_base>(uint32_t, std::string&&)>& parse_property_value
+	const std::function<std::unique_ptr<property_value_base>(uint32_t, std::string)>& parse_property_value
 );
 
 } // namespace cssom

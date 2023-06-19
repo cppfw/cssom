@@ -9,7 +9,7 @@
 #include "../harness/om.hpp"
 
 namespace{
-tst::set set("object_model", [](auto& suite){
+const tst::set set("object_model", [](auto& suite){
 	suite.add(
 		"append",
 		[](){

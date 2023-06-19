@@ -7,7 +7,7 @@
 #include "../harness/om.hpp"
 
 namespace{
-tst::set set("misc", [](tst::suite& suite){
+const tst::set set("misc", [](tst::suite& suite){
     suite.add("issue_test_1", [](){
         auto css_str = ".cls-1,.cls-3{fill:none;}.cls-2,.cls-4{fill:#47506a;}.cls-3{stroke:#3866f0;stroke-width:4px;}.cls-4{fill-rule:evenodd;}";
         auto css = read_css(css_str);

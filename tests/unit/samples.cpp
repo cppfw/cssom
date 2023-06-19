@@ -1,6 +1,8 @@
 #include <tst/set.hpp>
 #include <tst/check.hpp>
 
+#include <utki/util.hpp>
+
 #include <papki/fs_file.hpp>
 #include <papki/vector_file.hpp>
 
@@ -13,7 +15,8 @@ const std::string data_dir = "samples_data/";
 }
 
 namespace{
-tst::set set("samples", [](tst::suite& suite){
+// NOLINTNEXTLINE(cppcoreguidelines-interfaces-global-init)
+const tst::set set("samples", [](tst::suite& suite){
     std::vector<std::string> files;
 
     {
@@ -64,6 +67,7 @@ tst::set set("samples", [](tst::suite& suite){
                         return i->second;
                     },
                     [](uint32_t id, const cssom::property_value_base& value) -> std::string{
+                        // NOLINTNEXTLINE(cppcoreguidelines-pro-type-static-cast-downcast)
                         auto& v = static_cast<const property_value&>(value);
                         return v.value;
                     }

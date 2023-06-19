@@ -7,7 +7,7 @@
 #include "../harness/om.hpp"
 
 namespace{
-tst::set set("selectors", [](auto& suite){
+const tst::set set("selectors", [](auto& suite){
     suite.add(
         "basic_property_value_query",
         [](){
@@ -43,6 +43,7 @@ tst::set set("selectors", [](auto& suite){
 
                 tst::check(dynamic_cast<const property_value*>(qr.value), SL);
 
+                // NOLINTNEXTLINE(cppcoreguidelines-pro-type-static-cast-downcast)
                 auto pv = static_cast<const property_value*>(qr.value);
                 tst::check(pv->value == "blue", SL);
             }
@@ -54,6 +55,7 @@ tst::set set("selectors", [](auto& suite){
 
                 tst::check(dynamic_cast<const property_value*>(qr.value), SL);
 
+                // NOLINTNEXTLINE(cppcoreguidelines-pro-type-static-cast-downcast)
                 auto pv = static_cast<const property_value*>(qr.value);
                 tst::check(pv->value == "#006600", SL);
             }

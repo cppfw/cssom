@@ -13,15 +13,15 @@ public:
 
 	std::vector<std::string> classes;
 
-	om_node(std::string&& tag, std::string&& id, std::vector<std::string>&& classes = std::vector<std::string>()) :
-			id(id),
-			tag(tag),
-			classes(classes)
+	om_node(std::string tag, std::string id, std::vector<std::string> classes = std::vector<std::string>()) :
+			id(std::move(id)),
+			tag(std::move(tag)),
+			classes(std::move(classes))
 	{}
 
-	om_node(std::string&& tag, std::vector<std::string>&& classes = std::vector<std::string>()) :
-			tag(tag),
-			classes(classes)
+	om_node(std::string tag, std::vector<std::string> classes = std::vector<std::string>()) :
+			tag(std::move(tag)),
+			classes(std::move(classes))
 	{}
 
 	const std::string& get_id()const override{

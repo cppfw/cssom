@@ -77,17 +77,23 @@ class parser
 public:
 	parser() = default;
 
+	parser(const parser&) = default;
+	parser& operator=(const parser&) = default;
+
+	parser(parser&&) = default;
+	parser& operator=(parser&&) = default;
+
 	virtual ~parser() noexcept = default;
 
 	virtual void on_selector_chain_end() = 0;
 	virtual void on_selector_end() = 0;
-	virtual void on_selector_tag(std::string&& str) = 0;
-	virtual void on_selector_id(std::string&& str) = 0;
-	virtual void on_selector_class(std::string&& str) = 0;
-	virtual void on_combinator(std::string&& str) = 0;
+	virtual void on_selector_tag(std::string str) = 0;
+	virtual void on_selector_id(std::string str) = 0;
+	virtual void on_selector_class(std::string str) = 0;
+	virtual void on_combinator(std::string str) = 0;
 	virtual void on_style_properties_end() = 0;
-	virtual void on_property_name(std::string&& str) = 0;
-	virtual void on_property_value(std::string&& str) = 0;
+	virtual void on_property_name(std::string str) = 0;
+	virtual void on_property_value(std::string str) = 0;
 
 	/**
 	 * @brief feed UTF-8 data to parser.
@@ -101,6 +107,7 @@ public:
 	 */
 	void feed(const utki::span<uint8_t> data)
 	{
+		// NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
 		this->feed(utki::make_span(reinterpret_cast<const char*>(data.data()), data.size()));
 	}
 
