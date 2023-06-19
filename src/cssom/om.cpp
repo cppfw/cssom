@@ -26,6 +26,8 @@ SOFTWARE.
 
 #include "om.hpp"
 
+#include <algorithm>
+
 #include <utki/string.hpp>
 
 #include "parser.hpp"
