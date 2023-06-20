@@ -35,8 +35,8 @@ SOFTWARE.
 namespace cssom {
 
 struct styleable {
-	virtual const std::string& get_id() const = 0;
-	virtual const std::string& get_tag() const = 0;
+	virtual std::string_view get_id() const = 0;
+	virtual std::string_view get_tag() const = 0;
 
 	virtual utki::span<const std::string> get_classes() const = 0;
 

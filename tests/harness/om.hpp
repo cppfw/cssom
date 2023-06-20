@@ -24,11 +24,11 @@ public:
 			classes(std::move(classes))
 	{}
 
-	const std::string& get_id()const override{
+	std::string_view get_id()const override{
 		return this->id;
 	}
 
-	const std::string& get_tag()const override{
+	std::string_view get_tag()const override{
 		return this->tag;
 	}
 
