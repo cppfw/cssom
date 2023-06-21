@@ -8,15 +8,15 @@ cssom::sheet read_css(const char* css){
 
 	return cssom::read(
 			papki::span_file(utki::make_span(css)),
-			[pntim](const std::string& name) -> uint32_t{
+			[pntim](std::string_view name) -> uint32_t{
 				auto i = pntim->find(name);
 				if(i == pntim->end()){
 					return uint32_t(property_id::enum_size);
 				}
 				return uint32_t(i->second);
 			},
-			[](uint32_t id, std::string&& v) -> std::unique_ptr<cssom::property_value_base> {
-				auto ret = std::make_unique<property_value>(std::move(v));
+			[](uint32_t id, std::string_view v) -> std::unique_ptr<cssom::property_value_base> {
+				auto ret = std::make_unique<property_value>(std::string(v));
 				return ret;
 			}
 		);

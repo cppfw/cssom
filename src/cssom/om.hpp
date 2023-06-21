@@ -190,8 +190,8 @@ struct sheet {
 
 sheet read(
 	const papki::file& fi,
-	const std::function<uint32_t(const std::string&)> property_name_to_id,
-	const std::function<std::unique_ptr<property_value_base>(uint32_t, std::string)>& parse_property_value
+	std::function<uint32_t(std::string_view)> property_name_to_id,
+	std::function<std::unique_ptr<property_value_base>(uint32_t, std::string_view)> parse_property_value
 );
 
 } // namespace cssom

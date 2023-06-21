@@ -87,15 +87,15 @@ class om_parser : public parser
 public:
 	sheet doc;
 
-	const std::function<uint32_t(const std::string&)>& property_name_to_id;
-	const std::function<std::unique_ptr<cssom::property_value_base>(uint32_t, std::string)>& parse_property;
+	std::function<uint32_t(std::string_view)> property_name_to_id;
+	std::function<std::unique_ptr<cssom::property_value_base>(uint32_t, std::string_view)> parse_property;
 
 	om_parser(
-		const std::function<uint32_t(const std::string&)>& property_name_to_id,
-		const std::function<std::unique_ptr<cssom::property_value_base>(uint32_t, std::string)>& parse_property
+		std::function<uint32_t(std::string_view)> property_name_to_id,
+		std::function<std::unique_ptr<cssom::property_value_base>(uint32_t, std::string_view)> parse_property
 	) :
-		property_name_to_id(property_name_to_id),
-		parse_property(parse_property)
+		property_name_to_id(std::move(property_name_to_id)),
+		parse_property(std::move(parse_property))
 	{}
 
 	void on_selector_chain_end() override
@@ -188,8 +188,8 @@ public:
 
 sheet cssom::read(
 	const papki::file& fi,
-	const std::function<uint32_t(const std::string&)> property_name_to_id,
-	const std::function<std::unique_ptr<cssom::property_value_base>(uint32_t, std::string)>& parse_property
+	std::function<uint32_t(std::string_view)> property_name_to_id,
+	std::function<std::unique_ptr<cssom::property_value_base>(uint32_t, std::string_view)> parse_property
 )
 {
 	if (!property_name_to_id) {
@@ -199,7 +199,7 @@ sheet cssom::read(
 		throw std::logic_error("cssom::read(): passed in 'parse_property' function is nullptr");
 	}
 
-	om_parser p(property_name_to_id, parse_property);
+	om_parser p(std::move(property_name_to_id), std::move(parse_property));
 
 	{
 		papki::file::guard file_guard(fi);

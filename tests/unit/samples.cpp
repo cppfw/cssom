@@ -41,15 +41,15 @@ const tst::set set("samples", [](tst::suite& suite){
 
             auto doc = cssom::read(
                     papki::fs_file(in_file_name),
-                    [](const std::string& name) -> uint32_t{
+                    [](std::string_view name) -> uint32_t{
                         auto i = property_name_to_id_map.find(name);
                         if(i == property_name_to_id_map.end()){
                             return uint32_t(property_id::enum_size);
                         }
                         return uint32_t(i->second);
                     },
-                    [](uint32_t id, std::string&& value) -> std::unique_ptr<cssom::property_value_base>{
-                        return std::make_unique<property_value>(std::move(value));
+                    [](uint32_t id, std::string_view value) -> std::unique_ptr<cssom::property_value_base>{
+                        return std::make_unique<property_value>(std::string(value));
                     }
                 );
             
