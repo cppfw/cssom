@@ -24,20 +24,20 @@ Depends: ${shlibs:Depends}, ${misc:Depends}
 Description: CSS document object model library.
  Some library.
 
-Package: libcssom$(soname)-dbg
-Section: debug
-Architecture: any
-Depends: libcssom$(soname) (= ${binary:Version}), ${misc:Depends}
-Description: debugging symbols for libcssom$(soname) package.
-
 Package: libcssom-dev
 Section: libdevel
 Architecture: any
-Depends: libcssom$(soname) (= ${binary:Version}), libcssom$(soname)-dbg (= ${binary:Version}), ${misc:Depends},
+Depends: libcssom$(soname) (= ${binary:Version}), ${misc:Depends},
 		libutki-dev, libpapki-dev
 Suggests: libcssom-doc
 Description: CSS document object model library.
  CSS document object model cross-platform C++ library.
+
+Package: libcssom$(soname)-dbgsrc
+Section: debug
+Architecture: any
+Depends: libcssom$(soname)-dbgsym (= ${binary:Version}), ${misc:Depends}
+Description: debugging sources for libcssom$(soname) package.
 
 Package: libcssom-doc
 Section: doc
