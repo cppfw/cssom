@@ -107,8 +107,7 @@ public:
 	 */
 	void feed(const utki::span<uint8_t> data)
 	{
-		// NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
-		this->feed(utki::make_span(reinterpret_cast<const char*>(data.data()), data.size()));
+		this->feed(to_char(data));
 	}
 
 	/**
