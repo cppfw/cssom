@@ -11,7 +11,7 @@ public:
 	std::string id;
 	std::string tag;
 
-	std::vector<std::string> classes;
+	std::vector<std::string> classes{};
 
 	om_node(std::string tag, std::string id, std::vector<std::string> classes = std::vector<std::string>()) :
 			id(std::move(id)),
@@ -43,11 +43,11 @@ class crawler : public cssom::xml_dom_crawler{
 	std::vector<std::pair<
 			container_type*,
 			container_type::const_iterator
-		>> stack;
+		>> stack{};
 	
-	const std::vector<size_t> index; // initial position
+	const std::vector<size_t> index{}; // initial position
 public:
-	crawler(const utki::tree<om_node>::container_type& root, std::vector<size_t>&& index) :
+	crawler(const utki::tree<om_node>::container_type& root, std::vector<size_t> index) :
 			root(std::move(root)),
 			index(std::move(index))
 	{

@@ -140,10 +140,10 @@ using property_list = std::map<uint32_t, std::unique_ptr<property_value_base>>;
 using selector_chain = std::vector<selector>;
 
 struct style {
-	selector_chain selectors;
-	std::shared_ptr<property_list> properties;
+	selector_chain selectors{};
+	std::shared_ptr<property_list> properties{};
 
-	unsigned specificity;
+	unsigned specificity{};
 
 	void update_specificity() noexcept;
 
@@ -151,7 +151,7 @@ struct style {
 };
 
 struct sheet {
-	std::vector<style> styles;
+	std::vector<style> styles{};
 
 	void write(
 		papki::file& fi,

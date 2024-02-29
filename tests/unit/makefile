@@ -13,7 +13,7 @@ this_ldlibs += -lharness -lcssom -lpapki -lutki -ltst $(addprefix -l,$(CONAN_LIB
 this_ldflags += -L$(d)../../src/out/$(c)
 this_ldflags += -L$(d)../harness/out/$(c)
 
-this_cxxflags += -I ../../src
+this_cxxflags += -isystem ../../src
 this_cxxflags += $(addprefix -I,$(CONAN_INCLUDE_DIRS))
 this_ldflags += $(addprefix -L,$(CONAN_LIB_DIRS))
 
