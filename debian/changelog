@@ -1,3 +1,9 @@
+libcssom (0.2.10) unstable; urgency=medium
+
+  * fix dbgsrc package
+
+ -- Ivan Gagis <igagis@gmail.com>  Thu, 29 Feb 2024 14:38:39 +0200
+
 libcssom (0.2.9) unstable; urgency=medium
 
   * bookworm
