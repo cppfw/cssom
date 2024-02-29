@@ -35,7 +35,7 @@ Description: CSS document object model library.
 
 Package: libcssom$(soname)-dbgsrc
 Section: debug
-Architecture: any
+Architecture: all
 Depends: libcssom$(soname)-dbgsym (= ${binary:Version}), ${misc:Depends}
 Description: debugging sources for libcssom$(soname) package.
 
