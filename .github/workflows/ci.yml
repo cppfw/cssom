@@ -318,7 +318,7 @@ jobs:
         repo: deb https://gagis.hopto.org/repo/cppfw/$(lsb_release --id --short | tr '[:upper:]' '[:lower:]') $(lsb_release --codename --short) main
         repo-name: cppfw
         keys-asc: https://gagis.hopto.org/repo/cppfw/pubkey.gpg
-        install: myci git
+        install: myci git ninja-build
     - name: git clone
       uses: myci-actions/checkout@master
     - name: set PACKAGE_VERSION
