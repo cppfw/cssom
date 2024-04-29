@@ -104,6 +104,7 @@ public:
 		if (!this->cur_property_list) {
 			this->cur_property_list = std::make_shared<property_list>();
 		}
+		// NOLINTNEXTLINE(modernize-use-designated-initializers, "need C++20 for that, while we use C++17")
 		style s{
 			std::move(cur_selector_chain),
 			cur_property_list // several selectors may refer the same property list, therefore not moving
@@ -486,11 +487,13 @@ sheet::query_result sheet::get_property_value(xml_dom_crawler& crawler, uint32_t
 		if (s.is_matching(crawler)) {
 			auto i = s.properties->find(property_id);
 			if (i != s.properties->end()) {
+				// NOLINTNEXTLINE(modernize-use-designated-initializers, "need C++20 for that, while we use C++17")
 				return query_result{i->second.get(), s.specificity};
 			}
 		}
 	}
 
+	// NOLINTNEXTLINE(modernize-use-designated-initializers, "need C++20 for that, while we use C++17")
 	return query_result{nullptr, 0};
 }
 
