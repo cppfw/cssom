@@ -2,6 +2,7 @@
 #include <tst/check.hpp>
 
 #include <utki/util.hpp>
+#include <utki/string.hpp>
 
 #include <papki/fs_file.hpp>
 #include <papki/vector_file.hpp>
@@ -92,7 +93,9 @@ const tst::set set("samples", [](tst::suite& suite){
                 failed_file.write(out_data);
                 failed_file.close();
 
-                tst::check(false, SL) << "parsed file is not as expected: " << in_file_name;
+                tst::check(false, SL) << "parsed file is not as expected: " << in_file_name << "\n"
+                    << "parsed file contents:" << "\n"
+                    << utki::make_string_view(out_data);
             }
         }
     );
