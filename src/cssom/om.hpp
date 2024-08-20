@@ -143,7 +143,7 @@ struct style {
 	selector_chain selectors{};
 	std::shared_ptr<property_list> properties{};
 
-	unsigned specificity{};
+	uint32_t specificity{};
 
 	void update_specificity() noexcept;
 
@@ -175,7 +175,7 @@ struct sheet {
 		 * @brief Selector specificity.
 		 * Speceficity of the selector which matched the element for which the property value was queried.
 		 */
-		unsigned specificity;
+		uint32_t specificity;
 	};
 
 	/**

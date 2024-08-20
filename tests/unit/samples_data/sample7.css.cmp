@@ -1,6 +1,9 @@
+#id-1 {
+	fill: #334455; 
+}
 .cls-1.cls-2 {
 	fill: #445566; 
 }
-.cls-3.cls-4, #id-1, tag-1 {
+.cls-3.cls-4, tag-1 {
 	fill: #334455; 
 }

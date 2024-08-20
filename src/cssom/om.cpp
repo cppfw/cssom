@@ -319,26 +319,13 @@ void sheet::write(
 void sheet::sort_styles_by_specificity()
 {
 	std::sort(
-		this->styles.begin(),
+		this->styles.begin(), //
 		this->styles.end(),
-		[](const decltype(this->styles)::value_type& a, const decltype(this->styles)::value_type& b) -> bool {
+		[](const auto& a, const auto& b) -> bool {
 			return a.specificity > b.specificity; // descending order
 		}
 	);
 }
-
-namespace {
-unsigned calc_dec_order(unsigned x)
-{
-	unsigned ret = 1;
-
-	while (x / ret) {
-		ret *= utki::to_int(utki::integer_base::dec);
-	}
-
-	return ret;
-}
-} // namespace
 
 void style::update_specificity() noexcept
 {
@@ -347,7 +334,8 @@ void style::update_specificity() noexcept
 	// - count the number of class selectors, attributes selectors, and pseudo-classes in the selector (= b)
 	// - count the number of type selectors and pseudo-elements in the selector (= c)
 	// - ignore the universal selector
-	// and then concatenate the thee numbers 'a:b:c' to get the overall selector chain specificity.
+	// and then concatenate the three numbers 'abc' (in a number system with a large base) to get the overall selector
+	// chain specificity.
 
 	unsigned num_ids = 0;
 	unsigned num_classes = 0;
@@ -366,12 +354,12 @@ void style::update_specificity() noexcept
 		// TODO: add num attributes and pseudo-classes to num_classes
 	}
 
-	// concatenate decimal numbers 'num_ids:num_classes:num_types'
+	using std::min;
 
-	unsigned num_classes_shift = calc_dec_order(num_types);
-	unsigned num_ids_shift = calc_dec_order(num_classes) + num_classes_shift;
-
-	this->specificity = num_types + num_classes_shift * num_classes + num_ids_shift * num_ids;
+	unsigned max_val = utki::byte_mask;
+	this->specificity = (uint32_t(min(max_val, num_ids)) << (utki::byte_bits * 2)) | //
+		(uint32_t(min(max_val, num_classes)) << utki::byte_bits) | //
+		uint32_t(min(max_val, num_types));
 }
 
 bool selector::is_matching(const styleable& node) const

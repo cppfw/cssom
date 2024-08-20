@@ -87,11 +87,14 @@ const tst::set set("samples", [](tst::suite& suite){
             }
 
             if(out_data != cmp_data){
-                papki::fs_file failed_file(data_dir + p + ".out");
-
-                failed_file.open(papki::file::mode::create);
-                failed_file.write(out_data);
-                failed_file.close();
+                {
+                    papki::fs_file failed_file(data_dir + p + ".out");
+                    papki::file::guard file_guard(
+                        failed_file,//
+                        papki::file::mode::create
+                    );
+                    failed_file.write(out_data);
+                }
 
                 tst::check(false, SL) << "parsed file is not as expected: " << in_file_name << "\n"
                     << "parsed file contents:" << "\n"
