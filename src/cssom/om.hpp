@@ -145,6 +145,19 @@ struct style {
 
 	uint32_t specificity{};
 
+	mutable std::string name_cache;
+
+	void update_name_cache() const;
+
+	std::string_view get_name() const
+	{
+		if (this->name_cache.empty()) {
+			this->update_name_cache();
+		}
+
+		return this->name_cache;
+	}
+
 	void update_specificity() noexcept;
 
 	bool is_matching(xml_dom_crawler& crawler) const;

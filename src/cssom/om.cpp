@@ -242,14 +242,33 @@ void sheet::write(
 	const std::string& indent
 ) const
 {
+	auto styles_to_save = this->styles; // copy
+
+	// TODO: make this sorting deterministic
+	std::sort(
+		styles_to_save.begin(), //
+		styles_to_save.end(),
+		[](const auto& a, const auto& b) -> bool {
+			// sort by property_list to make consequent gropus using same property list by name within group
+			if (a.properties.get() < b.properties.get()) {
+				return true;
+			} else if (a.properties.get() > b.properties.get()) {
+				return false;
+			}
+
+			// sort by name within the group
+			return a.get_name() < b.get_name();
+		}
+	);
+
 	papki::file::guard file_guard(fi, papki::file::mode::create);
 
-	for (auto i = this->styles.begin(); i != this->styles.end(); ++i) {
+	for (auto i = styles_to_save.begin(); i != styles_to_save.end(); ++i) {
 		// Go through selector chains which refer to the same property set (selectors in the same selector group).
 		// These are selector chains specified as comma separated list before defining their properties in CSS sheet,
 		// such selector chains will go in a row.
 		auto selector_group_start_iter = i;
-		for (auto j = selector_group_start_iter; j != this->styles.end(); ++j) {
+		for (auto j = selector_group_start_iter; j != styles_to_save.end(); ++j) {
 			if (j->properties.get() != selector_group_start_iter->properties.get()) {
 				ASSERT(j > i)
 				i = --j;
@@ -264,29 +283,7 @@ void sheet::write(
 				fi.write(utki::make_span(indent));
 			}
 
-			// go through selectors in the selector chain
-			for (const auto& s : j->selectors) {
-				// write selector tag
-				fi.write(utki::make_span(s.tag));
-
-				// write selector id
-				if (!s.id.empty()) {
-					fi.write(hash_sign);
-					fi.write(utki::make_span(s.id));
-				}
-
-				// write selctor classes
-				for (auto& c : s.classes) {
-					fi.write(period);
-					fi.write(utki::make_span(c));
-				}
-
-				// TODO: write selector attributes
-
-				// write combinator
-				auto c = combinator_to_string(s.combinator);
-				fi.write(utki::make_span(c));
-			}
+			fi.write(j->get_name());
 		}
 
 		// write properties
@@ -325,6 +322,28 @@ void sheet::sort_styles_by_specificity()
 			return a.specificity > b.specificity; // descending order
 		}
 	);
+}
+
+void style::update_name_cache() const
+{
+	std::stringstream ss;
+
+	for (const auto& s : this->selectors) {
+		ss << s.tag;
+
+		if (!s.id.empty()) {
+			ss << hash_sign << s.id;
+		}
+
+		for (auto& c : s.classes) {
+			ss << period << c;
+		}
+
+		// TODO: selector attributes
+
+		ss << combinator_to_string(s.combinator);
+	}
+	this->name_cache = ss.str();
 }
 
 void style::update_specificity() noexcept
