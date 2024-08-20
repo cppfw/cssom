@@ -67,9 +67,6 @@ void parser::feed(utki::span<const char> data)
 			case state::property_value:
 				this->parse_property_value(i, e);
 				break;
-			case state::property_value_terminator:
-				this->parse_property_value_terminator(i, e);
-				break;
 		}
 		if (i == e) {
 			return;
@@ -405,52 +402,36 @@ void parser::parse_property_value(utki::span<const char>::iterator& i, utki::spa
 {
 	for (; i != e; ++i) {
 		switch (*i) {
+			case '\r':
+				// ignore
+				break;
 			case '\n':
 				++this->line;
 			case ' ':
-			case '\r':
 			case '\t':
 				if (this->buf.empty()) {
 					break;
 				}
-				this->on_property_value(utki::make_string(utki::make_span(this->buf)));
-				this->buf.clear();
-				this->cur_state = state::property_value_terminator;
-				return;
-			case ';':
-				this->on_property_value(utki::make_string(utki::make_span(this->buf)));
-				this->buf.clear();
-				this->cur_state = state::style_idle;
-				return;
-			default:
-				this->buf.push_back(*i);
-				break;
-		}
-	}
-}
-
-void parser::parse_property_value_terminator(utki::span<const char>::iterator& i, utki::span<const char>::iterator& e)
-{
-	for (; i != e; ++i) {
-		ASSERT(this->buf.empty())
-		switch (*i) {
-			case '\n':
-				++this->line;
-			case ' ':
-			case '\r':
-			case '\t':
+				// Property can have several values separated by space,
+				// so add a space which will be trimmed later if nothing else appears after it.
+				if (this->buf.back() != ' ') {
+					this->buf.push_back(' ');
+				}
 				break;
 			case ';':
+				this->on_property_value(std::string(utki::trim_back(utki::make_string_view(this->buf))));
+				this->buf.clear();
 				this->cur_state = state::style_idle;
 				return;
 			case '}':
+				this->on_property_value(std::string(utki::trim_back(utki::make_string_view(this->buf))));
+				this->buf.clear();
 				this->on_style_properties_end();
 				this->cur_state = state::idle;
 				return;
 			default:
-				std::stringstream ss;
-				ss << "unexpected character (" << *i << ") after style property value at line " << this->line;
-				throw malformed_css_error(ss.str());
+				this->buf.push_back(*i);
+				break;
 		}
 	}
 }

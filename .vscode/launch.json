@@ -69,7 +69,7 @@
 			"type": "cppdbg",
 			"request": "launch",
 			"program": "${workspaceFolder}/tests/unit/out/dbg/tests",
-			"args": ["--suite=samples", "--test=sample[7]"],
+			"args": ["--suite=samples", "--test=sample[2]"],
 			"stopAtEntry": false,
 			"cwd": "${workspaceFolder}/tests/unit",
 			"environment": [{"name": "LD_LIBRARY_PATH", "value": "../../src/out/dbg:../harness/out/dbg"}],

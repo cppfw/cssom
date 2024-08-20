@@ -14,6 +14,10 @@ enum class property_id{
 	background_color,
 	background_image,
 	fill_rule,
+	filter,
+	stroke_dasharray,
+	stroke_miterlimit,
+	fill_opacity,
 
 	enum_size
 };

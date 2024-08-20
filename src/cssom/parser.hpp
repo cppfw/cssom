@@ -51,8 +51,7 @@ class parser
 		combinator,
 		property_name,
 		property_value_delimiter, // colon between property name and value
-		property_value,
-		property_value_terminator // semicolon
+		property_value
 	};
 
 	state cur_state = state::idle;
@@ -68,7 +67,6 @@ class parser
 	void parse_property_name(utki::span<const char>::iterator& i, utki::span<const char>::iterator& e);
 	void parse_property_value_delimiter(utki::span<const char>::iterator& i, utki::span<const char>::iterator& e);
 	void parse_property_value(utki::span<const char>::iterator& i, utki::span<const char>::iterator& e);
-	void parse_property_value_terminator(utki::span<const char>::iterator& i, utki::span<const char>::iterator& e);
 
 	void notify_selector_tag();
 	void notify_selector_id();
