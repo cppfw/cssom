@@ -235,31 +235,79 @@ const auto semicolon = utki::make_span("; ");
 const auto colon = utki::make_span(": ");
 } // namespace
 
+namespace {
+std::string get_name(const style& st)
+{
+	std::stringstream ss;
+
+	for (const auto& s : st.selectors) {
+		ss << s.tag;
+
+		if (!s.id.empty()) {
+			ss << hash_sign << s.id;
+		}
+
+		for (auto& c : s.classes) {
+			ss << period << c;
+		}
+
+		// TODO: selector attributes
+
+		ss << combinator_to_string(s.combinator);
+	}
+	return ss.str();
+}
+} // namespace
+
+namespace {
+std::string to_string(
+	const property_list& prop_list,
+	const std::function<std::string(uint32_t)>& property_id_to_name,
+	const std::function<std::string(uint32_t, const property_value_base&)>& property_value_to_string
+)
+{
+	std::stringstream ss;
+	for (auto& prop : prop_list) {
+		auto name = property_id_to_name(prop.first);
+
+		if (name.empty()) {
+			continue;
+		}
+
+		ss << name << colon;
+		auto value = property_value_to_string(prop.first, *prop.second);
+		ss << value << semicolon;
+	}
+
+	return ss.str();
+}
+} // namespace
+
 void sheet::write(
 	papki::file& fi,
 	const std::function<std::string(uint32_t)>& property_id_to_name,
 	const std::function<std::string(uint32_t, const property_value_base&)>& property_value_to_string,
-	const std::string& indent
+	std::string_view indent
 ) const
 {
 	auto styles_to_save = this->styles; // copy
 
 	// TODO: make this sorting deterministic
-	std::sort(
-		styles_to_save.begin(), //
-		styles_to_save.end(),
-		[](const auto& a, const auto& b) -> bool {
-			// sort by property_list to make consequent gropus using same property list by name within group
-			if (a.properties.get() < b.properties.get()) {
-				return true;
-			} else if (a.properties.get() > b.properties.get()) {
-				return false;
-			}
+	// std::sort(
+	// 	styles_to_save.begin(), //
+	// 	styles_to_save.end(),
+	// 	[](const auto& a, const auto& b) -> bool {
+	// 		// sort by property_list to make consequent gropus using same property list by name within group
+	// 		if (a.properties.get() < b.properties.get()) {
+	// 			return true;
+	// 		} else if (a.properties.get() > b.properties.get()) {
+	// 			return false;
+	// 		}
 
-			// sort by name within the group
-			return a.get_name() < b.get_name();
-		}
-	);
+	// 		// sort by name within the group
+	// 		return a.get_name() < b.get_name();
+	// 	}
+	// );
 
 	papki::file::guard file_guard(fi, papki::file::mode::create);
 
@@ -283,7 +331,7 @@ void sheet::write(
 				fi.write(utki::make_span(indent));
 			}
 
-			fi.write(j->get_name());
+			fi.write(get_name(*j));
 		}
 
 		// write properties
@@ -291,21 +339,15 @@ void sheet::write(
 		fi.write(utki::make_span(indent));
 		fi.write(tab_char);
 
-		auto props = selector_group_start_iter->properties.get();
-		ASSERT(props)
-		for (auto& prop : *props) {
-			auto name = property_id_to_name(prop.first);
+		ASSERT(selector_group_start_iter->properties)
 
-			if (name.empty()) {
-				continue;
-			}
+		auto props_str = to_string(
+			*selector_group_start_iter->properties, //
+			property_id_to_name,
+			property_value_to_string
+		);
 
-			fi.write(utki::make_span(name));
-			fi.write(colon);
-			auto value = property_value_to_string(prop.first, *prop.second);
-			fi.write(utki::make_span(value));
-			fi.write(semicolon);
-		}
+		fi.write(props_str);
 
 		fi.write(new_line_char);
 		fi.write(utki::make_span(indent));
@@ -322,28 +364,6 @@ void sheet::sort_styles_by_specificity()
 			return a.specificity > b.specificity; // descending order
 		}
 	);
-}
-
-void style::update_name_cache() const
-{
-	std::stringstream ss;
-
-	for (const auto& s : this->selectors) {
-		ss << s.tag;
-
-		if (!s.id.empty()) {
-			ss << hash_sign << s.id;
-		}
-
-		for (auto& c : s.classes) {
-			ss << period << c;
-		}
-
-		// TODO: selector attributes
-
-		ss << combinator_to_string(s.combinator);
-	}
-	this->name_cache = ss.str();
 }
 
 void style::update_specificity() noexcept

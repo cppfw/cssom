@@ -145,19 +145,6 @@ struct style {
 
 	uint32_t specificity{};
 
-	mutable std::string name_cache;
-
-	void update_name_cache() const;
-
-	std::string_view get_name() const
-	{
-		if (this->name_cache.empty()) {
-			this->update_name_cache();
-		}
-
-		return this->name_cache;
-	}
-
 	void update_specificity() noexcept;
 
 	bool is_matching(xml_dom_crawler& crawler) const;
@@ -170,7 +157,7 @@ struct sheet {
 		papki::file& fi,
 		const std::function<std::string(uint32_t)>& property_id_to_name,
 		const std::function<std::string(uint32_t, const property_value_base&)>& property_value_to_string,
-		const std::string& indent = std::string()
+		std::string_view indent = {}
 	) const;
 
 	void sort_styles_by_specificity();
