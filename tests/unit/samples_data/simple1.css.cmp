@@ -1,12 +1,12 @@
-body.foo h1.bar {
-	background-color: green; 
-}
-body.foo.bar {
+.foo {
 	background-color: green; 
 }
 .foo h1.bar {
 	background-color: green; 
 }
-.foo {
+body.foo h1.bar {
+	background-color: green; 
+}
+body.foo.bar {
 	background-color: green; 
 }

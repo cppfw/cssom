@@ -1,72 +1,72 @@
-.fence {
-	fill: none; stroke: #c4e3c3; stroke-width: 1; 
-}
-.shadow {
-	filter: drop-shadow(0 0 2px #000); 
-}
-.stairs {
-	fill: #FFD700; 
-}
 .task {
 	fill: #000; 
-}
-.danger {
-	fill: red; stroke: red; stroke-width: 2; stroke-dasharray: 4,2; fill-opacity: .4; 
-}
-.powerline {
-	fill: none; stroke: #ffce00; stroke-width: 2; stroke-dasharray: 6,6; stroke-miterlimit: 10; 
-}
-.railroad {
-	fill: none; stroke: #914833; stroke-width: 3; stroke-dasharray: 6; 
-}
-.road_large {
-	stroke-width: 12; 
-}
-.road_medium {
-	stroke-width: 8; 
-}
-.road_small {
-	stroke-width: 5; 
-}
-.road_gravel {
-	fill: none; stroke: #946d3e; 
-}
-.road_tarmac {
-	fill: none; stroke: #888; 
 }
 .trees {
 	fill: #144043; 
 }
-.map_border {
-	fill: none; stroke: #000; stroke-width: 2; 
-}
-.locked {
-	fill: #37414c; 
-}
-.floor {
-	fill: #70777f; 
-}
 .building {
 	fill: #1a2632; 
-}
-.gravel {
-	fill: #946d3e; 
-}
-.tarmac {
-	fill: #768089; 
-}
-.wood {
-	fill: #593700; 
-}
-.water {
-	fill: #4a6b96; 
-}
-.rock {
-	fill: #dcd5b6; 
 }
 .land {
 	fill: #1f5054; 
 }
+.locked {
+	fill: #37414c; 
+}
+.water {
+	fill: #4a6b96; 
+}
+.wood {
+	fill: #593700; 
+}
+.floor {
+	fill: #70777f; 
+}
+.tarmac {
+	fill: #768089; 
+}
+.gravel {
+	fill: #946d3e; 
+}
+.stairs {
+	fill: #FFD700; 
+}
 .cement {
 	fill: #c6c2c2; 
+}
+.rock {
+	fill: #dcd5b6; 
+}
+.map_border {
+	fill: none; stroke: #000; stroke-width: 2; 
+}
+.road_tarmac {
+	fill: none; stroke: #888; 
+}
+.railroad {
+	fill: none; stroke: #914833; stroke-width: 3; stroke-dasharray: 6; 
+}
+.road_gravel {
+	fill: none; stroke: #946d3e; 
+}
+.fence {
+	fill: none; stroke: #c4e3c3; stroke-width: 1; 
+}
+.powerline {
+	fill: none; stroke: #ffce00; stroke-width: 2; stroke-dasharray: 6,6; stroke-miterlimit: 10; 
+}
+.danger {
+	fill: red; stroke: red; stroke-width: 2; stroke-dasharray: 4,2; fill-opacity: .4; 
+}
+.shadow {
+	filter: drop-shadow(0 0 2px #000); 
+}
+.road_large {
+	stroke-width: 12; 
+}
+.road_small {
+	stroke-width: 5; 
+}
+.road_medium {
+	stroke-width: 8; 
 }

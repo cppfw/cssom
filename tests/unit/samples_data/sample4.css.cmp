@@ -1,6 +1,6 @@
-tag-1, tag-2 {
-	fill: #445566; 
-}
 tag-3, tag-4 {
 	fill: #334455; 
+}
+tag-1, tag-2 {
+	fill: #445566; 
 }

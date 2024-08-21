@@ -1,6 +1,6 @@
-body h1 {
+body {
 	background-color: green; 
 }
-body {
+body h1 {
 	background-color: green; 
 }

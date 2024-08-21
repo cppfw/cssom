@@ -283,6 +283,65 @@ std::string to_string(
 }
 } // namespace
 
+namespace {
+// Produces deterministic list of CSS rules.
+// The list is sorted by property groups and within a group is sorted by rule "name".
+std::vector<std::pair<std::string, std::shared_ptr<std::string>>> to_string_styles(
+	utki::span<const style> styles, //
+	const std::function<std::string(uint32_t)>& property_id_to_name,
+	const std::function<std::string(uint32_t, const property_value_base&)>& property_value_to_string
+)
+{
+	std::map<property_list*, std::shared_ptr<std::string>> props_map;
+
+	std::vector<std::pair<std::string, std::shared_ptr<std::string>>> str_styles;
+
+	for (const auto& s : styles) {
+		auto props_ptr = s.properties.get();
+		ASSERT(props_ptr)
+		auto props_iter = props_map.find(props_ptr);
+		if (props_iter == props_map.end()) {
+			auto res = props_map.insert(
+				std::make_pair(
+					props_ptr,
+					std::make_shared<std::string>(to_string(
+						*s.properties, //
+						property_id_to_name,
+						property_value_to_string
+					))
+				)
+			);
+			ASSERT(res.second)
+			props_iter = res.first;
+		}
+		ASSERT(props_iter != props_map.end())
+
+		str_styles.emplace_back(
+			get_name(s), //
+			props_iter->second
+		);
+	}
+
+	std::sort(
+		str_styles.begin(), //
+		str_styles.end(),
+		[](const auto& a, const auto& b) {
+			// sort by property_list to make consequent gropus using same property list by name within group
+			if (*a.second < *b.second) {
+				return true;
+			} else if (*a.second > *b.second) {
+				return false;
+			}
+
+			// sort by name within the group
+			return a.first < b.first;
+		}
+	);
+
+	return str_styles;
+}
+} // namespace
+
 void sheet::write(
 	papki::file& fi,
 	const std::function<std::string(uint32_t)>& property_id_to_name,
@@ -290,24 +349,11 @@ void sheet::write(
 	std::string_view indent
 ) const
 {
-	auto styles_to_save = this->styles; // copy
-
-	// TODO: make this sorting deterministic
-	// std::sort(
-	// 	styles_to_save.begin(), //
-	// 	styles_to_save.end(),
-	// 	[](const auto& a, const auto& b) -> bool {
-	// 		// sort by property_list to make consequent gropus using same property list by name within group
-	// 		if (a.properties.get() < b.properties.get()) {
-	// 			return true;
-	// 		} else if (a.properties.get() > b.properties.get()) {
-	// 			return false;
-	// 		}
-
-	// 		// sort by name within the group
-	// 		return a.get_name() < b.get_name();
-	// 	}
-	// );
+	auto styles_to_save = to_string_styles(
+		this->styles, //
+		property_id_to_name,
+		property_value_to_string
+	);
 
 	papki::file::guard file_guard(fi, papki::file::mode::create);
 
@@ -317,7 +363,7 @@ void sheet::write(
 		// such selector chains will go in a row.
 		auto selector_group_start_iter = i;
 		for (auto j = selector_group_start_iter; j != styles_to_save.end(); ++j) {
-			if (j->properties.get() != selector_group_start_iter->properties.get()) {
+			if (j->second.get() != selector_group_start_iter->second.get()) {
 				ASSERT(j > i)
 				i = --j;
 				break;
@@ -331,7 +377,7 @@ void sheet::write(
 				fi.write(utki::make_span(indent));
 			}
 
-			fi.write(get_name(*j));
+			fi.write(j->first);
 		}
 
 		// write properties
@@ -339,15 +385,9 @@ void sheet::write(
 		fi.write(utki::make_span(indent));
 		fi.write(tab_char);
 
-		ASSERT(selector_group_start_iter->properties)
+		ASSERT(selector_group_start_iter->second)
 
-		auto props_str = to_string(
-			*selector_group_start_iter->properties, //
-			property_id_to_name,
-			property_value_to_string
-		);
-
-		fi.write(props_str);
+		fi.write(*selector_group_start_iter->second);
 
 		fi.write(new_line_char);
 		fi.write(utki::make_span(indent));
