@@ -18,9 +18,9 @@ nuget{
 		title: C++ CSS DOM library;
 		authors: {Ivan Gagis};
 		owners: {Ivan Gagis};
-		licenseUrl: "https://raw.githubusercontent.com/cppfw/cssom/master/LICENSE";
+		licenseUrl: "https://raw.githubusercontent.com/cppfw/cssom/main/LICENSE";
 		projectUrl: "https://github.com/cppfw/cssom";
-		iconUrl: "https://github.com/cppfw/cssom/blob/master/logo.svg";
+		iconUrl: "https://github.com/cppfw/cssom/blob/main/logo.svg";
 		requireLicenseAcceptance:false;
 		summary: C++ CSS DOM library;
 
@@ -73,7 +73,7 @@ nuget{
 		}
 */
 		//==== v142 tools ====
-
+/*
 		[x86,v142,release,MultiThreaded] {
 			lib: ..\msvs_solution\v142_Release_MT\libcssom.lib;
 		}
@@ -98,7 +98,7 @@ nuget{
 		[x64,v142,debug,MultiThreadedDebugDLL] {
 			lib: ..\msvs_solution\x64\v142_Debug_MD\libcssom.lib;
 		}
-
+*/
 		//==== v143 tools ====
 
 		[x86,v143,release,MultiThreaded] {
