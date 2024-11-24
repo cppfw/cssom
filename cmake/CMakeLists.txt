@@ -8,6 +8,7 @@ project(${name})
 
 find_package(utki CONFIG REQUIRED)
 find_package(papki CONFIG REQUIRED)
+find_package(ZLIB REQUIRED)
 
 file(GLOB_RECURSE srcs "../src/${name}/*.cpp")
 
