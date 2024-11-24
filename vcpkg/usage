@@ -1,0 +1,4 @@
+cssom provides CMake targets:
+
+find_package(cssom CONFIG REQUIRED)
+target_link_libraries(main PRIVATE cssom::cssom)
