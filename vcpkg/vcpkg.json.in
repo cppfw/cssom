@@ -2,7 +2,7 @@
     "name": "cssom",
     "version": "$(version)",
     "homepage": "https://github.com/cppfw/cssom",
-    "description": "filesystem abstraction in C++",
+    "description": "CSS object model library in C++",
     "license": "MIT",
     "dependencies": [
       {
