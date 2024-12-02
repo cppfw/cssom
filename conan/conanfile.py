@@ -22,7 +22,7 @@ class CssomConan(ConanFile):
 
 	def build_requirements(self):
 		self.requires("tst/[>=0.3.29]@cppfw/main", visible=False)
-		self.tool_requires("make/[>=4.4.1]")
+		self.tool_requires("prorab-extra/[>=0.2.56]")
 
 	def config_options(self):
 		if self.settings.os == "Windows":
