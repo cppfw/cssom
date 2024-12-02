@@ -18,10 +18,11 @@ class CssomConan(ConanFile):
 	generators = "AutotoolsDeps" # this will set CXXFLAGS etc. env vars
 
 	def requirements(self):
-		self.requires("papki/[>=0.0.0]@cppfw/main", transitive_headers=True)
+		self.requires("papki/[>=0.0.0]@cppfw/main", transitive_headers=True, transitive_libs=True)
 
 	def build_requirements(self):
-		self.test_requires("tst/[>=0.3.29]@cppfw/main")
+		self.requires("tst/[>=0.3.29]@cppfw/main", visible=False)
+		self.tool_requires("make/[>=4.4.1]")
 
 	def config_options(self):
 		if self.settings.os == "Windows":
