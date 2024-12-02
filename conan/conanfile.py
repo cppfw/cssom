@@ -21,7 +21,7 @@ class CssomConan(ConanFile):
 		self.requires("papki/[>=0.0.0]@cppfw/main", transitive_headers=True)
 
 	def build_requirements(self):
-		self.requires("tst/[>=0.3.29]@cppfw/main", visible=False)
+		self.test_requires("tst/[>=0.3.29]@cppfw/main")
 
 	def config_options(self):
 		if self.settings.os == "Windows":
