@@ -355,7 +355,7 @@ void sheet::write(
 		property_value_to_string
 	);
 
-	papki::file::guard file_guard(fi, papki::file::mode::create);
+	papki::file::guard file_guard(fi, papki::mode::create);
 
 	for (auto i = styles_to_save.begin(); i != styles_to_save.end(); ++i) {
 		// Go through selector chains which refer to the same property set (selectors in the same selector group).
