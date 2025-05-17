@@ -24,4 +24,6 @@ myci_declare_library(${name}
     DEPENDENCIES
         utki
         papki
+    EXTERNAL_DEPENDENCIES
+        ZLIB
 )
