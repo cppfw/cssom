@@ -14,6 +14,8 @@ myci_add_source_files(srcs
     RECURSIVE
 )
 
+find_package(ZLIB REQUIRED)
+
 myci_declare_library(${name}
     SOURCES
         ${srcs}
@@ -25,5 +27,5 @@ myci_declare_library(${name}
         utki
         papki
     EXTERNAL_DEPENDENCIES
-        ZLIB
+        ZLIB::ZLIB
 )
