@@ -3,14 +3,14 @@ include prorab-test.mk
 
 $(eval $(call prorab-config, ../../config))
 
-this_name := harness
+this_name := harness$(this_dbg)
 
 this_soname := 0
 
 this_srcs += $(call prorab-src-dir, .)
 
-this_ldlibs += -l papki
-this_ldlibs += ../../src/out/$(c)/libcssom$(dot_so)
+this_ldlibs += -l papki$(this_dbg)
+this_ldlibs += ../../src/out/$(c)/libcssom$(this_dbg)$(dot_so)
 
 this_no_install := true
 

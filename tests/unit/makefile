@@ -7,21 +7,18 @@ this_name := tests
 
 this_srcs += $(call prorab-src-dir, .)
 
-this_ldlibs += -lharness -lcssom -lpapki -lutki -ltst
-this_ldflags += -L$(d)../../src/out/$(c)
-this_ldflags += -L$(d)../harness/out/$(c)
+this_ldlibs += -l papki$(this_dbg)
+this_ldlibs += -l utki$(this_dbg)
+this_ldlibs += -l tst
+
+this_ldlibs += ../../src/out/$(c)/libcssom$(this_dbg)$(dot_so)
+this_ldlibs += ../harness/out/$(c)/libharness$(this_dbg)$(dot_so)
 
 this_cxxflags += -isystem ../../src
 
 this_no_install := true
 
 $(eval $(prorab-build-app))
-
-# add dependency on libcssom
-$(prorab_this_name): $(abspath $(d)../../src/out/$(c)/libcssom$(dot_so))
-
-# add dependency on libharness
-$(prorab_this_name): $(abspath $(d)../harness/out/$(c)/libharness$(dot_so))
 
 this_test_cmd := $(prorab_this_name) --junit-out=out/$(c)/junit.xml
 this_test_deps := $(prorab_this_name)
