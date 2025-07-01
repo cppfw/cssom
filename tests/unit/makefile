@@ -9,7 +9,7 @@ this_srcs += $(call prorab-src-dir, .)
 
 this_ldlibs += -l papki$(this_dbg)
 this_ldlibs += -l utki$(this_dbg)
-this_ldlibs += -l tst
+this_ldlibs += -l tst$(this_dbg)
 
 this_ldlibs += ../../src/out/$(c)/libcssom$(this_dbg)$(dot_so)
 this_ldlibs += ../harness/out/$(c)/libharness$(this_dbg)$(dot_so)
