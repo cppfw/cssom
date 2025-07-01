@@ -20,23 +20,41 @@ Standards-Version: 3.9.2
 Package: libcssom$(soname)
 Section: libs
 Architecture: any
-Depends: ${shlibs:Depends}, ${misc:Depends}
+Depends:
+	${shlibs:Depends},
+	${misc:Depends}
 Description: CSS document object model library.
- Some library.
+	CSS library.
+
+Package: libcssom-dbg$(soname)
+Section: libs
+Architecture: any
+Depends:
+	${shlibs:Depends},
+	${misc:Depends}
+Description: CSS document object model library.
+	Debug version of libcssom.
 
 Package: libcssom-dev
 Section: libdevel
 Architecture: any
-Depends: libcssom$(soname) (= ${binary:Version}), ${misc:Depends},
-		libutki-dev, libpapki-dev
+Depends:
+	libcssom$(soname) (= ${binary:Version}),
+	libcssom-dbg$(soname) (= ${binary:Version}),
+	${misc:Depends},
+	libutki-dev,
+	libpapki-dev
 Suggests: libcssom-doc
 Description: CSS document object model library.
- CSS document object model cross-platform C++ library.
+	CSS document object model cross-platform C++ library.
 
 Package: libcssom$(soname)-dbgsrc
 Section: debug
 Architecture: all
-Depends: libcssom$(soname)-dbgsym (= ${binary:Version}), ${misc:Depends}
+Depends:
+	libcssom$(soname)-dbgsym (= ${binary:Version}),
+	libcssom-dbg$(soname)-dbgsym (= ${binary:Version}),
+	${misc:Depends}
 Description: debugging sources for libcssom$(soname) package.
 
 Package: libcssom-doc
@@ -44,4 +62,4 @@ Section: doc
 Architecture: all
 Depends: ${misc:Depends}
 Description: documentation for libcssom library.
- For more details see description to libcssom-dev package.
+	For more details see description to libcssom-dev package.
