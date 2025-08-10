@@ -1,3 +1,5 @@
+#include <iostream>
+
 #include <tst/set.hpp>
 #include <tst/check.hpp>
 

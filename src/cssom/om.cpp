@@ -301,16 +301,14 @@ std::vector<std::pair<std::string, std::shared_ptr<std::string>>> to_string_styl
 		ASSERT(props_ptr)
 		auto props_iter = props_map.find(props_ptr);
 		if (props_iter == props_map.end()) {
-			auto res = props_map.insert(
-				std::make_pair(
-					props_ptr,
-					std::make_shared<std::string>(to_string(
-						*s.properties, //
-						property_id_to_name,
-						property_value_to_string
-					))
-				)
-			);
+			auto res = props_map.insert(std::make_pair(
+				props_ptr,
+				std::make_shared<std::string>(to_string(
+					*s.properties, //
+					property_id_to_name,
+					property_value_to_string
+				))
+			));
 			ASSERT(res.second)
 			props_iter = res.first;
 		}

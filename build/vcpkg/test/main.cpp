@@ -1,5 +1,7 @@
 #include <cssom/om.hpp>
 
+#include <iostream>
+
 int main(int argc, const char** argv){
     cssom::sheet css;
 
