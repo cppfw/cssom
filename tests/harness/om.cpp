@@ -1,13 +1,13 @@
 #include "om.hpp"
 #include "properties.hpp"
 
-#include <papki/span_file.hpp>
+#include <fsif/span_file.hpp>
 
 cssom::sheet read_css(const char* css){
 	auto pntim = &property_name_to_id_map;
 
 	return cssom::read(
-			papki::span_file(utki::make_span(css)),
+			fsif::span_file(utki::make_span(css)),
 			[pntim](std::string_view name) -> uint32_t{
 				auto i = pntim->find(name);
 				if(i == pntim->end()){

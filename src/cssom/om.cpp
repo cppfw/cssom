@@ -188,7 +188,7 @@ public:
 } // namespace
 
 sheet cssom::read(
-	const papki::file& fi,
+	const fsif::file& fi,
 	std::function<uint32_t(std::string_view)> property_name_to_id,
 	std::function<std::unique_ptr<cssom::property_value_base>(uint32_t, std::string_view)> parse_property
 )
@@ -203,7 +203,7 @@ sheet cssom::read(
 	om_parser p(std::move(property_name_to_id), std::move(parse_property));
 
 	{
-		papki::file::guard file_guard(fi);
+		fsif::file::guard file_guard(fi);
 
 		// NOLINTNEXTLINE(cppcoreguidelines-pro-type-member-init)
 		std::array<uint8_t, size_t(utki::kilobyte) * 4> buf;
@@ -341,7 +341,7 @@ std::vector<std::pair<std::string, std::shared_ptr<std::string>>> to_string_styl
 } // namespace
 
 void sheet::write(
-	papki::file& fi,
+	fsif::file& fi,
 	const std::function<std::string(uint32_t)>& property_id_to_name,
 	const std::function<std::string(uint32_t, const property_value_base&)>& property_value_to_string,
 	std::string_view indent
@@ -353,7 +353,7 @@ void sheet::write(
 		property_value_to_string
 	);
 
-	papki::file::guard file_guard(fi, papki::mode::create);
+	fsif::file::guard file_guard(fi, fsif::mode::create);
 
 	for (auto i = styles_to_save.begin(); i != styles_to_save.end(); ++i) {
 		// Go through selector chains which refer to the same property set (selectors in the same selector group).

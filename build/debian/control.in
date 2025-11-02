@@ -11,7 +11,7 @@ Build-Depends:
 		clang-format,
 		libc6-dev,
 		libutki-dev (>= 1.1.122),
-		libpapki-dev (>= 1.0.93),
+		libfsif-dev (>= 1.0.93),
 		libclargs-dev (>= 0.2.19),
 		libtst-dev (>= 0.3.2)
 Build-Depends-Indep: doxygen
@@ -43,7 +43,7 @@ Depends:
 	libcssom-dbg$(soname) (= ${binary:Version}),
 	${misc:Depends},
 	libutki-dev,
-	libpapki-dev
+	libfsif-dev
 Suggests: libcssom-doc
 Description: CSS document object model library.
 	CSS document object model cross-platform C++ library.

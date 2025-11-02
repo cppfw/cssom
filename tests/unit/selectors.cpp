@@ -1,7 +1,7 @@
 #include <tst/set.hpp>
 #include <tst/check.hpp>
 
-#include <papki/span_file.hpp>
+#include <fsif/span_file.hpp>
 
 #include "../harness/properties.hpp"
 #include "../harness/om.hpp"

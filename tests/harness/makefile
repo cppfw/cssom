@@ -9,7 +9,7 @@ this_soname := 0
 
 this_srcs += $(call prorab-src-dir, .)
 
-this_ldlibs += -l papki$(this_dbg)
+this_ldlibs += -l fsif$(this_dbg)
 this_ldlibs += ../../src/out/$(c)/libcssom$(this_dbg)$(dot_so)
 
 this_no_install := true

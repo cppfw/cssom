@@ -28,7 +28,7 @@ SOFTWARE.
 
 #include <map>
 
-#include <papki/file.hpp>
+#include <fsif/file.hpp>
 #include <utki/destructable.hpp>
 #include <utki/span.hpp>
 
@@ -154,7 +154,7 @@ struct sheet {
 	std::vector<style> styles{};
 
 	void write(
-		papki::file& fi,
+		fsif::file& fi,
 		const std::function<std::string(uint32_t)>& property_id_to_name,
 		const std::function<std::string(uint32_t, const property_value_base&)>& property_value_to_string,
 		std::string_view indent = {}
@@ -189,7 +189,7 @@ struct sheet {
 };
 
 sheet read(
-	const papki::file& fi,
+	const fsif::file& fi,
 	std::function<uint32_t(std::string_view)> property_name_to_id,
 	std::function<std::unique_ptr<property_value_base>(uint32_t, std::string_view)> parse_property_value
 );

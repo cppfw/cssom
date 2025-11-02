@@ -6,8 +6,8 @@
 #include <utki/util.hpp>
 #include <utki/string.hpp>
 
-#include <papki/fs_file.hpp>
-#include <papki/vector_file.hpp>
+#include <fsif/native_file.hpp>
+#include <fsif/vector_file.hpp>
 
 #include <regex>
 
@@ -24,7 +24,7 @@ const tst::set set("samples", [](tst::suite& suite){
 
     {
 		const std::regex suffix_regex("^.*\\.css$");
-		auto all_files = papki::fs_file(data_dir).list_dir();
+		auto all_files = fsif::native_file(data_dir).list_dir();
 
 		std::copy_if(
 				all_files.begin(),
@@ -43,7 +43,7 @@ const tst::set set("samples", [](tst::suite& suite){
             auto in_file_name = data_dir + p;
 
             auto doc = cssom::read(
-                    papki::fs_file(in_file_name),
+                    fsif::native_file(in_file_name),
                     [](std::string_view name) -> uint32_t{
                         auto i = property_name_to_id_map.find(name);
                         if(i == property_name_to_id_map.end()){
@@ -58,7 +58,7 @@ const tst::set set("samples", [](tst::suite& suite){
             
             auto pitnm = utki::flip_map(property_name_to_id_map);
 
-            papki::vector_file out_file;
+            fsif::vector_file out_file;
 
             doc.write(
                     out_file,
@@ -80,7 +80,7 @@ const tst::set set("samples", [](tst::suite& suite){
 
             decltype(out_data) cmp_data;
 
-            papki::fs_file cmp_file(in_file_name + ".cmp");
+            fsif::native_file cmp_file(in_file_name + ".cmp");
 
             try{
                 cmp_data = cmp_file.load();
@@ -90,10 +90,10 @@ const tst::set set("samples", [](tst::suite& suite){
 
             if(out_data != cmp_data){
                 {
-                    papki::fs_file failed_file(data_dir + p + ".out");
-                    papki::file::guard file_guard(
+                    fsif::native_file failed_file(data_dir + p + ".out");
+                    fsif::file::guard file_guard(
                         failed_file,//
-                        papki::mode::create
+                        fsif::mode::create
                     );
                     failed_file.write(out_data);
                 }
