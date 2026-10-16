@@ -1,0 +1,7 @@
+# cssom must support C++17, so the C++20-only modernize-use-ranges
+# (std::ranges algorithms) and modernize-loop-convert (whose fix-it
+# suggests std::ranges::reverse_view) are suppressed for this library.
+Checks: |
+  -modernize-use-ranges
+  -modernize-loop-convert
+InheritParentConfig: true
