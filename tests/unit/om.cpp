@@ -35,8 +35,8 @@ const tst::set set("object_model", [](auto& suite){
 			css_om1.append(std::move(css_om2));
 
 			tst::check_eq(css_om1.styles.size(), size_t(2), SL);
-			tst::check_eq(css_om1.styles.front().specificity, unsigned(2), SL) << "specificity = " << css_om1.styles.front().specificity;
-			tst::check_eq(css_om1.styles.back().specificity, unsigned(1), SL) << "specificity = " << css_om1.styles.back().specificity;
+			tst::check_eq(css_om1.styles.front().specificity, unsigned(2), [&](auto& o){o << "specificity = " << css_om1.styles.front().specificity;}, SL);
+			tst::check_eq(css_om1.styles.back().specificity, unsigned(1), [&](auto& o){o << "specificity = " << css_om1.styles.back().specificity;}, SL);
 		}
 	);
 });

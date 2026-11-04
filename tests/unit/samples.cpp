@@ -98,9 +98,9 @@ const tst::set set("samples", [](tst::suite& suite){
                     failed_file.write(out_data);
                 }
 
-                tst::check(false, SL) << "parsed file is not as expected: " << in_file_name << "\n"
+                tst::check(false, [&](auto& o){o << "parsed file is not as expected: " << in_file_name << "\n"
                     << "parsed file contents:" << "\n"
-                    << utki::make_string_view(out_data);
+                    << utki::make_string_view(out_data);}, SL);
             }
         }
     );
