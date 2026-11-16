@@ -111,9 +111,9 @@ public:
 		};
 		s.update_specificity();
 		doc.styles.emplace_back(std::move(s));
-		ASSERT(this->cur_selector_chain.empty())
-		ASSERT(this->cur_selector.classes.empty())
-		ASSERT(this->cur_selector.tag.empty())
+		utki::assert(this->cur_selector_chain.empty(), SL);
+		utki::assert(this->cur_selector.classes.empty(), SL);
+		utki::assert(this->cur_selector.tag.empty(), SL);
 		// TODO: add assert(attributes of current selector are empty)
 	}
 
@@ -144,10 +144,10 @@ public:
 	void on_combinator(std::string str) override
 	{
 		// TRACE(<< "combinator: " << str << std::endl)
-		ASSERT(this->cur_selector.classes.empty())
-		ASSERT(this->cur_selector.tag.empty())
+		utki::assert(this->cur_selector.classes.empty(), SL);
+		utki::assert(this->cur_selector.tag.empty(), SL);
 		// TODO: add assert attributes of current selector are empty
-		ASSERT(!this->cur_selector_chain.empty())
+		utki::assert(!this->cur_selector_chain.empty(), SL);
 		this->cur_selector_chain.back().combinator = ::parse_combinator(str);
 	}
 
@@ -160,7 +160,7 @@ public:
 	void on_property_name(std::string str) override
 	{
 		// TRACE(<< "property name: " << str << std::endl)
-		ASSERT(this->cur_property_list)
+		utki::assert(this->cur_property_list, SL);
 		this->cur_property_name = std::move(str);
 	}
 
@@ -168,12 +168,12 @@ public:
 	{
 		// TRACE(<< "property value: " << str << std::endl)
 
-		ASSERT(!this->cur_property_name.empty())
+		utki::assert(!this->cur_property_name.empty(), SL);
 
-		ASSERT(this->property_name_to_id)
+		utki::assert(this->property_name_to_id, SL);
 		uint32_t id = this->property_name_to_id(this->cur_property_name);
 
-		ASSERT(this->parse_property)
+		utki::assert(this->parse_property, SL);
 		auto value = this->parse_property(id, std::move(str));
 
 		if (!value) {
@@ -181,7 +181,7 @@ public:
 			return;
 		}
 
-		ASSERT(this->cur_property_list)
+		utki::assert(this->cur_property_list, SL);
 		(*this->cur_property_list)[id] = std::move(value);
 	}
 };
@@ -298,7 +298,7 @@ std::vector<std::pair<std::string, std::shared_ptr<std::string>>> to_string_styl
 
 	for (const auto& s : styles) {
 		auto props_ptr = s.properties.get();
-		ASSERT(props_ptr)
+		utki::assert(props_ptr, SL);
 		auto props_iter = props_map.find(props_ptr);
 		if (props_iter == props_map.end()) {
 			auto res = props_map.insert(std::make_pair(
@@ -309,10 +309,10 @@ std::vector<std::pair<std::string, std::shared_ptr<std::string>>> to_string_styl
 					property_value_to_string
 				))
 			));
-			ASSERT(res.second)
+			utki::assert(res.second, SL);
 			props_iter = res.first;
 		}
-		ASSERT(props_iter != props_map.end())
+		utki::assert(props_iter != props_map.end(), SL);
 
 		str_styles.emplace_back(
 			get_name(s), //
@@ -362,7 +362,7 @@ void sheet::write(
 		auto selector_group_start_iter = i;
 		for (auto j = selector_group_start_iter; j != styles_to_save.end(); ++j) {
 			if (j->second.get() != selector_group_start_iter->second.get()) {
-				ASSERT(j > i)
+				utki::assert(j > i, SL);
 				i = --j;
 				break;
 			}
@@ -383,7 +383,7 @@ void sheet::write(
 		fi.write(utki::make_span(indent));
 		fi.write(tab_char);
 
-		ASSERT(selector_group_start_iter->second)
+		utki::assert(selector_group_start_iter->second, SL);
 
 		fi.write(*selector_group_start_iter->second);
 

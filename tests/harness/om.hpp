@@ -74,7 +74,7 @@ public:
 	}
 	
 	bool move_left()override{
-		ASSERT(this->stack.back().first)
+		utki::assert(this->stack.back().first, SL);
 		auto& c = *this->stack.back().first;
 		auto& i = this->stack.back().second;
 
