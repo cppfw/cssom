@@ -170,10 +170,10 @@ public:
 
 		utki::assert(!this->cur_property_name.empty(), SL);
 
-		utki::assert(this->property_name_to_id, SL);
+		utki::assert(this->property_name_to_id != nullptr, SL);
 		uint32_t id = this->property_name_to_id(this->cur_property_name);
 
-		utki::assert(this->parse_property, SL);
+		utki::assert(this->parse_property != nullptr, SL);
 		auto value = this->parse_property(id, std::move(str));
 
 		if (!value) {
